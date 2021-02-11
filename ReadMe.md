@@ -1,0 +1,1 @@
+Provides a serverless email management system for hsbc project
