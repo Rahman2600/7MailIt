@@ -43,11 +43,6 @@ class Table extends React.Component {
                         {this.renderContent(current.content[i], i)}
                      </td>
                 )
-                // } else if (current.button) {
-                //     return <td key={j}><button> {current.button} </button></td>;
-                // } else {
-                //     return <td key={j}> error </td>;
-                // }
             })  
         )
     }
@@ -58,7 +53,7 @@ class Table extends React.Component {
             return content;
         } else if (type === "object") {
             if (Object.keys(content)[0] === "button") {
-                return <button className="btn btn-primary"> {content.button} </button>; 
+                return <button className="btn btn-light"> {content.button} </button>; 
             }
         }
     }

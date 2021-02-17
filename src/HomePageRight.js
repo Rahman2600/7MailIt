@@ -8,8 +8,9 @@ class HomePageRight extends React.Component {
     render() {
         return (
              <div className="right-component">
-                <button className="btn btn-primary"> Log out </button>
-                <button className="btn btn-primary"> Upload New Template </button>
+                <button className="btn btn-light mt-5 ml-5 mr-5 mb-5 float-right"> Log out </button>
+                <button className="btn btn-light btn-block mt-5"> View Job Logs </button>
+                <button className="btn btn-light btn-block mt-5"> Upload New Template </button>
             </div> 
         )
     }
