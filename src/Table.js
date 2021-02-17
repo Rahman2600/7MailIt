@@ -1,5 +1,4 @@
 import React from "react";
-import { objectExpression } from "@babel/types";
 
 class Table extends React.Component {
     constructor(props) {
@@ -8,7 +7,7 @@ class Table extends React.Component {
 
     render() {
         return (
-            <table className="table table-striped" >
+            <table className="table table-striped left-component" >
                 <thead>
                     {this.renderTableHeader()}
                 </thead>
@@ -59,7 +58,7 @@ class Table extends React.Component {
             return content;
         } else if (type === "object") {
             if (Object.keys(content)[0] === "button") {
-                return <td key={i}><button> {content.button} </button></td>; 
+                return <button className="btn btn-primary"> {content.button} </button>; 
             }
         }
     }

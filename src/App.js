@@ -1,5 +1,6 @@
 import Table from './Table.js';
-
+import HomePageRight from "./HomePageRight";
+import "./App.css";
 
 function App() {
   let table = {numRows: 2, columns: [
@@ -18,7 +19,7 @@ function App() {
       content: ["Marketing", "Investment"]},
 
     { title: "No. of Campaigns",
-      content: [3, 0]},
+      content: ["3", "0"]},
 
     { title: "Status",
       content: [{button: "Ready"}, "Upload"]},
@@ -36,6 +37,7 @@ function App() {
   return (
     <div>
       <Table data={table}/>
+      <HomePageRight />
     </div>
   );
 }
