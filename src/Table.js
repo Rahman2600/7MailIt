@@ -3,7 +3,7 @@ import React from "react";
 class Table extends React.Component {
     constructor(props) {
         super(props);
-    } 
+    }
 
     render() {
         return (
@@ -12,7 +12,7 @@ class Table extends React.Component {
                     {this.renderTableHeader()}
                 </thead>
                 <tbody>
-                    {this.props.data[0].content.map((_, i) => {return <tr key={i}>{this.renderRow(i)}</tr>})}
+                    {this.renderTableBody()}
                 </tbody>
             </table>
         );
@@ -22,14 +22,30 @@ class Table extends React.Component {
     renderTableHeader() {
         return (
             <tr>
-                {this.props.data.map((column, i) => {return <th key={i}>{column.title}</th>})}
+                {this.props.data.columns.map((column, i) => { return <th key={i}>{column.title}</th> })}
             </tr>
-        )  
+        )
+    }
+
+    renderTableBody() {
+        return (
+            [...Array(this.props.data.numRows).keys()].map((i) => {
+                return <tr key={i}>{this.renderRow(i)}</tr>;               
+            })
+        )
     }
 
     renderRow(i) {
         return (
-                this.props.data.map((current, j) => {return <td key={j}> {current.content[i]} </td>})
+            this.props.data.columns.map((current, j) => { 
+                if (current.content) { 
+                    return <td key={j}> {current.content[i]} </td>;
+                } else if (current.button) {
+                    return <td key={j}><button> {current.button} </button></td>;
+                } else {
+                    return <td key={j}> error </td>;
+                }
+            })  
         )
     }
 }

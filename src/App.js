@@ -2,7 +2,7 @@ import Table from './Table.js';
 
 
 function App() {
-  let data = [
+  let table = {numRows: 2, columns: [
     { title: "Template Key",
      content: ["3fda23114tdf5",
               "4s395ter203d4"]
@@ -18,13 +18,16 @@ function App() {
       content: ["Marketing", "Investment"]},
 
     { title: "Dynamic Values",
-      content: ["NAME AMOUNT", "NAME"]}
+      content: ["NAME AMOUNT", "NAME"]},
 
-  ]
+    { title: "Details",
+      button: "View"}
+
+  ]}
 
   return (
     <div>
-      <Table data={data}/>
+      <Table data={table}/>
     </div>
   );
 }
