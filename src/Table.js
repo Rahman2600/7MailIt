@@ -7,12 +7,12 @@ class Table extends React.Component {
 
     render() {
         return (
-            <table>
+            <table className="table table-striped" >
                 <thead>
                     {this.renderTableHeader()}
                 </thead>
                 <tbody>
-                    {this.props.data.map((_, i) => {return <tr key={i}>{this.renderRow(i)}</tr>})}
+                    {this.props.data[0].content.map((_, i) => {return <tr key={i}>{this.renderRow(i)}</tr>})}
                 </tbody>
             </table>
         );
