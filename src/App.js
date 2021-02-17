@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import Table from './Table.js';
+
 
 function App() {
+  let data = [
+    { title: "Template Key",
+     content: ["3fda23114tdf5",
+              "4s395ter203d4"]
+    },
+
+    { title: "Template Name",
+      content: ["Offer Notice", "Change of Term"]},
+    
+    { title: "Upload Date",
+      content: ["01/07/2019", "02/09/2017"]},
+
+    { title: "Team",
+      content: ["Marketing", "Investment"]},
+
+    { title: "Dynamic Values",
+      content: ["NAME AMOUNT", "NAME"]}
+
+  ]
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Table data={data}/>
     </div>
   );
 }
