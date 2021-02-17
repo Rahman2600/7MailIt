@@ -1,4 +1,5 @@
 import React from "react";
+import { objectExpression } from "@babel/types";
 
 class Table extends React.Component {
     constructor(props) {
@@ -38,15 +39,29 @@ class Table extends React.Component {
     renderRow(i) {
         return (
             this.props.data.columns.map((current, j) => { 
-                if (current.content) { 
-                    return <td key={j}> {current.content[i]} </td>;
-                } else if (current.button) {
-                    return <td key={j}><button> {current.button} </button></td>;
-                } else {
-                    return <td key={j}> error </td>;
-                }
+                return (
+                    <td key={j}> 
+                        {this.renderContent(current.content[i], i)}
+                     </td>
+                )
+                // } else if (current.button) {
+                //     return <td key={j}><button> {current.button} </button></td>;
+                // } else {
+                //     return <td key={j}> error </td>;
+                // }
             })  
         )
+    }
+
+    renderContent(content, i) {
+        let type = typeof content;
+        if (type === "string") {
+            return content;
+        } else if (type === "object") {
+            if (Object.keys(content)[0] === "button") {
+                return <td key={i}><button> {content.button} </button></td>; 
+            }
+        }
     }
 }
 

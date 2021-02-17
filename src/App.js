@@ -17,11 +17,19 @@ function App() {
     { title: "Team",
       content: ["Marketing", "Investment"]},
 
+    { title: "No. of Campaigns",
+      content: [3, 0]},
+
+    { title: "Status",
+      content: [{button: "Ready"}, "Upload"]},
+
     { title: "Dynamic Values",
       content: ["NAME AMOUNT", "NAME"]},
 
     { title: "Details",
-      button: "View"}
+    content: [{button: "View"}, {button: "View"}]}
+
+
 
   ]}
 
