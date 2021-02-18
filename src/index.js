@@ -3,11 +3,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import CampaignPage from './CampaignPage'
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <CampaignPage />
   </React.StrictMode>,
   document.getElementById('root')
 );
