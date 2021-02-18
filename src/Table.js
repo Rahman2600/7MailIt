@@ -40,14 +40,14 @@ class Table extends React.Component {
             this.props.data.columns.map((current, j) => { 
                 return (
                     <td key={j}> 
-                        {this.renderContent(current.content[i], i)}
+                        {this.renderContent(current.content[i])}
                      </td>
                 )
             })  
         )
     }
 
-    renderContent(content, i) {
+    renderContent(content) {
         let type = typeof content;
         if (type === "string") {
             return content;
