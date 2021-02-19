@@ -10,21 +10,51 @@ import React, {useState, useEffect} from "react";
 // Amplify.configure(awsconfig);
 // import loginImage from "./images/hsbcLoginSummerWinter.jpg";
 import LoginPage from "./components/login/LoginPage"
+import ConfirmSignUp from "./components/login/ConfirmSignUp"
 import ConfirmCredentials from "./components/login/ConfirmCredentials"
+import Home from "./components/home/Home"
+import SignUp from "./components/login/SignUp"
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Auth from 'aws-amplify';
+
+const initialFormState = {
+    username: "", email: "", password: "", newPassword: "", authCode: "", formType: "signIn"
+}
+
 
 function App() {
+    const [formState, updateFormState] = useState(initialFormState)
+    const [user, updateUser] = useState(null)
+
+    useEffect(() => {
+        checkUser()
+    },
+        [])
+
+    async function checkUser() {
+        try {
+            const user = await Auth.currentAuthenticatedUser()
+            updateUser(user)
+            updateFormState(() =>({...formState, formType: "signedIn"}))
+        }
+        catch (err){
+            updateUser(null)
+        }
+    }
     return (
         <BrowserRouter>
                 <Switch>
                     <Route path="/" component={LoginPage} exact/>
+                    <Route path="/SignUp" component={SignUp}/>
+                    <Route path="/ConfirmSignUp" component={ConfirmSignUp}/>
                     <Route path="/ConfirmCredentials" component={ConfirmCredentials}/>
-                    {/*<Route path="/home" component={homePage}/>*/}
+                    <Route path="/Home" component={Home}/>
                 </Switch>
         </BrowserRouter>
     );
 }
 
+export default App
 
 
 
@@ -179,7 +209,7 @@ function App() {
 //                                 </Link>
 //                             </Grid>
 //                             <Grid item>
-//                                 <Link href="./components/login/ConfirmCredentials" variant="body2">
+//                                 <Link href="./components/login/ConfirmSignUp" variant="body2">
 //                                     {"First time signing in? Confirm your credentials here!"}
 //                                 </Link>
 //                             </Grid>
@@ -203,7 +233,7 @@ function App() {
 //     );
 // }
 
-export default App
+
 // export default withAuthenticator(App);
 // =============================
 // 6chl57dkfs39u98dg140fpo931

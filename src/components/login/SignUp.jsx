@@ -27,7 +27,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 const initialFormState = {
-    username: "", email: "", password: "", newPassword: "", authCode: "", formType: "signIn"
+    username: "", password: "", newPassword: "", authCode: "", formType: "signIn"
 }
 
 // from https://docs.amplify.aws/lib/auth/emailpassword/q/platform/js#sign-out
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function LoginPage() {
+function SignUp() {
     const classes = useStyles();
     const [formState, updateFormState] = useState(initialFormState)
     function onChange(e){
@@ -86,28 +86,18 @@ function LoginPage() {
         updateFormState(() =>({...formState, [e.target.name]: e.target.value}))
     }
     const {formType} = formState
-    async function signIn(e) {
+    async function signUp(e) {
         e.preventDefault()
-        const {email, password} = formState
+        const { username, email, password} = formState
         try {
-            // const username = this.signupForm.get('email').value.toLowerCase( ),
-            //     password: this.signupForm.get('password').value,
-            await Auth.signIn(email, password);
-            updateFormState(() =>({...formState, formType: "signedIn"}))
-            // whatNext()
-        } catch (error) {
+                await Auth.signUp({username, password, attributes: {email}})
+                updateFormState(() => ({ ...formState, formType: "confirmSignUp"}))
+                window.location.replace('/ConfirmSignUp')
+            }
+         catch (error) {
             console.log('error signing in', error);
         }
     }
-    // function whatNext(){
-    //     const {formType} = formState
-    //     if (formType === "signedIn" ){
-    //         window.location.replace('/Home');
-    //     }
-        // else{
-        //     window.location.replace('/ConfirmSignUp');
-        // }
-    // }
 
     return (
         <div className="App"> {
@@ -122,7 +112,7 @@ function LoginPage() {
                                     <LockOutlinedIcon />
                                 </Avatar>
                                 <Typography component="h1" variant="h5">
-                                    Sign in
+                                    Sign Up
                                 </Typography>
                                 <form className={classes.form} noValidate>
                                     <TextField
@@ -130,8 +120,21 @@ function LoginPage() {
                                         margin="normal"
                                         required
                                         fullWidth
+                                        name="username"
+                                        label="username"
+                                        type="username"
+                                        id="username"
+                                        autoComplete="username"
+                                        placeholder="username"
+                                        onChange= {onChange}
+                                    />
+                                    <TextField
+                                        variant="outlined"
+                                        margin="normal"
+                                        required
+                                        fullWidth
                                         id="email"
-                                        label="email"
+                                        label="Email Address"
                                         name="email"
                                         autoComplete="email"
                                         autoFocus
@@ -161,7 +164,7 @@ function LoginPage() {
                                         variant="contained"
                                         color="primary"
                                         className={classes.submit}
-                                        onClick={signIn}
+                                        onClick={signUp}
                                     >
                                         Sign In
                                     </Button>
@@ -172,8 +175,8 @@ function LoginPage() {
                                         {/*    </Link>*/}
                                         {/*</Grid>*/}
                                         <Grid item>
-                                            <Link href="/ConfirmCredentials" variant="body2">
-                                                {"SignUp Here!"}
+                                            <Link href="/ConfirmSignUp" variant="body2">
+                                                {"SignIn using temporary password"}
                                             </Link>
                                         </Grid>
                                     </Grid>
@@ -189,14 +192,14 @@ function LoginPage() {
         }
             {
                 formType === "signedIn" && (
-                    <h1> Connect home page component here! </h1>
+                    <h1> Made it to Page 2! </h1>
                 )
             }
         </div>
     );
 }
 
-export default LoginPage
+export default SignUp
 // export default withAuthenticator(App);
 // =============================
 // 6chl57dkfs39u98dg140fpo931
