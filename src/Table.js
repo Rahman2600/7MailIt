@@ -1,4 +1,11 @@
 import React from "react";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from "react-router-dom";
+import CampaignPage from "./CampaignPage";
 
 class Table extends React.Component {
     constructor(props) {
@@ -53,7 +60,13 @@ class Table extends React.Component {
             return content;
         } else if (type === "object") {
             if (Object.keys(content)[0] === "button") {
-                return <button className="btn btn-light"> {content.button} </button>; 
+                return (
+                    <Link 
+                    className="btn btn-light"
+                    role="button"
+                    to="/campaignPage"> 
+                    {content.button}
+                    </Link>)
             }
         }
     }
