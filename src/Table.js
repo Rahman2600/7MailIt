@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-  } from "react-router-dom";
-import CampaignPage from "./CampaignPage";
+import { Link } from "react-router-dom";
 
 class Table extends React.Component {
     constructor(props) {
@@ -47,28 +41,35 @@ class Table extends React.Component {
             this.props.data.columns.map((current, j) => { 
                 return (
                     <td key={j}> 
-                        {this.renderContent(current.content[i])}
+                        {this.renderContent(current.content[i], i)}
                      </td>
                 )
             })  
         )
     }
 
-    renderContent(content) {
+    renderContent(content, row) {
         let type = typeof content;
         if (type === "string") {
             return content;
         } else if (type === "object") {
             if (Object.keys(content)[0] === "button") {
                 return (
-                    <Link 
-                    className="btn btn-light"
-                    role="button"
-                    to="/campaignPage"> 
-                    {content.button}
-                    </Link>)
+                    <div>
+                        <Link 
+                            className="btn btn-light"
+                            role="button"
+                            to={`/campaignPage/${this.getTemplateKey(row)}`}> 
+                            {content.button}
+                        </Link>
+                    </div>)
             }
         }
+    }
+
+    getTemplateKey(row) {
+        let keys = this.props.data.columns[0].content;
+        return keys[row];
     }
 }
 

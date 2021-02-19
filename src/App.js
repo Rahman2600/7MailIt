@@ -66,7 +66,7 @@ function App() {
             <Table data={table} />
             <HomePageRight />
           </Route>
-          <Route exact path="/campaignPage" component={CampaignPage}>
+          <Route path="/campaignPage/:templateKey" component={CampaignPage}>
           </Route>
         </Switch>
       </Router>
