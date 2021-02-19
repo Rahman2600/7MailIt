@@ -1,17 +1,4 @@
-import logo from './logo.svg';
-import './App.css';
-// import login from "./components/loginPage/login";
-// Added by Franco Feb 16 -  next 3 lines
-// import Amplify, { Auth } from 'aws-amplify';
-import {Auth, Hub } from 'aws-amplify';
-import awsconfig from './aws-exports';
-// import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
-import React, {useState, useEffect} from "react";
-// Amplify.configure(awsconfig);
-// import loginImage from "./images/hsbcLoginSummerWinter.jpg";
-
-
-// material-ui
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -22,17 +9,16 @@ import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { Auth } from 'aws-amplify';
+
 const initialFormState = {
     username: "", password: "", newPassword: "", authCode: "", formType: "signIn"
 }
-
-// from https://docs.amplify.aws/lib/auth/emailpassword/q/platform/js#sign-out
-
-
 // function Copyright() {
 //     return (
 //         <Typography variant="body2" color="textSecondary" align="center">
@@ -51,8 +37,7 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh',
     },
     image: {
-        backgroundImage: 'url(https://create.hsbc/content/dam/brandhub/homeassets/IceHex.jpg)',
-            // 'url(https://source.unsplash.com/random)',
+        backgroundImage: 'url(https://source.unsplash.com/random)',
         backgroundRepeat: 'no-repeat',
         backgroundColor:
             theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
@@ -78,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function App() {
+export default function ConfirmCredentials() {
     const classes = useStyles();
     const [formState, updateFormState] = useState(initialFormState)
     function onChange(e){
@@ -86,20 +71,37 @@ function App() {
         updateFormState(() =>({...formState, [e.target.name]: e.target.value}))
     }
     const {formType} = formState
-    async function signIn(e) {
+
+    async function confirmSignIn(e) {
         e.preventDefault()
-        const {username, password} = formState
-        try {
-            await Auth.signIn(username, password);
-            updateFormState(() =>({...formState, formType: "signedIn"}))
-        } catch (error) {
-            console.log('error signing in', error);
-        }
+        const {username, password, newPassword} = formState
+        Auth.signIn(username, password)
+            .then(user => {
+                if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+                    // const {requiredAttributes} = user.challengeParam; // the array of required attributes, e.g ['email', 'phone_number']
+                    Auth.completeNewPassword(
+                        user,               // the Cognito User Object
+                        newPassword,       // the new password
+                        // OPTIONAL, the required attributes
+                        // {
+                        //     email: 'xxxx@example.com',
+                        //     phone_number: '1234567890'
+                        // }
+                    ).then(user => {
+                        // at this time the user is logged in if no MFA required
+                        console.log(user);
+                    }).catch(e => {
+                        console.log(e);
+                    });
+                } else {
+                    // other situations
+                }
+            }).catch(e => {
+            console.log(e);
+        })
     }
+
     return (
-        <div className="App"> {
-            formType === "signIn" &&  (
-                <div>
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
             <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -122,8 +124,6 @@ function App() {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            placeholder="email"
-                            onChange= {onChange}
                         />
                         <TextField
                             variant="outlined"
@@ -131,12 +131,32 @@ function App() {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="Temporary Password"
                             type="password"
                             id="password"
                             autoComplete="current-password"
-                            placeholder="password"
-                            onChange= {onChange}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="New Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Confirm New Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
@@ -148,7 +168,7 @@ function App() {
                             variant="contained"
                             color="primary"
                             className={classes.submit}
-                            onClick={signIn}
+                            onClick={confirmSignIn}
                         >
                             Sign In
                         </Button>
@@ -159,8 +179,8 @@ function App() {
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="./components/ConfirmCredentials" variant="body2">
-                                    {"First time signing in? Confirm your credentials here!"}
+                                <Link href="#" variant="body2">
+                                    {"Already Confirmed? Sign In!"}
                                 </Link>
                             </Grid>
                         </Grid>
@@ -171,71 +191,5 @@ function App() {
                 </div>
             </Grid>
         </Grid>
-        </div>
-            )
-        }
-            {
-        formType === "signedIn" && (
-            <h1> Made it to Page 2! </h1>
-        )
-            }
-        </div>
     );
 }
-
-export default App
-// export default withAuthenticator(App);
-
-
-
-// async function signOut() {
-//     try {
-//         await Auth.signOut();
-//     } catch (error) {
-//         console.log('error signing out: ', error);
-//     }
-// }
-//
-// function App() {
-//     const [formState, updateFormState] = useState(initialFormState)
-//     function onChange(e){
-//         e.persist()
-//         updateFormState(() =>({...formState, [e.target.name]: e.target.value}))
-//     }
-//     const {formType} = formState
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//           {/*<Authenticator hideDefault={true}>*/}
-//           <h2>This AWS sucks</h2>
-//           {/*    <login/>*/}
-//           {/*</Authenticator>*/}
-//       </header>
-//     </div>
-//   );
-// }
-
-// const App = () => (
-//     <div>
-//       <login/>
-//     </div>
-// );
-
-
-
-
-
-
-
-// from https://docs.amplify.aws/lib/auth/emailpassword/q/platform/js#sign-out
-// async function resendConfirmationCode() {
-//     try {
-//         await Auth.resendSignUp(username);
-//         console.log('code resent successfully');
-//     } catch (err) {
-//         console.log('error resending code: ', err);
-//     }
-// }
-
-// Password recovery implementation was not implemented as this is a MVP project, otherwise view:
-// https://docs.amplify.aws/lib/auth/manageusers/q/platform/js#retrieve-current-authenticated-user
