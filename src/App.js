@@ -45,10 +45,10 @@ function App() {
         <BrowserRouter>
                 <Switch>
                     <Route path="/" component={LoginPage} exact/>
-                    <Route path="/SignUp" component={SignUp}/>
-                    <Route path="/ConfirmSignUp" component={ConfirmSignUp}/>
+                    {/*<Route path="/SignUp" component={SignUp}/>*/}
+                    {/*<Route path="/ConfirmSignUp" component={ConfirmSignUp}/>*/}
                     <Route path="/ConfirmCredentials" component={ConfirmCredentials}/>
-                    <Route path="/Home" component={Home}/>
+                    {/*<Route path="/Home" component={Home}/>*/}
                 </Switch>
         </BrowserRouter>
     );
