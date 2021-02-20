@@ -10,11 +10,11 @@ import axios from 'axios'
 // Initializing S3 Interface
 const s3 = new AWS.S3({
     accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY
+    secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+    region: 'us-east-1'
 });
 
 const uploadFile = (fileName,fileInput,BUCKET_NAME) => {
-    console.log(process.env.AWS_ACCESS_KEY_ID)
     // read content from the file
     const fileContent = fileInput;
 
@@ -24,7 +24,6 @@ const uploadFile = (fileName,fileInput,BUCKET_NAME) => {
         Key: fileName, // file name you want to save as
         Body: fileContent
     };
-
     // Uploading files to the bucket
     s3.upload(params, function(err, data) {
         if (err) {

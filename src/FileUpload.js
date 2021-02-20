@@ -4,11 +4,12 @@ import {convertToTemplate,uploadFile} from "./aws_util"
 class FileUpload extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { selectedFile: '', error: null }
-        this.errors = Object.freeze({
+        this.state = { selectedFile: '', message: null }
+        this.messages = Object.freeze({
             WRONG_FILE_TYPE:   "Wrong template file type. Upload a .doc or .docx file",
             UPLOAD_FAIL:  "Upload Failure",
-            NO_FILE: "Please upload an Email template document"
+            NO_FILE: "Please upload an Email template document",
+            SUCCESS: "Sucessfully uploaded file"
         });
         this.onFileChange = this.onFileChange.bind(this);
         this.onFileUpload = this.onFileUpload.bind(this);
@@ -18,9 +19,12 @@ class FileUpload extends React.Component {
         return (
             <div>
                 <button className="btn btn-light btn-block mt-5" onClick={this.onFileUpload}> Upload New Template </button>
-                {this.state.error != null ? 
-                    <div className="alert alert-danger" role="alert">
-                        {`Error: ${this.state.error}`} 
+                {this.state.message != null ? 
+                    <div 
+                    className={
+                        this.state.message === this.messages.SUCCESS ? "alert alert-success" : "alert alert-danger" } 
+                        role="alert">
+                        {`${this.state.message}`} 
                     </div>
                     :
                     <div></div>
@@ -42,27 +46,29 @@ class FileUpload extends React.Component {
     onFileUpload() {
         var allowedExtensions = /(\.doc|\.docx)$/i;
         var fileInput = this.state.selectedFile;
+        console.log(fileInput);
         var filePath;
+
         if (fileInput) {
             filePath = fileInput.name;
         }
+
         if (!fileInput) {
-            this.setState({error: this.errors.NO_FILE });
+            this.setState({message: this.messages.NO_FILE });
         } else if(!allowedExtensions.exec(filePath)){    
-            this.setState({error: this.errors.WRONG_FILE_TYPE });
-        } 
-        // else {
-        //     this.setState({ error: null });
-        // }
+            this.setState({message: this.messages.WRONG_FILE_TYPE });
+        } else {
+            try{
+                uploadFile(fileInput.name,fileInput, 'docxtemplates');
+                //convertToTemplate() - TODO for Matt. Just edit the convertToTemplate.mjs file.
+                this.setState({ message: this.messages.SUCCESS });
+                } catch(error) { 
+                    console.log(error);
+                    this.setState({ message: this.messages.UPLOAD_FAIL });
+            }    
+        }
         
-        try{
-            uploadFile(fileInput.name,fileInput, 'docxtemplates');
-            //convertToTemplate() - TODO for Matt. Just edit the convertToTemplate.mjs file.
-            
-            } catch(error) { 
-            //TODO for Abdurahman. Show error message on front-end if SDK or API has an error.
-            }
-            
+          
     }
 }
 
