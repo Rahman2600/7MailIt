@@ -173,7 +173,7 @@ function LoginPage() {
                                         {/*</Grid>*/}
                                         <Grid item>
                                             <Link href="/ConfirmCredentials" variant="body2">
-                                                {"SignUp Here!"}
+                                                {"Update Temporary Password Here!"}
                                             </Link>
                                         </Grid>
                                     </Grid>
