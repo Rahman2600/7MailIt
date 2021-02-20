@@ -10,10 +10,10 @@ import React, {useState, useEffect} from "react";
 // Amplify.configure(awsconfig);
 // import loginImage from "./images/hsbcLoginSummerWinter.jpg";
 import LoginPage from "./components/login/LoginPage"
-import ConfirmSignUp from "./components/login/ConfirmSignUp"
+import ConfirmSignUp from "./components/login/Refactor-ConfirmSignUp"
 import ConfirmCredentials from "./components/login/ConfirmCredentials"
 import Home from "./components/home/Home"
-import SignUp from "./components/login/SignUp"
+import SignUp from "./components/login/Refactor-SignUp"
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Auth from 'aws-amplify';
 
