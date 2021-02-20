@@ -18,7 +18,7 @@ class FileUpload extends React.Component {
             <div>
                 <button className="btn btn-light btn-block mt-5" onClick={this.onFileUpload}> Upload New Template </button>
                 {this.state.error != null ? 
-                    <div class="alert alert-danger" role="alert">
+                    <div className="alert alert-danger" role="alert">
                         {`Error: ${this.state.error}`} 
                     </div>
                     :
@@ -34,11 +34,13 @@ class FileUpload extends React.Component {
     }
 
     onFileChange(event) {
+        console.log(event.target.files[0]);
         this.setState({ selectedFile: event.target.files[0] });
     }
 
     onFileUpload() {
-        if (this.state.selectedFile === '') {
+        this.setState({ error: null });
+        if (this.state.selectedFile === '' ||  this.state.selectedFile === undefined) {
             this.setState({error: this.errors.NO_FILE });
             return;
         }
@@ -48,7 +50,6 @@ class FileUpload extends React.Component {
         console.log(filePath);
         if(!allowedExtensions.exec(filePath)){
             this.setState({error: this.errors.WRONG_FILE_TYPE });
-            // alert('Please upload file having extensions .doc or docx only.');
             //fileInput.value = '';
             return false;
         }
