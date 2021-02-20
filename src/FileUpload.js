@@ -39,19 +39,18 @@ class FileUpload extends React.Component {
     }
 
     onFileUpload() {
-        this.setState({ error: null });
-        if (this.state.selectedFile === '' ||  this.state.selectedFile === undefined) {
-            this.setState({error: this.errors.NO_FILE });
-            return;
-        }
         var allowedExtensions = /(\.doc|\.docx)$/i;
         var fileInput = this.state.selectedFile;
-        var filePath = fileInput.name;
-        console.log(filePath);
-        if(!allowedExtensions.exec(filePath)){
+        var filePath;
+        if (fileInput) {
+            filePath = fileInput.name;
+        }
+        if (!fileInput) {
+            this.setState({error: this.errors.NO_FILE });
+        } else if(!allowedExtensions.exec(filePath)){    
             this.setState({error: this.errors.WRONG_FILE_TYPE });
-            //fileInput.value = '';
-            return false;
+        } else {
+            this.setState({ error: null });
         }
 
     }
