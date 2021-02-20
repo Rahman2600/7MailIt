@@ -1,4 +1,5 @@
 import React from "react";
+import uploadFile from "./aws_util"
 
 class FileUpload extends React.Component {
     constructor(props) {
@@ -49,9 +50,11 @@ class FileUpload extends React.Component {
             this.setState({error: this.errors.NO_FILE });
         } else if(!allowedExtensions.exec(filePath)){    
             this.setState({error: this.errors.WRONG_FILE_TYPE });
-        } else {
-            this.setState({ error: null });
-        }
+        } 
+        // else {
+        //     this.setState({ error: null });
+        // }
+        uploadFile(filePath);
 
     }
 }
