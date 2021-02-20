@@ -1,5 +1,5 @@
-import fs from 'fs';
 import AWS from 'aws-sdk'
+import axios from 'axios'
 
 // Enter copied or downloaded access id and secret here
 
@@ -9,13 +9,14 @@ import AWS from 'aws-sdk'
 
 // Initializing S3 Interface
 const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY
 });
 
-const uploadFile = (fileName,BUCKET_NAME) => {
+const uploadFile = (fileName,fileInput,BUCKET_NAME) => {
+    console.log(process.env.AWS_ACCESS_KEY_ID)
     // read content from the file
-    const fileContent = fs.readFileSync(fileName);
+    const fileContent = fileInput;
 
     // setting up s3 upload parameters
     const params = {
@@ -33,5 +34,14 @@ const uploadFile = (fileName,BUCKET_NAME) => {
     });
 };
 
-// Enter the file you want to upload here
-export default uploadFile;
+//convertToTemplate() - TODO for Matt.
+const convertToTemplate = async () => {
+    try {
+      const res = await axios.put(`website/endpoint`);
+      const todos = res.data;  
+      return todos;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+export {convertToTemplate,uploadFile}

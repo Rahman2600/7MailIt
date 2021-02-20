@@ -1,5 +1,5 @@
 import React from "react";
-import uploadFile from "./aws_util"
+import {convertToTemplate,uploadFile} from "./aws_util"
 
 class FileUpload extends React.Component {
     constructor(props) {
@@ -54,8 +54,15 @@ class FileUpload extends React.Component {
         // else {
         //     this.setState({ error: null });
         // }
-        uploadFile(filePath);
-
+        
+        try{
+            uploadFile(fileInput.name,fileInput, 'docxtemplates');
+            //convertToTemplate() - TODO for Matt. Just edit the convertToTemplate.mjs file.
+            
+            } catch(error) { 
+            //TODO for Abdurahman. Show error message on front-end if SDK or API has an error.
+            }
+            
     }
 }
 
