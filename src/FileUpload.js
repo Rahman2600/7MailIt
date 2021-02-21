@@ -57,11 +57,11 @@ class FileUpload extends React.Component {
         
         try{
             uploadFile(fileInput.name,fileInput, 'docxtemplates');
-            //convertToTemplate() - TODO for Matt. Just edit the convertToTemplate.mjs file.
+            convertToTemplate(fileInput.name, "docxtemplates");
             
-            } catch(error) { 
+        } catch(error) { 
             //TODO for Abdurahman. Show error message on front-end if SDK or API has an error.
-            }
+        }
             
     }
 }

@@ -34,10 +34,16 @@ const uploadFile = (fileName,fileInput,BUCKET_NAME) => {
     });
 };
 
-//convertToTemplate() - TODO for Matt.
-const convertToTemplate = async () => {
+const convertToTemplate = async (fileName, bucketName) => {
+    console.log("made it top");
     try {
-      const res = await axios.put(`website/endpoint`);
+      const res = await axios.post(`https://q6z3mxhv9d.execute-api.us-east-1.amazonaws.com/v1/template`, {
+          bucket: bucketName,
+          key: fileName
+      }).catch(err => {
+         console.log('Template was not created successfully');
+      });
+      console.log("made it");
       const todos = res.data;  
       return todos;
     } catch (e) {
