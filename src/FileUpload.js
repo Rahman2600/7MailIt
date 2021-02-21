@@ -56,8 +56,11 @@ class FileUpload extends React.Component {
         // }
         
         try{
-            uploadFile(fileInput.name,fileInput, 'docxtemplates');
-            convertToTemplate(fileInput.name, "docxtemplates");
+            uploadFile(fileInput.name,fileInput, 'docxtemplates').then(() => {
+                convertToTemplate(fileInput.name, "docxtemplates");
+            }).catch(err => {
+                //Display error message
+            });
             
         } catch(error) { 
             //TODO for Abdurahman. Show error message on front-end if SDK or API has an error.

@@ -13,11 +13,10 @@ const s3 = new AWS.S3({
     secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY
 });
 
-const uploadFile = (fileName,fileInput,BUCKET_NAME) => {
-    console.log(process.env.AWS_ACCESS_KEY_ID)
+const uploadFile = async (fileName,fileInput,BUCKET_NAME) => {
     // read content from the file
     const fileContent = fileInput;
-
+    
     // setting up s3 upload parameters
     const params = {
         Bucket: BUCKET_NAME,
@@ -26,28 +25,36 @@ const uploadFile = (fileName,fileInput,BUCKET_NAME) => {
     };
 
     // Uploading files to the bucket
-    s3.upload(params, function(err, data) {
-        if (err) {
-            throw err
-        }
-        console.log(`File uploaded successfully. ${data.Location}`)
+    return new Promise(function (resolve, reject) {
+        s3.upload(params, (err, data) => {
+            if (err) {
+                reject(err);
+            }
+            console.log(`File uploaded successfully. ${data.Location}`)
+            resolve();
+        });
     });
+    
 };
 
 const convertToTemplate = async (fileName, bucketName) => {
-    console.log("made it top");
     try {
-      const res = await axios.post(`https://q6z3mxhv9d.execute-api.us-east-1.amazonaws.com/v1/template`, {
+     var header = { headers: {
+        "x-api-key": "lvzGHPPiCF5H0RHg23ZS2wjFwMtaLig6KlYC7vP2"
+     }};
+     var body = {
           bucket: bucketName,
           key: fileName
-      }).catch(err => {
-         console.log('Template was not created successfully');
+      };
+      const res = await axios.post(`https://q6z3mxhv9d.execute-api.us-east-1.amazonaws.com/v1/template`, 
+                                    body, header).catch(err => {
+         console.error('Template was not created successfully', err);
       });
-      console.log("made it");
       const todos = res.data;  
       return todos;
     } catch (e) {
       console.error(e);
     }
-  };
+};
+
 export {convertToTemplate,uploadFile}
