@@ -54,3 +54,7 @@ text-align: 'center',
   border: 3px solid black;
 }
 
+img {
+	height: auto;
+	max-width: 100%;
+}
