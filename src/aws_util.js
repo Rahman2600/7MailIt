@@ -10,7 +10,8 @@ import axios from 'axios'
 // Initializing S3 Interface
 const s3 = new AWS.S3({
     accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY
+    secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+    region: 'us-east-1'
 });
 
 const uploadFile = async (fileName,fileInput,BUCKET_NAME) => {
