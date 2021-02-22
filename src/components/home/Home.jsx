@@ -1,4 +1,10 @@
-
+// async function signOut() {
+//     try {
+//         await Auth.signOut();
+//     } catch (error) {
+//         console.log('error signing out: ', error);
+//     }
+// }
 
 function Home() {
     return (
@@ -6,3 +12,4 @@ function Home() {
     )}
 
 export default Home
+
