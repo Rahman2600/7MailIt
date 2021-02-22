@@ -24,7 +24,10 @@ const uploadFile = async (fileName,fileInput,BUCKET_NAME) => {
         Body: fileContent
     };
 
-    // Uploading files to the bucket
+    /* Uploading files to the bucket
+    * This needs to be wrapped in a promise to ensure that the file upload is complete 
+    * before any subsequent process can be initiated.
+    */
     return new Promise(function (resolve, reject) {
         s3.upload(params, (err, data) => {
             if (err) {
@@ -38,18 +41,26 @@ const uploadFile = async (fileName,fileInput,BUCKET_NAME) => {
 };
 
 const convertToTemplate = async (fileName, bucketName) => {
+    
     try {
      var header = { headers: {
-        "x-api-key": "lvzGHPPiCF5H0RHg23ZS2wjFwMtaLig6KlYC7vP2"
+        "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_API_KEY
      }};
+
      var body = {
           bucket: bucketName,
           key: fileName
       };
+
+      //Create and send API request to /template endpoint
       const res = await axios.post(`https://q6z3mxhv9d.execute-api.us-east-1.amazonaws.com/v1/template`, 
                                     body, header).catch(err => {
          console.error('Template was not created successfully', err);
       });
+      
+      /*TODO: Below is placeholder code to implement after the email template log
+      * grid is integrated with all stored email template logs in dynamodb
+      */
       const todos = res.data;  
       return todos;
     } catch (e) {
