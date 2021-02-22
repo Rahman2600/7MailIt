@@ -1,8 +1,13 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+//next 3 lines added by Franco
+import Amplify from 'aws-amplify'
+import config from './aws-exports'
+Amplify.configure(config)
 
 ReactDOM.render(
   <React.StrictMode>

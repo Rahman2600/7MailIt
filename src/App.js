@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import './App.css';
+import React, {useState, useEffect} from "react";
+import LoginPage from "./components/login/LoginPage"
+import Home from "./components/home/Home"
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Auth from 'aws-amplify';
+
+const initialFormState = {
+    username: "", email: "", password: "", newPassword: "", authCode: "", formType: "signIn"
 }
 
-export default App;
+function App() {
+    const [formState, updateFormState] = useState(initialFormState)
+    const [user, updateUser] = useState(null)
+
+    useEffect(() => {
+        checkUser()
+    },
+        [])
+
+    async function checkUser() {
+        try {
+            const user = await Auth.currentAuthenticatedUser()
+            updateUser(user)
+            updateFormState(() =>({...formState, formType: "signedIn"}))
+        }
+        catch (err){
+            updateUser(null)
+        }
+    }
+    return (
+        <BrowserRouter>
+                <Switch>
+                    <Route path="/" component={LoginPage} exact/>
+                    {/*<Route path="/Home" component={Home}/>*/}
+                </Switch>
+        </BrowserRouter>
+    );
+}
+
+export default App
