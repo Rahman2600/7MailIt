@@ -17,6 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
+import {Redirect} from "react-router";
 
 const initialFormState = {
     username: "", email: "", password: "", newPassword: "", authCode: "", formType: "signIn"
@@ -284,7 +285,7 @@ function LoginPage() {
             }
             {
                 formType === "signedIn" && (
-                    <h1> Connect home page component here! </h1>
+                    <Redirect to="/HomePage" />
                 )
             }
         </div>
