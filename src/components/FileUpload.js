@@ -59,16 +59,17 @@ class FileUpload extends React.Component {
             this.setState({message: this.messages.WRONG_FILE_TYPE });
         } else {
             try{
-                uploadFile(fileInput.name,fileInput, 'docxtemplates');
-                //convertToTemplate() - TODO for Matt. Just edit the convertToTemplate.mjs file.
-                this.setState({ message: this.messages.SUCCESS });
-                } catch(error) { 
-                    console.log(error);
-                    this.setState({ message: this.messages.UPLOAD_FAIL });
+                uploadFile(fileInput.name,fileInput, 'docxtemplates').then(() => {
+                    convertToTemplate(fileInput.name, "docxtemplates").then(() => {   
+                        this.setState({ message: this.messages.SUCCESS });
+                    });
+                });
+            } catch(error) { 
+                console.log(error);
+                this.setState({ message: this.messages.UPLOAD_FAIL + error });
             }    
         }
-        
-          
+            
     }
 }
 
