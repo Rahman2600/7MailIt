@@ -1,8 +1,8 @@
 import React from "react";
-import "./App.css";
-import scrap from './assets/scrap.png'; 
-import multipleUserLogo from './assets/multipleUserLogo.png'; 
-import userLogo from './assets/userLogo.png'; 
+import "../App.css";
+import scrap from '../assets/scrap.png';
+import multipleUserLogo from '../assets/multipleUserLogo.png';
+import userLogo from '../assets/userLogo.png';
 var AWS = require('aws-sdk');
 var S3 = require('aws-sdk/clients/s3');
 var mammoth = require("mammoth");
