@@ -55,10 +55,7 @@ const convertToTemplate = async (fileName, bucketName) => {
 
       //Create and send API request to /template endpoint
       const res = await axios.post(`https://q6z3mxhv9d.execute-api.us-east-1.amazonaws.com/v1/template`, 
-                                    body, header).catch(err => {
-         console.error('Template was not created successfully', err);
-      });
-      
+                                    body, header);
       /*TODO: Below is placeholder code to implement after the email template log
       * grid is integrated with all stored email template logs in dynamodb
       */
