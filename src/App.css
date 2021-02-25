@@ -1,0 +1,60 @@
+.left-component {
+  float: left;
+  width: 75%;
+}
+.right-component {
+  float:right;
+  width: 25%;
+}
+.top-buffer { 
+  margin-top:30mm;
+  margin-left:-2cm
+
+}
+body{
+  margin:30px, 
+}
+.my-container{
+border: 1px white;
+width: 100%;
+height: 100%;
+position: fixed;
+top: 0;
+left: 0;
+bottom: 0;
+right: 0;
+overflow: auto;
+text-align: 'center',
+
+}
+.my-rows{
+  border: 1px solid white;
+}
+.my-row{
+  padding-left: 30px;
+}
+
+.my-row1{
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-left: 30px;
+}
+
+.my-row2{
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-top: 30px;
+}
+.my-row3{
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-left: 500px;
+}
+.my-col{
+  border: 3px solid black;
+}
+
+img {
+	height: auto;
+	max-width: 100%;
+}
