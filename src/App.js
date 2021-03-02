@@ -34,7 +34,7 @@ function App() {
             },
             {
                 title: "Status",
-                content: [{button: "Ready"}, "Upload"]
+                content: [{button: {displayName: "Ready", link: "/campaignPage/3fda23114tdf5"}}, "Upload"]
             },
             {
                 title: "Dynamic Values",
@@ -42,7 +42,7 @@ function App() {
             },
             {
                 title: "Details",
-                content: [{button: "View"}, {button: "View"}]
+                content: [{button: {displayName: "View", link: "/HomePage"}}, {button: {displayName: "View", link: "/HomePage"}}]
             }
         ]
     }
