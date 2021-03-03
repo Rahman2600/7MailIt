@@ -93,34 +93,44 @@ class HomePageTable extends React.Component {
         let content = [];
         for (let row of data.body) {
            let apiName = columnTitle.apiName;
-            if (columnTitle.displayName === "Details") {
-                content.push({button: {displayName: "View", link: "/HomePage"}});
-           } else if (columnTitle.displayName === "No. of Campaigns") {
-                content.push("TODO");
-           } else if (columnTitle.displayName === "Status") {
-               let value = row[columnTitle.apiName];
-               if (value == "Ready") {
-                content.push({button: {displayName:"Ready", link:""}});
-               } else {
-                content.push(value);
-               }
-
-           } else if (columnTitle.displayName === "Upload Date") {
-                let value = row[columnTitle.apiName];
-                if (value) {
-                    let dateObj = new Date(value);
-                    var date = dateObj.getDate();
-                    var month = dateObj.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
-                    var year = dateObj.getFullYear();
-                        
-                    var dateString = date + "/" + month + "/" + year;
-                    content.push(dateString);
-                } else {
-                    content.push(" ");
+            switch (columnTitle.displayName) {
+                case "Details": {
+                    content.push({button: {displayName: "View", link: "/HomePage"}});
+                    break;
                 }
-           } else if (apiName) {
-            content.push(row[columnTitle.apiName]);
-          }
+                case "No. of Campaigns": {
+                    content.push("TODO");
+                    break;
+                }
+                case "Status": {
+                    let value = row[columnTitle.apiName];
+                    if (value == "Ready") {
+                        content.push({button: {displayName:"Ready", link:""}});
+                    } else {
+                        content.push(value);
+                    }
+                    break;
+                }
+                case "Upload Date": {
+                    let value = row[columnTitle.apiName];
+                    if (value) {
+                        let dateObj = new Date(value);
+                        var date = dateObj.getDate();
+                        var month = dateObj.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+                        var year = dateObj.getFullYear();
+                            
+                        var dateString = date + "/" + month + "/" + year;
+                        content.push(dateString);
+                    } else {
+                        content.push(" ");
+                    }
+                    break;
+                }
+                default:
+                    if (apiName) {
+                        content.push(row[columnTitle.apiName]);
+                    }
+                }
         }
         return content;
     }
