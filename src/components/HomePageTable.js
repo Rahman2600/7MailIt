@@ -52,7 +52,9 @@ class HomePageTable extends React.Component {
 
     componentDidMount() {
         axios.get(DATA_LINK).then(response => {
+            console.log(response.data);
             table = this.dataToTable(response.data);
+            console.log(table);
             this.setState({table: table})
         });
     }
@@ -75,7 +77,7 @@ class HomePageTable extends React.Component {
             {displayName:"Status", apiName: "UploadStatus"},
             {displayName:"Details", apiName: ""}
         ];
-        let table = {numRows: columnTitles.length, columns: []};
+        let table = {columns: []};
         if (data.statusCode === 200) {
             for (let i = 0; i < columnTitles.length; i++) {
                 let columnTitle = columnTitles[i]
@@ -85,6 +87,8 @@ class HomePageTable extends React.Component {
                 });
             }
         }
+        let templateKeyColumn = this.getColumnWithDisplayName("Template Key", table);
+        table.numRows = templateKeyColumn.content.length;
         this.addLinksToCampaignPage(table);
         return table;
     }
