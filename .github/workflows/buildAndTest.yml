@@ -27,6 +27,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.11.0
+          
+      - name: Run a script
+        run: env
 
       # 2: Checkout repository in the CWD
       - name: Checkout repository
