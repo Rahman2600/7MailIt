@@ -13,9 +13,10 @@ class HomePageRight extends React.Component {
                  <Link
                      className="btn btn-light mt-5 ml-5 mr-5 mb-5 float-right"
                      role="button"
+                     id="logOutButton"
                      to={"/"}>LogOut
                  </Link>
-                <button className="btn btn-light btn-block mt-5"> View Job Logs </button>
+                <button  id="viewLogButton" className="btn btn-light btn-block mt-5"> View Job Logs </button>
                 <FileUpload />
             </div> 
         )

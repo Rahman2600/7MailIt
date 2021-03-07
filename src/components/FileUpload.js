@@ -31,7 +31,7 @@ class FileUpload extends React.Component {
                 }
                 <form>
                     <div className="form-group">
-                        <input type="file" className="form-control-file" id="file" onChange={this.onFileChange}/>
+                        <input type="file" className="form-control-file" id="fileUploadButton" onChange={this.onFileChange}/>
                     </div>
                 </form>
             </div>

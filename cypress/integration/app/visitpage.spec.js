@@ -48,5 +48,32 @@ context("Assertions", () => {
     cy.url().should('eq', 'http://localhost:3000/');
 
   });
+  
+
+  describe("Log out test", () => {
+    it('login success and navigates to first template', () => {
+
+      // login
+      cy.get('#email')
+        .should('be.visible')
+        .type('mountainSasquatch00@gmail.com');
+      cy.get('#password')
+        .should('be.visible')
+        .type('teamMailIt!');
+      cy.get('button[type="submit"]')
+        .should('be.visible')
+        .click();
+
+      cy.wait(5000);
+
+      // click logoff
+      cy.get('a[id="logOutButton"]').click();
+      cy.wait(35000);
+
+      // validate login is visible
+      cy.get('#email')
+        .should('be.visible');
+    });
+  });
 });
 

@@ -153,6 +153,7 @@ function LoginPage() {
                                         label="Remember me"
                                     />
                                     <Button
+                                        data-testid="loginpagetypography"
                                         type="submit"
                                         fullWidth
                                         variant="contained"
