@@ -29,7 +29,10 @@ jobs:
           node-version: 14.11.0
           
       - name: Run a script
-        run: env
+        run: |
+          echo ${{secrets.REACT_APP_AWS_ACCESS_KEY_ID}}
+          echo ${{secrets.REACT_APP_AWS_SECRET_ACCESS_KEY}}
+          echo ${{secrets.REACT_APP_AWS_TEMPLATE_API_KEY}}
 
       # 2: Checkout repository in the CWD
       - name: Checkout repository
