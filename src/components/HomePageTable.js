@@ -6,54 +6,16 @@ import Table from "./Table"
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
 
-let table = {
-    numRows: 2, columns: [
-        {
-            title: "Template Key",
-            content: ["3fda23114tdf5",
-                "4s395ter203d4"]
-        },
-        {
-            title: "Template Name",
-            content: ["Offer Notice", "Change of Term"]
-        },
-        {
-            title: "Upload Date",
-            content: ["01/07/2019", "02/09/2017"]
-        },
-        {
-            title: "Team",
-            content: ["Marketing", "Investment"]
-        },
-        {
-            title: "No. of Campaigns",
-            content: ["3", "0"]
-        },
-        {
-            title: "Status",
-            content: [{button: {displayName: "Ready", link: "/campaignPage/3fda23114tdf5"}}, "Upload"]
-        },
-        {
-            title: "Dynamic Values",
-            content: ["NAME AMOUNT", "NAME"]
-        },
-        {
-            title: "Details",
-            content: [{button: {displayName: "View", link: "/HomePage"}}, {button: {displayName: "View", link: "/HomePage"}}]
-        }
-    ]
-}
-
 class HomePageTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {table: {}}
+        this.state = {}
     }
 
     componentDidMount() {
         axios.get(DATA_LINK).then(response => {
             console.log(response.data);
-            table = this.dataToTable(response.data);
+            let table = this.dataToTable(response.data);
             console.log(table);
             this.setState({table: table})
         });
@@ -61,7 +23,7 @@ class HomePageTable extends React.Component {
 
     render() {
         if (this.state.table) {
-            return <Table data={table}/>;
+            return <Table data={this.state.table}/>;
         } else {
             return <div></div>
         }
@@ -86,6 +48,8 @@ class HomePageTable extends React.Component {
                     content: this.getContent(columnTitle, data)
                 });
             }
+        } else {
+            console.log("Request failed with " + data.statusCode)
         }
         let templateKeyColumn = this.getColumnWithDisplayName("Template Key", table);
         table.numRows = templateKeyColumn.content.length;
