@@ -46,7 +46,6 @@ class FileUpload extends React.Component {
     onFileUpload() {
         var allowedExtensions = /(\.doc|\.docx)$/i;
         var fileInput = this.state.selectedFile;
-        console.log(fileInput);
         var filePath;
 
         if (fileInput) {
@@ -60,9 +59,7 @@ class FileUpload extends React.Component {
         } else {
             try{
                 uploadFile(fileInput.name,fileInput, 'docxtemplates').then(() => {
-                    convertToTemplate(fileInput.name, "docxtemplates").then(() => {   
-                        this.setState({ message: this.messages.SUCCESS });
-                    });
+                    this.setState({ message: this.messages.SUCCESS });
                 });
             } catch(error) { 
                 console.log(error);
