@@ -60,11 +60,16 @@ class FileUpload extends React.Component {
             try{
                 uploadFile(fileInput.name,fileInput, 'docxtemplates').then(() => {
                     this.setState({ message: this.messages.SUCCESS });
+                    //TODO: This is a temporary solution to have the newly uploaded template appear on the grid 
+                    //Need a more sophisticated solution 
+                    window.location.reload();
                 });
+
             } catch(error) { 
                 console.log(error);
                 this.setState({ message: this.messages.UPLOAD_FAIL + error });
-            }    
+            }
+
         }
             
     }

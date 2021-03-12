@@ -1,11 +1,25 @@
 import AWS from 'aws-sdk'
 import axios from 'axios'
 import fs from 'fs'
+import { type } from 'os';
 
-const uploadFile = async (fileName,fileInput,BUCKET_NAME) => {
+const uploadFile = async (fileInput,BUCKET_NAME) => {
+    if(typeof(fileInput) !== 'object' || !fileInput instanceof File) {
+        
+        throw Error("File input is not of type File");
+    }
+
+    if((typeof(BUCKET_NAME)) !== "string" || BUCKET_NAME == null) {
+        throw Error("Bucket name is not a string");
+    }
+
+    if(BUCKET_NAME === "") {
+        throw Error("Bucket name cannot be an empty string");
+    }
     // read content from the file
     var fileBase64String = await encodeFileAsBase64String(fileInput);
     var fileType = fileInput.type;
+    var fileName = fileInput.name;
     // setting up s3 upload parameters
     try {
      var header = { headers: {
@@ -22,9 +36,6 @@ const uploadFile = async (fileName,fileInput,BUCKET_NAME) => {
     //Create and send API request to /template endpoint
     const res = await axios.post(`https://q6z3mxhv9d.execute-api.us-east-1.amazonaws.com/v1/template`, 
                                     body, header);
-        //TODO: This is a temporary solution to have the newly uploaded template appear on the grid 
-        //Need a more sophisticated solution 
-        window.location.reload();
     } catch (e) {
       console.error(e);
     }
