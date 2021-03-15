@@ -5,6 +5,7 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import HomePageTable from './components/HomePageTable.js';
 import HomePageRight from "./components/HomePageRight";
 import CampaignPage from "./components/CampaignPage";
+import CampaignLogTable from "./components/CampaignLogTable";
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
                     <Route path="/" component={LoginPage} exact/>
                     <Route exact path="/HomePage"><HomePageTable/><HomePageRight/></Route>
                     <Route path="/campaignPage/:templateKey" component={CampaignPage}/>
+                    <Route path="/campaignLogTable" component={CampaignLogTable}/>
                 </Switch>
             </BrowserRouter>
         </div>

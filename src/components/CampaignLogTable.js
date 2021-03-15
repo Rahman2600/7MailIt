@@ -4,9 +4,9 @@ import axios from 'axios';
 import Table from "./Table"
 
 
-const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
+const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/Logs"
 
-class HomePageTable extends React.Component {
+class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {}
@@ -31,13 +31,12 @@ class HomePageTable extends React.Component {
 
     dataToTable(data) {
         let columnTitles = [
-            {displayName:"Template Key", apiName: "S3Key"}, 
-            {displayName:"Template Name", apiName: "TemplateName"}, 
-            {displayName:"Upload Date", apiName: "DocUploadDateTime"},
-            {displayName:"Team", apiName: "Team"},
-            {displayName:"No. of Campaigns", apiName: ""},
-            {displayName:"Status", apiName: "UploadStatus"},
-            {displayName:"Details", apiName: ""}
+            {displayName:"Date Submitted", apiName: "S3Key"}, 
+            {displayName:"No. of People Emailed", apiName: "TemplateName"}, 
+            {displayName:"No. of Emails Successfully Delivered", apiName: "DocUploadDateTime"},
+            {displayName:"No. of Opened Emails", apiName: "Team"},
+            {displayName:"No. of Links Opened", apiName: ""},
+            {displayName:"Email Log", apiName: "UploadStatus"}
         ];
         let table = {columns: []};
         if (data.statusCode === 200) {
@@ -63,7 +62,7 @@ class HomePageTable extends React.Component {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
                 case "Details": {
-                    content.push({button: {displayName: "View", link: "/CampaignLogTable"}});
+                    content.push({button: {displayName: "View", link: "/HomePage"}});
                     break;
                 }
                 case "No. of Campaigns": {
@@ -126,4 +125,4 @@ class HomePageTable extends React.Component {
 
 }
 
-export default HomePageTable;
+export default CampaignLogTable;
