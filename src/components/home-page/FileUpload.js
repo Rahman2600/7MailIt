@@ -62,7 +62,7 @@ class FileUpload extends React.Component {
                 this.setState({ message: this.messages.SUCCESS });
                 //TODO: This is a temporary solution to have the newly uploaded template appear on the grid 
                 //Need a more sophisticated solution 
-                //window.location.reload();
+                window.location.reload();
             }).catch(error => {
                 console.log(error);
                 this.setState({ message: this.messages.UPLOAD_FAIL + error });
