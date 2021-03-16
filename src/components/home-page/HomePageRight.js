@@ -11,12 +11,18 @@ class HomePageRight extends React.Component {
         return (
              <div className="right-component">
                  <Link
-                     className="btn btn-light mt-5 ml-5 mr-5 mb-5 float-right"
+                     className="btn btn-primary mt-5 ml-5 mr-5 mb-5 float-right"
                      role="button"
                      id="logOutButton"
-                     to={"/"}>LogOut
+                     to={"/"}>Log Out
                  </Link>
-                <button  id="viewLogButton" className="btn btn-light btn-block mt-5"> View Job Logs </button>
+                <Link to="/UnderConstructionPage">
+                    <button  
+                        id="viewLogButton" 
+                        className="btn btn-primary btn-block mt-5"> 
+                        View All Campaign Logs 
+                    </button>
+                </Link>
                 <FileUpload />
             </div> 
         )
