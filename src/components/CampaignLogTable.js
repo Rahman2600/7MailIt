@@ -4,7 +4,7 @@ import axios from 'axios';
 import Table from "./Table"
 
 
-const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/Logs"
+const DATA_LINK = "https://whut97mukj.execute-api.us-east-1.amazonaws.com/v1/campaignlog"
 
 class CampaignLogTable extends React.Component {
     constructor(props) {
@@ -31,12 +31,12 @@ class CampaignLogTable extends React.Component {
 
     dataToTable(data) {
         let columnTitles = [
-            {displayName:"Date Submitted", apiName: "S3Key"}, 
-            {displayName:"No. of People Emailed", apiName: "TemplateName"}, 
-            {displayName:"No. of Emails Successfully Delivered", apiName: "DocUploadDateTime"},
-            {displayName:"No. of Opened Emails", apiName: "Team"},
-            {displayName:"No. of Links Opened", apiName: ""},
-            {displayName:"Email Log", apiName: "UploadStatus"}
+            {displayName:"Date of Campaign Launch", apiName: "SentDateTime"}, 
+            {displayName:"No. of People Emailed", apiName: "NumEmailed"}, 
+            {displayName:"No. of Emails Successfully Delivered", apiName: "NumSuccessful"},
+            {displayName:"No. of Opened Emails", apiName: "NumOpened"},
+            {displayName:"No. of Links Opened", apiName: "NumLinks"},
+            {displayName:"Email Log", apiName: ""}
         ];
         let table = {columns: []};
         if (data.statusCode === 200) {
@@ -52,7 +52,7 @@ class CampaignLogTable extends React.Component {
         }
         let templateKeyColumn = this.getColumnWithDisplayName("Template Key", table);
         table.numRows = templateKeyColumn.content.length;
-        this.addLinksToCampaignPage(table);
+        // this.addLinksToCampaignPage(table);
         return table;
     }
 
@@ -61,23 +61,10 @@ class CampaignLogTable extends React.Component {
         for (let row of data.body) {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
-                case "Details": {
-                    content.push({button: {displayName: "View", link: "/HomePage"}});
-                    break;
-                }
-                case "No. of Campaigns": {
-                    content.push("TODO");
-                    break;
-                }
-                case "Status": {
-                    let value = row[columnTitle.apiName];
-                    if (value == "Ready") {
-                        content.push({button: {displayName:"Ready", link:""}});
-                    } else {
-                        content.push(value);
-                    }
-                    break;
-                }
+                // case "Details": {
+                //     content.push({button: {displayName: "View", link: "/HomePage"}});
+                //     break;
+                // }
                 case "Upload Date": {
                     let value = row[columnTitle.apiName];
                     if (value) {
@@ -102,17 +89,17 @@ class CampaignLogTable extends React.Component {
         return content;
     }
 
-    addLinksToCampaignPage(table) {
-        let templateKeyColumn = this.getColumnWithDisplayName("Template Key", table);
-        let statusColumn = this.getColumnWithDisplayName("Status", table);
-        let content = statusColumn.content;
-        for(let i = 0; i < content.length; i++) {
-            let current = content[i];
-            if (typeof current === "object") {
-                current.button.link = `campaignPage/${templateKeyColumn.content[i]}`;
-            }
-        }
-    }
+    // addLinksToCampaignPage(table) {
+    //     let templateKeyColumn = this.getColumnWithDisplayName("Template Key", table);
+    //     let statusColumn = this.getColumnWithDisplayName("Status", table);
+    //     let content = statusColumn.content;
+    //     for(let i = 0; i < content.length; i++) {
+    //         let current = content[i];
+    //         if (typeof current === "object") {
+    //             current.button.link = `campaignPage/${templateKeyColumn.content[i]}`;
+    //         }
+    //     }
+    // }
 
     getColumnWithDisplayName(displayName, table) {
         for (let column of table.columns) {
