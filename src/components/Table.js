@@ -1,6 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+/**  
+ * Table is passed data 
+ * data is in the form of
+ * {numRows: <number>, columns: [
+ *  <column> 
+ *  (, <column>)*
+ * ]}
+ * <column> ::= {title: <string>, content:[<string>, <button>]} 
+ * <button> ::= {button: {displayName: <string>, link: <string>}}
+ * link should be string in the form of an HTML link e.g "/HomePage"
+ * button links to the route given by link
+*/
+
 class Table extends React.Component {
     constructor(props) {
         super(props);
@@ -41,36 +54,32 @@ class Table extends React.Component {
             this.props.data.columns.map((current, j) => { 
                 return (
                     <td key={j}> 
-                        {this.renderContent(current.content[i], i)}
+                        {this.renderCell(current.content[i], i)}
                      </td>
                 )
             })  
         )
     }
 
-    renderContent(content, row) {
-        let type = typeof content;
+    renderCell(cell, row) {
+        let type = typeof cell;
         if (type === "string") {
-            return content;
+            return cell;
         } else if (type === "object") {
-            if (Object.keys(content)[0] === "button") {
+            if (Object.keys(cell)[0] === "button") {
                 return (
                     <div>
                         <Link 
-                            className="btn btn-light"
+                            className="btn btn-primary"
                             role="button"
-                            to={`/campaignPage/${this.getTemplateKey(row)}`}> 
-                            {content.button}
+                            to={cell.button.link}> 
+                            {cell.button.displayName}
                         </Link>
                     </div>)
             }
         }
     }
 
-    getTemplateKey(row) {
-        let keys = this.props.data.columns[0].content;
-        return keys[row];
-    }
 }
 
 

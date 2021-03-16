@@ -1,11 +1,10 @@
 
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import CampaignPage from './components/CampaignPage'
 import reportWebVitals from './reportWebVitals';
 
 //next 3 lines added by Franco
