@@ -16,4 +16,8 @@ Hopeful Updates for the next sprint.
 2. The campaign log and email log grids will be created and possibly integrated with the template log grid on the home page. 
 3. A single email will be able to be sent from the user interface and hopefully the batch email service will usable with the UI as well 
 4. The delivery status of an email will be reflected in the email log 
-5. Any errors that occur in the upload process will appear as an error message. Currently if an error occurs the messsage sent to the front end is a success message which is not desired. 
+5. Any errors that occur in the upload process will appear as an error message. Currently if an error occurs the messsage displayed in the front end user interface is a success message which is not desired. 
+6. Logs will be paginated such that there is a fixed maximum amount of logs that can appear at once. 
+
+Design Changes 
+1. We have introduced the Campaign Log data type to our data model. Since 1000s of emails can be created in a single campaign we felt the need to create a log for each campaign created to improve accesssibility of the user to email logs that may have occured previously. This log will contain information about when the campaign was created, the number of emails (one or more) included in a campaign, the number of successfully delivered emails, the number of emails that have been opened by users, the number emails that have had at least one link clicked on by a user and a link to all email logs associated with a campaign. Campaign logss will be either accessibile per tempalte from the the tempalte log grid or from the "View All Campaign Logs" button on the right hand side of the home page (which will provide the list of campaign logs created from all templates ordered by date.
