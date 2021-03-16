@@ -4,7 +4,8 @@ import fs from 'fs'
 import { type } from 'os';
 
 const uploadFile = async (fileInput,BUCKET_NAME) => {
-    if(typeof(fileInput) !== 'object' || !fileInput instanceof File) {
+    console.log(fileInput);
+    if(typeof(fileInput) !== 'object' || !(fileInput instanceof File)) {
         
         throw Error("File input is not of type File");
     }
