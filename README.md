@@ -1,4 +1,6 @@
 March 16th, 2021 WIP Updates 
+
+
 Updates Visible In The User Interface 
 1. The home page grid (i.e. the template log grid) is now populated with template logs stored in the dynamodb tTemplateLog. The columns that still require implementation are the Team Column (with the team that uploaded the template), No. of Campaigns (number of campaigns created with this tempalte) and the view button in the Campaign Logs column. Also the Status Column has been changed to the "Create Email Campaign" column, the Details column has been changed to the "Campaign Logs" column, the Template Key column has been changed to the File Name column. 
 2. The "upload new template" section on the right hand side of the home page has been updated such that there is now a submit button that the user will click on after a docx file has been uploaded. 
