@@ -70,7 +70,7 @@ class Table extends React.Component {
                 return (
                     <div>
                         <Link 
-                            className="btn btn-light"
+                            className="btn btn-primary"
                             role="button"
                             to={cell.button.link}> 
                             {cell.button.displayName}

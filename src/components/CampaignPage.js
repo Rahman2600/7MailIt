@@ -7,23 +7,22 @@ var AWS = require('aws-sdk');
 var S3 = require('aws-sdk/clients/s3');
 var mammoth = require("mammoth");
 
-const ACCESS_KEY_ID = "AKIAIQB2ZKEM34KXQX6Q"
-const SECRET_ACCESS_KEY = "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"
 const BUCKET_NAME = "docxtemplates"
 
 AWS.config.update(
     {
-      accessKeyId: ACCESS_KEY_ID,
-      secretAccessKey: SECRET_ACCESS_KEY,
+      accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
     }
   );
 
 class CampaignPage extends React.Component {
     constructor(props) {
+        console.log(props);
         super(props);
         this.state = {templateKey: '', docHtml:''}
         var s3 = new AWS.S3();
-        s3.getObject( { Bucket: BUCKET_NAME, Key: "BasicTemplate_withImage.docx" }, (err, data) => {
+        s3.getObject( { Bucket: BUCKET_NAME, Key: this.props.match.params.templateKey }, (err, data) => {
             if (err) {
                 console.log(err);
                 throw err
