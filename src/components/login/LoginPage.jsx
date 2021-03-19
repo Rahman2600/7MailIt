@@ -58,7 +58,9 @@ const useStyles = makeStyles((theme) => ({
 function LoginPage() {
     const classes = useStyles();
     const [formState, updateFormState] = useState(initialFormState)
-    const [invalidCredentials,setInvalidCredentials] = useState(false); 
+    const [showErrorMsg,setShowErrorMsg] = useState(false); 
+    const [errorMsg,setErrorMsg] = useState(""); 
+
     function onChange(e) {
         e.persist()
         updateFormState(() => ({...formState, [e.target.name]: e.target.value}))
@@ -74,7 +76,13 @@ function LoginPage() {
             updateFormState(() => ({...formState, formType: "signedIn"}))
             // whatNext()
         } catch (error) {
-            setInvalidCredentials(true);
+            setShowErrorMsg(true);
+            if(error.message == "Password attempts exceeded")
+                setErrorMsg("Password attempts exceeded. Please wait before logging back in again.")
+            else if(error.message == "Incorrect username or password.")
+                setErrorMsg("Incorrect username or password")
+            else if(error.code == "UserNotFoundException")
+                setErrorMsg("User doesn't exist")
             console.log('error signing in', error);
         }
     }
@@ -154,7 +162,7 @@ function LoginPage() {
                                         label="Remember me"
                                     />
                                     
-                                    {invalidCredentials?<h6 style={{color: 'red'}}>Invalid Credentials</h6>:null}
+                                    {showErrorMsg?<h6 style={{color: 'red'}}>{errorMsg}</h6>:null}
                                     <Button
                                         data-testid="loginpagetypography"
                                         type="submit"
