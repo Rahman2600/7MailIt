@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 function LoginPage() {
     const classes = useStyles();
     const [formState, updateFormState] = useState(initialFormState)
-
+    const [invalidCredentials,setInvalidCredentials] = useState(false); 
     function onChange(e) {
         e.persist()
         updateFormState(() => ({...formState, [e.target.name]: e.target.value}))
@@ -74,6 +74,7 @@ function LoginPage() {
             updateFormState(() => ({...formState, formType: "signedIn"}))
             // whatNext()
         } catch (error) {
+            setInvalidCredentials(true);
             console.log('error signing in', error);
         }
     }
@@ -152,6 +153,8 @@ function LoginPage() {
                                         control={<Checkbox value="remember" color="primary"/>}
                                         label="Remember me"
                                     />
+                                    
+                                    {invalidCredentials?<h6 style={{color: 'red'}}>Invalid Credentials</h6>:null}
                                     <Button
                                         data-testid="loginpagetypography"
                                         type="submit"
