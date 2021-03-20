@@ -42,9 +42,9 @@ class TemplateLogTable extends React.Component {
     render() {
         if (this.state.table) {
             return ( 
-                    <div className="col-lg-9">
-                        <Table data={this.state.table}/>
-                    </div>
+
+                        <Table data={this.state.table} className="col-lg-9"/>
+   
                     
             );
         } else {
