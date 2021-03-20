@@ -54,14 +54,14 @@ class Table extends React.Component {
             this.props.data.columns.map((current, j) => { 
                 return (
                     <td key={j}> 
-                        {this.renderCell(current.content[i], i)}
+                        {this.renderCell(current.content[i])}
                      </td>
                 )
             })  
         )
     }
 
-    renderCell(cell, row) {
+    renderCell(cell) {
         let type = typeof cell;
         if (type === "string") {
             return cell;
