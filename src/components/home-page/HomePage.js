@@ -1,6 +1,7 @@
 import React from "react";
 import TemplateLogTable from "./TemplateLogTable";
 import HomePageRight from "./HomePageRight";
+import "../../styles/HomePage.css"
 
 class HomePage extends React.Component {
 	constructor(props) {
@@ -8,10 +9,12 @@ class HomePage extends React.Component {
 	}
 	render() {
 		return (
-        <div class="homepage">
-            <TemplateLogTable/>
-			<HomePageRight/>
-        </div>
+		<div className="container-fluid">
+			<div className="row">
+				<TemplateLogTable />
+				<HomePageRight/>
+			</div>
+		</div>
     );
 	}
     

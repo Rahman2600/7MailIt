@@ -44,7 +44,7 @@ class Table extends React.Component {
     renderTableBody() {
         return (
             [...Array(this.props.data.numRows).keys()].map((i) => {
-                return <tr key={i}>{this.renderRow(i)}</tr>;               
+                return <tr key={i} >{this.renderRow(i)}</tr>;               
             })
         )
     }
@@ -68,7 +68,7 @@ class Table extends React.Component {
         } else if (type === "object") {
             if (Object.keys(cell)[0] === "button") {
                 return (
-                    <div>
+                    <div className="d-flex justify-content-center">
                         <Link 
                             className="btn btn-primary"
                             role="button"

@@ -13,10 +13,10 @@ class TemplateLogTable extends React.Component {
     }
 
     componentDidMount() {
-        var data = JSON.stringify({
+        var params = {
             "min": 0,
             "max": 5
-          });
+          };
           
           var config = {
             method: 'get',
@@ -24,7 +24,7 @@ class TemplateLogTable extends React.Component {
             headers: { 
               'Content-Type': 'application/json'
             },
-            data : data
+            body : params
           };
           
           axios(config)
@@ -41,9 +41,21 @@ class TemplateLogTable extends React.Component {
 
     render() {
         if (this.state.table) {
-            return <Table data={this.state.table}/>;
+            return ( 
+                    <div className="col-lg-9">
+                        <Table data={this.state.table}/>
+                    </div>
+                    
+            );
         } else {
-            return <div></div>
+            return (
+                <div className="col-lg-9 center">
+                    <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}}
+                    role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div>
+            );
         }
     }
 
