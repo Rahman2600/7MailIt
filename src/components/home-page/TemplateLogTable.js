@@ -41,7 +41,7 @@ class TemplateLogTable extends React.Component {
 
     render() {
         return ( 
-            <div className="col-lg-9">
+            <div className="col-lg-9 pl-0 pr-1">
                 <Table data={this.state.table}/>
             </div>        
         );

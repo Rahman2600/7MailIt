@@ -28,7 +28,7 @@ class Table extends React.Component {
     render() {
         if (this.props.data) {
             return (
-                <table className="table table-striped left-component" >
+                <table className="table table-striped" >
                     <thead>
                         {this.renderTableHeader()}
                     </thead>
