@@ -13,14 +13,30 @@ class TemplateLogTable extends React.Component {
     }
 
     componentDidMount() {
-        var header = { headers: {
-             "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
-        }};
-        axios.get(DATA_LINK, header).then(response => {
+        var data = JSON.stringify({
+            "min": 0,
+            "max": 5
+          });
+          
+          var config = {
+            method: 'get',
+            url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/template-logs-with-range',
+            headers: { 
+              'Content-Type': 'application/json'
+            },
+            data : data
+          };
+          
+          axios(config)
+          .then(response => {
+            console.log(JSON.stringify(response.data));
             let table = this.dataToTable(response.data);
             console.log(table);
             this.setState({table: table})
-        });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     }
 
     render() {
