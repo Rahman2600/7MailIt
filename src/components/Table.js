@@ -2,16 +2,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 /**  
- * Table is passed data 
- * data is in the form of
+ * - Table is passed data as a prop 
+ * 
+ * - data is in the form of
  * {numRows: <number>, columns: [
  *  <column> 
  *  (, <column>)*
  * ]}
  * <column> ::= {title: <string>, content:[<string>, <button>]} 
  * <button> ::= {button: {displayName: <string>, link: <string>}}
- * link should be string in the form of an HTML link e.g "/HomePage"
- * button links to the route given by link
+ * 
+ * - link should be string in the form of an HTML link e.g "/HomePage"
+ * 
+ * - button links to the route given by link
+ * 
+ * - Table can handle data loading, if data is null loading spinner is displayed on the page and 
+ * table is displayed as soon as data is available
 */
 
 class Table extends React.Component {
@@ -20,16 +26,27 @@ class Table extends React.Component {
     }
 
     render() {
-        return (
-            <table className="table table-striped left-component" >
-                <thead>
-                    {this.renderTableHeader()}
-                </thead>
-                <tbody>
-                    {this.renderTableBody()}
-                </tbody>
-            </table>
-        );
+        if (this.props.data) {
+            return (
+                <table className="table table-striped left-component" >
+                    <thead>
+                        {this.renderTableHeader()}
+                    </thead>
+                    <tbody>
+                        {this.renderTableBody()}
+                    </tbody>
+                </table>
+            );
+        } else {
+            return (
+                <div className="center">
+                    <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}}
+                    role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div>
+            );
+        }
     }
 
 
