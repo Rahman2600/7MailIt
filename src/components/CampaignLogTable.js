@@ -4,7 +4,7 @@ import axios from 'axios';
 import Table from "./Table"
 
 
-const DATA_LINK = "https://whut97mukj.execute-api.us-east-1.amazonaws.com/v1/campaignlog"
+const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
 
 class CampaignLogTable extends React.Component {
     constructor(props) {

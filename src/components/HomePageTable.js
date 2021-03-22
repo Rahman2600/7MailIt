@@ -13,7 +13,10 @@ class HomePageTable extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(DATA_LINK).then(response => {
+        var header = { headers: {
+            "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
+       }};
+        axios.get(DATA_LINK, header).then(response => {
             console.log(response.data);
             let table = this.dataToTable(response.data);
             console.log(table);
