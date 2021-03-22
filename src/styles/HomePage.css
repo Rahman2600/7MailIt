@@ -15,9 +15,14 @@
     text-align: center;
   }
 
-.center {
+.vertical-horizontal-center {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 1000px;
+}
+
+.horizontal-center {
+    display: flex;
+    justify-content: center;
 }
