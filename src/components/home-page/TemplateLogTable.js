@@ -1,51 +1,74 @@
 import React from "react";
 import axios from 'axios';
 
-import Table from "./Table"
+import Table from "../Table"
 
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
 
-class HomePageTable extends React.Component {
+class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {}
+        this.getTableData = this.getTableData.bind(this);
     }
 
     componentDidMount() {
-        var header = { headers: {
-            "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
-       }};
-        axios.get(DATA_LINK, header).then(response => {
-            console.log(response.data);
-            let table = this.dataToTable(response.data);
-            console.log(table);
-            this.setState({table: table})
+        this.getTableData()
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.key != prevProps.key) {
+            this.getTableData()
+        }
+    }
+
+    getTableData() {
+        var data = JSON.stringify({
+            "min": 0,
+            "max": 5
+          });
+          
+        var config = {
+        method: 'get',
+        url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/template-logs-with-range',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        data : data
+        };
+        
+        axios(config)
+        .then(response => {
+        let table = this.dataToTable(response.data);
+        this.setState({table: table})
+        })
+        .catch(function (error) {
         });
     }
 
     render() {
-        if (this.state.table) {
-            return <Table data={this.state.table}/>;
-        } else {
-            return <div></div>
-        }
+        return ( 
+            <div className="col-lg-9 pl-0 pr-1">
+                <Table data={this.state.table}/>
+            </div>        
+        );
     }
 
     dataToTable(data) {
         let columnTitles = [
-            {displayName:"Template Key", apiName: "S3Key"}, 
+            {displayName:"File Name", apiName: "S3Key"}, 
             {displayName:"Template Name", apiName: "TemplateName"}, 
             {displayName:"Upload Date", apiName: "DocUploadDateTime"},
             {displayName:"Team", apiName: "Team"},
             {displayName:"No. of Campaigns", apiName: ""},
-            {displayName:"Status", apiName: "UploadStatus"},
-            {displayName:"Details", apiName: ""}
+            {displayName:"Create Email Campaign", apiName: "UploadStatus"},
+            {displayName:"Campaign Logs", apiName: ""}
         ];
         let table = {columns: []};
         if (data.statusCode === 200) {
             for (let i = 0; i < columnTitles.length; i++) {
-                let columnTitle = columnTitles[i]
+                let columnTitle = columnTitles[i];
                 table.columns.push({
                     title: columnTitle.displayName,
                     content: this.getContent(columnTitle, data)
@@ -54,7 +77,7 @@ class HomePageTable extends React.Component {
         } else {
             console.log("Request failed with " + data.statusCode)
         }
-        let templateKeyColumn = this.getColumnWithDisplayName("Template Key", table);
+        let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
         table.numRows = templateKeyColumn.content.length;
         this.addLinksToCampaignPage(table);
         return table;
@@ -69,11 +92,15 @@ class HomePageTable extends React.Component {
                     content.push({button: {displayName: "View", link: "/CampaignLogTable"}});
                     break;
                 }
+                case "Campaign Logs": {
+                    content.push({button: {displayName: "View", link: "/UnderConstructionPage"}});
+                    break;
+                }
                 case "No. of Campaigns": {
                     content.push("TODO");
                     break;
                 }
-                case "Status": {
+                case "Create Email Campaign": {
                     let value = row[columnTitle.apiName];
                     if (value == "Ready") {
                         content.push({button: {displayName:"Ready", link:""}});
@@ -107,8 +134,8 @@ class HomePageTable extends React.Component {
     }
 
     addLinksToCampaignPage(table) {
-        let templateKeyColumn = this.getColumnWithDisplayName("Template Key", table);
-        let statusColumn = this.getColumnWithDisplayName("Status", table);
+        let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
+        let statusColumn = this.getColumnWithDisplayName("Create Email Campaign", table);
         let content = statusColumn.content;
         for(let i = 0; i < content.length; i++) {
             let current = content[i];
@@ -129,4 +156,4 @@ class HomePageTable extends React.Component {
 
 }
 
-export default HomePageTable;
+export default TemplateLogTable;

@@ -1,10 +1,10 @@
 import React from "react";
-import {convertToTemplate,uploadFile} from "../aws_util"
+import {convertToTemplate,uploadFile} from "../../aws_util"
 
 class FileUpload extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { selectedFile: '', message: null }
+        this.state = { selectedFile: '', message: null, uploading: false}
         this.messages = Object.freeze({
             WRONG_FILE_TYPE:   "Wrong template file type. Upload a .doc or .docx file",
             UPLOAD_FAIL:  "Upload Failure",
@@ -18,7 +18,7 @@ class FileUpload extends React.Component {
     render() {
         return (
             <div>
-                <button className="btn btn-light btn-block mt-5" onClick={this.onFileUpload}> Upload New Template </button>
+                <p class="mt-5 text-center">Upload New Template</p>
                 {this.state.message != null ? 
                     <div 
                     className={
@@ -29,24 +29,33 @@ class FileUpload extends React.Component {
                     :
                     <div></div>
                 }
+                {this.state.uploading ? 
+                    <div className="horizontal-center">
+                        <div className="spinner-border text-primary" style={{width: "3rem", height: "3rem"}}
+                        role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                    </div> :
+                    <div></div>
+                }
                 <form>
                     <div className="form-group">
                         <input type="file" className="form-control-file" id="fileUploadButton" onChange={this.onFileChange}/>
                     </div>
                 </form>
+                <button className="btn btn-primary btn-block mt-5" onClick={this.onFileUpload}> Submit </button>
             </div>
         )
     }
 
     onFileChange(event) {
         console.log(event.target.files[0]);
-        this.setState({ selectedFile: event.target.files[0] });
+        this.setState({ selectedFile: event.target.files[0], message: null });
     }
 
     onFileUpload() {
         var allowedExtensions = /(\.doc|\.docx)$/i;
         var fileInput = this.state.selectedFile;
-        console.log(fileInput);
         var filePath;
 
         if (fileInput) {
@@ -54,22 +63,19 @@ class FileUpload extends React.Component {
         }
 
         if (!fileInput) {
-            this.setState({message: this.messages.NO_FILE });
+            this.setState({message: this.messages.NO_FILE});
         } else if(!allowedExtensions.exec(filePath)){    
-            this.setState({message: this.messages.WRONG_FILE_TYPE });
+            this.setState({message: this.messages.WRONG_FILE_TYPE});
         } else {
-            try{
-                uploadFile(fileInput.name,fileInput, 'docxtemplates').then(() => {
-                    convertToTemplate(fileInput.name, "docxtemplates").then(() => {   
-                        this.setState({ message: this.messages.SUCCESS });
-                    });
-                });
-            } catch(error) { 
+            this.setState({uploading: true});
+            uploadFile(fileInput, 'docxtemplates').then(() => {
+                this.setState({ message: this.messages.SUCCESS, uploading: false});
+                this.props.onUploadSuccess();
+            }).catch(error => {
                 console.log(error);
-                this.setState({ message: this.messages.UPLOAD_FAIL + error });
-            }    
+                this.setState({ message: this.messages.UPLOAD_FAIL + error, uploading: false});
+            });    
         }
-            
     }
 }
 
