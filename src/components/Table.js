@@ -39,7 +39,7 @@ class Table extends React.Component {
             );
         } else {
             return (
-                <div className="center">
+                <div className="vertical-horizontal-center">
                     <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}}
                     role="status">
                         <span className="sr-only">Loading...</span>

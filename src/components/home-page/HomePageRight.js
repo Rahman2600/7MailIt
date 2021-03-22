@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 class HomePageRight extends React.Component {
     constructor(props) {
         super(props);
+        this.onUploadSuccess = this.onUploadSuccess.bind(this);
     }
 
     render() {
@@ -23,9 +24,13 @@ class HomePageRight extends React.Component {
                         View All Campaign Logs 
                     </button>
                 </Link>
-                <FileUpload />
+                <FileUpload onUploadSuccess={this.onUploadSuccess}/>
             </div> 
         )
+    }
+
+    onUploadSuccess() {
+        this.props.onUploadSuccess();
     }
 }
 
