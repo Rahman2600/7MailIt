@@ -10,10 +10,8 @@ class HomePage extends React.Component {
 	render() {
 		return (
 		<div className="container-fluid">
-			<div className="row">
-				<TemplateLogTable />
-				<HomePageRight/>
-			</div>
+			<TemplateLogTable />
+			<HomePageRight/>
 		</div>
     );
 	}
