@@ -26,16 +26,31 @@ class CampaignPage extends React.Component {
             dynamicValues: this.props.location.state }
     }
 
+    createDynamicValueTextFields() {
+        let dynamicValueTextInputs = []
+        for (var dynamicValue of this.state.dynamicValues ) {
+            let textInput = 
+                <div className="input-group mb-1">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text">{dynamicValue}</span>
+                    </div>
+                    <input type="text" className="form-control" aria-label="With input"></input>
+                </div>
+            dynamicValueTextInputs.push(textInput);
+        }
+        return dynamicValueTextInputs;
+    }
+
     render() {
         return (
             <div className="container-fluid my-container">
                 <div className="row my-rows" style={{ textAlign: 'center' }}>
                     <div className="col-6 my-col">Preview Template</div>
-                    <div className="col-6 my-col">Create Template</div>
+                    <div className="col-6 my-col">Create Email Campaign</div>
                 </div>
                 <div className="row my-rows">
                     <div className="col-6 my-col img-responsive" dangerouslySetInnerHTML={{ __html: this.state.docHtml }} />
-                    <div className="col-6 my-col">Parameter List: {this.state.dynamicValues}
+                    <div className="col-6 my-col">
                         <div className="row my-row1"></div>
                         <div className="row justify-content-space-evenly my-row">
                             <img src={userLogo} className="img-rounded" width="30" height="30" />
@@ -49,17 +64,19 @@ class CampaignPage extends React.Component {
                             </div>
                         </div>
                         <div className="row justify-content-space-evenly my-row2">
+                            Dynamic Values
                             <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text">Parameter List</span>
-                                </div>
-                                <textarea className="form-control" aria-label="With textarea"></textarea>
+                                {this.createDynamicValueTextFields()}
                             </div>
+                        </div>
+                        <div className="row justify-content-right my-row1">
+                                <button type="button" className="btn btn-success">Submit</button>
                         </div>
                         <div className="row my-row1"></div>
                         <div className="row justify-content-space-evenly my-row">
                             <img src={multipleUserLogo} className="img-rounded" width="50" height="50" />
                         </div>
+                        Coming Soon!
                         <div className="row justify-content-space-evenly my-row2">
                             <div className="input-group mb-3">
                                 <div className="custom-file">
@@ -76,9 +93,11 @@ class CampaignPage extends React.Component {
                                 <input type="text" className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" />
                             </div>
                         </div>
+                        
                         <div className="row justify-content-left my-row1">
                             <img src={scrap} className="img-rounded" width="50" height="50" />
                             <button type="button" className="btn btn-danger">Remove Template</button>
+                            Coming Soon!
                         </div>
                         <div className="row justify-content-right my-row1">
                             <button type="button" className="btn btn-success">Submit</button>
@@ -91,7 +110,7 @@ class CampaignPage extends React.Component {
 
     async componentDidMount() {
         var s3 = new AWS.S3();
-        s3.getObject({ Bucket: BUCKET_NAME, Key: this.props.match.params.templateKey }, (err, data) => {
+        s3.getObject({ Bucket: BUCKET_NAME, Key: this.state.templateKey }, (err, data) => {
             if (err) {
                 console.log(err);
                 throw err
