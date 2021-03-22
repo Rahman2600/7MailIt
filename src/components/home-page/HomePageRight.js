@@ -5,12 +5,11 @@ import {Link} from "react-router-dom";
 class HomePageRight extends React.Component {
     constructor(props) {
         super(props);
-        this.onUploadSuccess = this.onUploadSuccess.bind(this);
     }
 
     render() {
         return (
-             <div className="col-lg-3">
+             <div className="right-component">
                  <Link
                      className="btn btn-primary mt-5 ml-5 mr-5 mb-5 float-right"
                      role="button"
@@ -24,13 +23,9 @@ class HomePageRight extends React.Component {
                         View All Campaign Logs 
                     </button>
                 </Link>
-                <FileUpload onUploadSuccess={this.onUploadSuccess}/>
+                <FileUpload />
             </div> 
         )
-    }
-
-    onUploadSuccess() {
-        this.props.onUploadSuccess();
     }
 }
 
