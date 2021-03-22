@@ -53,7 +53,7 @@ class TemplateLogTable extends React.Component {
             {displayName:"Template Name", apiName: "TemplateName"}, 
             {displayName:"Upload Date", apiName: "DocUploadDateTime"},
             {displayName:"Team", apiName: "Team"},
-            {displayName:"No. of Campaigns", apiName: ""},
+            {displayName:"Dynamic Values", apiName: "DynamicValues"},
             {displayName:"Create Email Campaign", apiName: "UploadStatus"},
             {displayName:"Campaign Logs", apiName: ""}
         ];
@@ -84,14 +84,16 @@ class TemplateLogTable extends React.Component {
                     content.push({button: {displayName: "View", link: "/UnderConstructionPage"}});
                     break;
                 }
-                case "No. of Campaigns": {
-                    content.push("TODO");
+                case "Dynamic Values": {
+                    let value = row[columnTitle.apiName];
+                    //Need to remove this once dynamic value parsing is complete
+                    content.push("[" + JSON.stringify(value) + "]");
                     break;
                 }
                 case "Create Email Campaign": {
                     let value = row[columnTitle.apiName];
                     if (value == "Ready") {
-                        content.push({button: {displayName:"Ready", link:""}});
+                        content.push({button: {displayName:"Ready", link:"", data: ""}});
                     } else {
                         content.push(value);
                     }
@@ -123,12 +125,14 @@ class TemplateLogTable extends React.Component {
 
     addLinksToCampaignPage(table) {
         let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
+        let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
         let statusColumn = this.getColumnWithDisplayName("Create Email Campaign", table);
         let content = statusColumn.content;
         for(let i = 0; i < content.length; i++) {
             let current = content[i];
             if (typeof current === "object") {
                 current.button.link = `campaignPage/${templateKeyColumn.content[i]}`;
+                current.button.data = JSON.parse(dynamicValuesColumn.content[i]);
             }
         }
     }

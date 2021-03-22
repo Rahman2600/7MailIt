@@ -20,18 +20,10 @@ class CampaignPage extends React.Component {
     constructor(props) {
         console.log(props);
         super(props);
-        this.state = { templateKey: '', docHtml: '' }
-        var s3 = new AWS.S3();
-        s3.getObject({ Bucket: BUCKET_NAME, Key: this.props.match.params.templateKey }, (err, data) => {
-            if (err) {
-                console.log(err);
-                throw err
-            }
-            mammoth.convertToHtml({ arrayBuffer: data.Body }).then((v, m) => {
-                this.setState({ docHtml: v.value })
-                console.log(v.value);
-            });
-        });
+        this.state = { 
+            templateKey: this.props.match.params.templateKey,
+            docHtml: '', 
+            dynamicValues: this.props.location.state }
     }
 
     render() {
@@ -43,7 +35,7 @@ class CampaignPage extends React.Component {
                 </div>
                 <div className="row my-rows">
                     <div className="col-6 my-col img-responsive" dangerouslySetInnerHTML={{ __html: this.state.docHtml }} />
-                    <div className="col-6 my-col">Parameter List:{this.state.templateKey}
+                    <div className="col-6 my-col">Parameter List: {this.state.dynamicValues}
                         <div className="row my-row1"></div>
                         <div className="row justify-content-space-evenly my-row">
                             <img src={userLogo} className="img-rounded" width="30" height="30" />
@@ -98,7 +90,16 @@ class CampaignPage extends React.Component {
     }
 
     async componentDidMount() {
-        this.setState({ templateKey: this.props.match.params.templateKey })
+        var s3 = new AWS.S3();
+        s3.getObject({ Bucket: BUCKET_NAME, Key: this.props.match.params.templateKey }, (err, data) => {
+            if (err) {
+                console.log(err);
+                throw err
+            }
+            mammoth.convertToHtml({ arrayBuffer: data.Body }).then((v, m) => {
+                this.setState({ docHtml: v.value });
+            });
+        });
     }
 }
 export default CampaignPage;

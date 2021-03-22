@@ -84,12 +84,13 @@ class Table extends React.Component {
             return cell;
         } else if (type === "object") {
             if (Object.keys(cell)[0] === "button") {
+                let data = cell.button.data ? cell.button.data : null;
                 return (
                     <div className="d-flex justify-content-center">
                         <Link 
                             className="btn btn-primary"
                             role="button"
-                            to={cell.button.link}> 
+                            to={{pathname:cell.button.link, state: data}}>
                             {cell.button.displayName}
                         </Link>
                     </div>)
