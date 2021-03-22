@@ -11,6 +11,10 @@
   margin-left:-2cm
 
 }
+.homepage {
+  display: flex;
+  flex-direction: row;
+}
 body{
   margin:30px, 
 }
