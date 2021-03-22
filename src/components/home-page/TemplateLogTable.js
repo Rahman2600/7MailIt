@@ -29,9 +29,8 @@ class TemplateLogTable extends React.Component {
           
           axios(config)
           .then(response => {
-            console.log(JSON.stringify(response.data));
+            this.sortTemplateLogs(response.data);
             let table = this.dataToTable(response.data);
-            console.log(table);
             this.setState({table: table})
           })
           .catch(function (error) {
@@ -41,7 +40,7 @@ class TemplateLogTable extends React.Component {
 
     render() {
         return ( 
-            <div className="col-lg-9 pl-0 pr-1">
+            <div className="float-left col-lg-9 pl-0 pr-1">
                 <Table data={this.state.table}/>
             </div>        
         );
@@ -87,7 +86,7 @@ class TemplateLogTable extends React.Component {
                 case "Dynamic Values": {
                     let value = row[columnTitle.apiName];
                     //Need to remove this once dynamic value parsing is complete
-                    content.push("[" + JSON.stringify(value) + "]");
+                    content.push("[" + JSON.stringify(value) + ", \"NAME\", \"AMOUNT\", \"PROMO_LINK\"" + "]");
                     break;
                 }
                 case "Create Email Campaign": {
@@ -143,6 +142,14 @@ class TemplateLogTable extends React.Component {
                 return column;
             }
         }
+    }
+
+    sortTemplateLogs(templateLogs) {
+        templateLogs.body.sort((a, b) => {
+            let dateA = new Date(a.DocUploadDateTime);
+            let dateB = new Date(b.DocUploadDateTime)
+            return dateB - dateA;
+        });
     }
 
 
