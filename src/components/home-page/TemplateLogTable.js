@@ -10,25 +10,49 @@ class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {}
+        this.getTableData = this.getTableData.bind(this);
     }
 
     componentDidMount() {
-        var header = { headers: {
-             "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
-        }};
-        axios.get(DATA_LINK, header).then(response => {
-            let table = this.dataToTable(response.data);
-            console.log(table);
-            this.setState({table: table})
+        this.getTableData()
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.key != prevProps.key) {
+            this.getTableData()
+        }
+    }
+
+    getTableData() {
+        var data = JSON.stringify({
+            "min": 0,
+            "max": 5
+          });
+          
+        var config = {
+        method: 'get',
+        url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/template-logs-with-range',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        data : data
+        };
+        
+        axios(config)
+        .then(response => {
+        let table = this.dataToTable(response.data);
+        this.setState({table: table})
+        })
+        .catch(function (error) {
         });
     }
 
     render() {
-        if (this.state.table) {
-            return <Table data={this.state.table}/>;
-        } else {
-            return <div></div>
-        }
+        return ( 
+            <div className="col-lg-9 pl-0 pr-1">
+                <Table data={this.state.table}/>
+            </div>        
+        );
     }
 
     dataToTable(data) {
