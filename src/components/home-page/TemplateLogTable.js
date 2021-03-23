@@ -9,7 +9,7 @@ const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/log
 class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {table: null}
         this.getTableData = this.getTableData.bind(this);
     }
 

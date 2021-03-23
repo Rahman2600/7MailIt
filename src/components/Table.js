@@ -9,15 +9,16 @@ import { Link } from "react-router-dom";
  *  <column> 
  *  (, <column>)*
  * ]}
- * <column> ::= {title: <string>, content:[<string>, <button>]} 
+ * <column> ::= {title: <string>, content:[list of <content>]}
+ * <content> := <string> | <button>
  * <button> ::= {button: {displayName: <string>, link: <string>}}
  * 
  * - link should be string in the form of an HTML link e.g "/HomePage"
  * 
  * - button links to the route given by link
  * 
- * - Table can handle data loading, if data is null loading spinner is displayed on the page and 
- * table is displayed as soon as data is available
+ * - Table has a loading state set it to true when data is not yet available to trigger the loading spinner.
+ * You can pass in the data as soon as it is available and table would be rendered
 */
 
 class Table extends React.Component {
@@ -26,7 +27,16 @@ class Table extends React.Component {
     }
 
     render() {
-        if (this.props.data) {
+        if (this.props.loading) {
+            return (
+                <div className="vertical-horizontal-center">
+                    <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}}
+                    role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div>
+            );
+        } else if (this.props.data) {
             return (
                 <table className="table table-striped" >
                     <thead>
@@ -39,12 +49,7 @@ class Table extends React.Component {
             );
         } else {
             return (
-                <div className="vertical-horizontal-center">
-                    <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}}
-                    role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
+                <div> Error: Loading not set to true and data not available </div>
             );
         }
     }
