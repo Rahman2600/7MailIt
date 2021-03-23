@@ -123,15 +123,17 @@ class TemplateLogTable extends React.Component {
     }
 
     addLinksToCampaignPage(table) {
-        let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
+        let fileNameColumn = this.getColumnWithDisplayName("File Name", table);
+        let templateNameCoumn = this.getColumnWithDisplayName("Template Name", table);
         let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
         let statusColumn = this.getColumnWithDisplayName("Create Email Campaign", table);
         let content = statusColumn.content;
         for(let i = 0; i < content.length; i++) {
             let current = content[i];
             if (typeof current === "object") {
-                current.button.link = `campaignPage/${templateKeyColumn.content[i]}`;
-                current.button.data = JSON.parse(dynamicValuesColumn.content[i]);
+                current.button.link = `campaignPage/${fileNameColumn.content[i]}`;
+                current.button.data = {dynamicValues: JSON.parse(dynamicValuesColumn.content[i]), 
+                                       templateName: templateNameCoumn.content[i]};
             }
         }
     }
@@ -151,7 +153,6 @@ class TemplateLogTable extends React.Component {
             return dateB - dateA;
         });
     }
-
 
 }
 
