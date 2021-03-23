@@ -20,12 +20,13 @@ Sending a SINGLE email campaign
 -Each dynamic value should appear with its own text field
 -Any fields that are empty when the submit button (for the single email campaign set of fields) will have a red-colored border and an error message should appear for the user to fill in all fields. If the email address provided is an invalid format then an error message will appear indicating the issue to the user and the email address field will have a red border.
 -When a template has no dynamic values then there should be no text fields that appear and the “Dynamic Values” heading should not be present 
-PLEASE NOTE: Email addresses are still sandboxed and therefore require verification by AWS before being used in this application. If you would like your email added to this service please notify Matthew De Rose so that he may add you to SES manually. Please feel free to use the credentials for the test email below to use this application (these credentials work on gmail as well):
+PLEASE NOTE: Please don’t use any of the ReadTemplateLogsTest.docx templates to send emails since they are just database logs with no SES templates associated with them. This is being used to help test the pagination of the logs in the grid that will appear in the next deployment. In addition to this, please be advised that email addresses are still sandboxed and therefore require verification by AWS before being used in this application. If you would like your email added to this service please notify Matthew De Rose so that he may add you to SES manually. Please feel free to use the credentials for the test email below to use this application (these credentials work on gmail as well):
 The credentials for Gmail and the deployment environment are: 
 Email: teamMailItTest@gmail.com
 Password: testEmail123
 
 Upcoming Tasks For The Next Code Drop
+-Create a database instance solely for the deployment environment so no testing data appears in the development server
 -Adding a text field for a user to add a template name associated with a file in the upload process
 -Integration with the existing AWS infrastructure and the user interface for the pagination of logs in the user interface (will be used for all logs ultimately)
 -Final integration with the existing AWS infrastructure and the user interface for the batch email campaign process 
