@@ -10,7 +10,7 @@ class HomePageRight extends React.Component {
 
     render() {
         return (
-             <div className="col-lg-3">
+             <div className="float-right col-lg-3 ">
                  <Link
                      className="btn btn-primary mt-5 ml-5 mr-5 mb-5 float-right"
                      role="button"

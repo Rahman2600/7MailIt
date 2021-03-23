@@ -12,13 +12,11 @@ class HomePage extends React.Component {
 	render() {
 		this.key += 1;
 		return (
-		<div className="container-fluid">
-			<div className="row">
+			<div className="scroll container-fluid">
 				<TemplateLogTable key={this.key}/>
 				<HomePageRight onUploadSuccess={this.onUploadSuccess}/>
 			</div>
-		</div>
-		);
+    	);
 	}
 
 	onUploadSuccess() {

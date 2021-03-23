@@ -27,29 +27,31 @@ class TemplateLogTable extends React.Component {
         var data = JSON.stringify({
             "min": 0,
             "max": 5
-          });
-          
-        var config = {
-        method: 'get',
-        url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/template-logs-with-range',
-        headers: { 
-            'Content-Type': 'application/json'
-        },
-        data : data
-        };
-        
-        axios(config)
-        .then(response => {
-        let table = this.dataToTable(response.data);
-        this.setState({table: table})
-        })
-        .catch(function (error) {
         });
+          
+       var config = {
+            method: 'get',
+            url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/template-logs-with-range',
+            headers: { 
+              'Content-Type': 'application/json'
+            },
+            body : data
+          };
+          
+          axios(config)
+          .then(response => {
+            this.sortTemplateLogs(response.data);
+            let table = this.dataToTable(response.data);
+            this.setState({table: table})
+          })
+          .catch(function (error) {
+            console.log(error);
+        });   
     }
 
     render() {
         return ( 
-            <div className="col-lg-9 pl-0 pr-1">
+            <div className="float-left col-lg-9 pl-0 pr-1">
                 {this.state.table? <Table data={this.state.table}/> : <Table loading={true}/>}
             </div>        
         );
@@ -61,7 +63,7 @@ class TemplateLogTable extends React.Component {
             {displayName:"Template Name", apiName: "TemplateName"}, 
             {displayName:"Upload Date", apiName: "DocUploadDateTime"},
             {displayName:"Team", apiName: "Team"},
-            {displayName:"No. of Campaigns", apiName: ""},
+            {displayName:"Dynamic Values", apiName: "DynamicValues"},
             {displayName:"Create Email Campaign", apiName: "UploadStatus"},
             {displayName:"Campaign Logs", apiName: ""}
         ];
@@ -96,14 +98,18 @@ class TemplateLogTable extends React.Component {
                     content.push({button: {displayName: "View", link: "/UnderConstructionPage"}});
                     break;
                 }
-                case "No. of Campaigns": {
-                    content.push("TODO");
+                case "Dynamic Values": {
+                    let value = row[columnTitle.apiName];
+
+                    let commaList = this.arrayToCommaSeperatedString(value);
+                    //Need to remove this once dynamic value parsing is complete
+                    content.push(commaList);
                     break;
                 }
                 case "Create Email Campaign": {
                     let value = row[columnTitle.apiName];
                     if (value == "Ready") {
-                        content.push({button: {displayName:"Ready", link:""}});
+                        content.push({button: {displayName:"Ready", link:"", data: ""}});
                     } else {
                         content.push(value);
                     }
@@ -134,13 +140,17 @@ class TemplateLogTable extends React.Component {
     }
 
     addLinksToCampaignPage(table) {
-        let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
+        let fileNameColumn = this.getColumnWithDisplayName("File Name", table);
+        let templateNameCoumn = this.getColumnWithDisplayName("Template Name", table);
+        let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
         let statusColumn = this.getColumnWithDisplayName("Create Email Campaign", table);
         let content = statusColumn.content;
         for(let i = 0; i < content.length; i++) {
             let current = content[i];
             if (typeof current === "object") {
-                current.button.link = `campaignPage/${templateKeyColumn.content[i]}`;
+                current.button.link = `campaignPage/${fileNameColumn.content[i]}`;
+                current.button.data = {dynamicValues: JSON.parse(this.commaSeperatedStringToArray(dynamicValuesColumn.content[i])), 
+                                       templateName: templateNameCoumn.content[i]};
             }
         }
     }
@@ -153,6 +163,24 @@ class TemplateLogTable extends React.Component {
         }
     }
 
+    sortTemplateLogs(templateLogs) {
+        templateLogs.body.sort((a, b) => {
+            let dateA = new Date(a.DocUploadDateTime);
+            let dateB = new Date(b.DocUploadDateTime)
+            return dateB - dateA;
+        });
+    }
+
+    arrayToCommaSeperatedString(dynamicValueString) {
+        let newString = dynamicValueString
+                            .replace("]", "");
+        newString = newString.replace("[", "");
+        return newString;
+    }
+
+    commaSeperatedStringToArray(dynamicValueString) {
+        return "[" + dynamicValueString + "]";
+    }
 
 }
 
