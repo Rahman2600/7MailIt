@@ -17,7 +17,7 @@ class HomePageRight extends React.Component {
                      id="logOutButton"
                      to={"/"}>Log Out
                  </Link>
-                <Link to="/UnderConstructionPage">
+                <Link to="/CampaignLogTable">
                     <button  
                         id="viewLogButton" 
                         className="btn btn-primary btn-block mt-5"> 

@@ -1,20 +1,23 @@
 import React from "react";
 import axios from 'axios';
-
-import Table from "./Table"
+import Table from "../components/Table";
 
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
+
 
 class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {}
+        
     }
 
     componentDidMount() {
-        axios.get(DATA_LINK).then(response => {
-            console.log(response.data);
+        var header = { headers: {
+             "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
+        }};
+        axios.get(DATA_LINK, header).then(response => {
             let table = this.dataToTable(response.data);
             console.log(table);
             this.setState({table: table})
@@ -22,11 +25,11 @@ class CampaignLogTable extends React.Component {
     }
 
     render() {
-        if (this.state.table) {
-            return <Table data={this.state.table}/>;
-        } else {
-            return <div></div>
-        }
+        return ( 
+            <div className="col-lg-9 pl-0 pr-1">
+                <Table data={this.state.table}/>
+            </div>        
+        );
     }
 
     dataToTable(data) {
@@ -41,7 +44,7 @@ class CampaignLogTable extends React.Component {
         let table = {columns: []};
         if (data.statusCode === 200) {
             for (let i = 0; i < columnTitles.length; i++) {
-                let columnTitle = columnTitles[i]
+                let columnTitle = columnTitles[i];
                 table.columns.push({
                     title: columnTitle.displayName,
                     content: this.getContent(columnTitle, data)
@@ -50,9 +53,9 @@ class CampaignLogTable extends React.Component {
         } else {
             console.log("Request failed with " + data.statusCode)
         }
-        let templateKeyColumn = this.getColumnWithDisplayName("Template Key", table);
+        let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
         table.numRows = templateKeyColumn.content.length;
-        // this.addLinksToCampaignPage(table);
+        this.addLinksToCampaignPage(table);
         return table;
     }
 
@@ -61,11 +64,7 @@ class CampaignLogTable extends React.Component {
         for (let row of data.body) {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
-                // case "Details": {
-                //     content.push({button: {displayName: "View", link: "/HomePage"}});
-                //     break;
-                // }
-                case "Upload Date": {
+                case "Date of Campaign Launch": {
                     let value = row[columnTitle.apiName];
                     if (value) {
                         let dateObj = new Date(value);
@@ -89,17 +88,6 @@ class CampaignLogTable extends React.Component {
         return content;
     }
 
-    // addLinksToCampaignPage(table) {
-    //     let templateKeyColumn = this.getColumnWithDisplayName("Template Key", table);
-    //     let statusColumn = this.getColumnWithDisplayName("Status", table);
-    //     let content = statusColumn.content;
-    //     for(let i = 0; i < content.length; i++) {
-    //         let current = content[i];
-    //         if (typeof current === "object") {
-    //             current.button.link = `campaignPage/${templateKeyColumn.content[i]}`;
-    //         }
-    //     }
-    // }
 
     getColumnWithDisplayName(displayName, table) {
         for (let column of table.columns) {
