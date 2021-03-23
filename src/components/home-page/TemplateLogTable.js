@@ -9,7 +9,7 @@ const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/log
 class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {table: null}
         this.getTableData = this.getTableData.bind(this);
     }
 
@@ -50,7 +50,7 @@ class TemplateLogTable extends React.Component {
     render() {
         return ( 
             <div className="col-lg-9 pl-0 pr-1">
-                <Table data={this.state.table}/>
+                {this.state.table? <Table data={this.state.table}/> : <Table loading={true}/>}
             </div>        
         );
     }
