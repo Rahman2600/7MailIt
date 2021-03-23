@@ -4,7 +4,7 @@ import {convertToTemplate,uploadFile} from "../../aws_util"
 class FileUpload extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { selectedFile: '', message: null }
+        this.state = { selectedFile: '', message: null, uploading: false}
         this.messages = Object.freeze({
             WRONG_FILE_TYPE:   "Wrong template file type. Upload a .doc or .docx file",
             UPLOAD_FAIL:  "Upload Failure",
@@ -18,7 +18,7 @@ class FileUpload extends React.Component {
     render() {
         return (
             <div>
-                <p class="mt-5 text-center">Upload New Template</p>
+                <p className="mt-5 text-center">Upload New Template</p>
                 {this.state.message != null ? 
                     <div 
                     className={
@@ -27,6 +27,15 @@ class FileUpload extends React.Component {
                         {`${this.state.message}`} 
                     </div>
                     :
+                    <div></div>
+                }
+                {this.state.uploading ? 
+                    <div className="horizontal-center">
+                        <div className="spinner-border text-primary" style={{width: "3rem", height: "3rem"}}
+                        role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                    </div> :
                     <div></div>
                 }
                 <form>
@@ -41,11 +50,11 @@ class FileUpload extends React.Component {
 
     onFileChange(event) {
         console.log(event.target.files[0]);
-        this.setState({ selectedFile: event.target.files[0] });
+        this.setState({ selectedFile: event.target.files[0], message: null });
     }
 
     onFileUpload() {
-        var allowedExtensions = /(\.doc|\.docx)$/i;
+        var allowedExtensions = /(\.docx)$/i;
         var fileInput = this.state.selectedFile;
         var filePath;
 
@@ -54,21 +63,19 @@ class FileUpload extends React.Component {
         }
 
         if (!fileInput) {
-            this.setState({message: this.messages.NO_FILE });
+            this.setState({message: this.messages.NO_FILE});
         } else if(!allowedExtensions.exec(filePath)){    
-            this.setState({message: this.messages.WRONG_FILE_TYPE });
+            this.setState({message: this.messages.WRONG_FILE_TYPE});
         } else {
+            this.setState({uploading: true});
             uploadFile(fileInput, 'docxtemplates').then(() => {
-                this.setState({ message: this.messages.SUCCESS });
-                //TODO: This is a temporary solution to have the newly uploaded template appear on the grid 
-                //Need a more sophisticated solution 
-                window.location.reload();
+                this.setState({ message: this.messages.SUCCESS, uploading: false});
+                this.props.onUploadSuccess();
             }).catch(error => {
                 console.log(error);
-                this.setState({ message: this.messages.UPLOAD_FAIL + error });
+                this.setState({ message: this.messages.UPLOAD_FAIL + ": " + error.message, uploading: false});
             });    
         }
-            
     }
 }
 

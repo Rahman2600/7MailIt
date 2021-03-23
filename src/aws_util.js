@@ -37,8 +37,12 @@ const uploadFile = async (fileInput,BUCKET_NAME) => {
     //Create and send API request to /template endpoint
     const res = await axios.post(`https://q6z3mxhv9d.execute-api.us-east-1.amazonaws.com/v1/template`, 
                                     body, header);
-    } catch (e) {
-      console.error(e);
+    if(res.data.statusCode !== 200) {
+        console.log(res);
+        throw new Error(res.data.body);
+    }
+    } catch (err) {
+      throw err;
     }
     
 };
