@@ -9,7 +9,8 @@ import { Link } from "react-router-dom";
  *  <column> 
  *  (, <column>)*
  * ]}
- * <column> ::= {title: <string>, content:[<string>, <button>]} 
+ * <column> ::= {title: <string>, content:[list of <content>]}
+ * <content> := <string> | <button>
  * <button> ::= {button: {displayName: <string>, link: <string>}}
  * 
  * - link should be string in the form of an HTML link e.g "/HomePage"
