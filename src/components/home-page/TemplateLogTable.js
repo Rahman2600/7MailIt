@@ -51,7 +51,7 @@ class TemplateLogTable extends React.Component {
 
     render() {
         return ( 
-            <div className="float-left col-lg-9 pl-0 pr-1">
+            <div className="float-left col-lg-6 mr-1 pl-0 pr-1">
                 <Table data={this.state.table}/>
             </div>        
         );
@@ -100,8 +100,10 @@ class TemplateLogTable extends React.Component {
                 }
                 case "Dynamic Values": {
                     let value = row[columnTitle.apiName];
+
+                    let commaList = this.arrayToCommaSeperatedString(value);
                     //Need to remove this once dynamic value parsing is complete
-                    content.push("[" + JSON.stringify(value) + ", \"NAME\", \"AMOUNT\", \"PROMO_LINK\"" + "]");
+                    content.push(commaList);
                     break;
                 }
                 case "Create Email Campaign": {
@@ -147,7 +149,7 @@ class TemplateLogTable extends React.Component {
             let current = content[i];
             if (typeof current === "object") {
                 current.button.link = `campaignPage/${fileNameColumn.content[i]}`;
-                current.button.data = {dynamicValues: JSON.parse(dynamicValuesColumn.content[i]), 
+                current.button.data = {dynamicValues: JSON.parse(this.commaSeperatedStringToArray(dynamicValuesColumn.content[i])), 
                                        templateName: templateNameCoumn.content[i]};
             }
         }
@@ -167,6 +169,17 @@ class TemplateLogTable extends React.Component {
             let dateB = new Date(b.DocUploadDateTime)
             return dateB - dateA;
         });
+    }
+
+    arrayToCommaSeperatedString(dynamicValueString) {
+        let newString = dynamicValueString
+                            .replace("]", "");
+        newString = newString.replace("[", "");
+        return newString;
+    }
+
+    commaSeperatedStringToArray(dynamicValueString) {
+        return "[" + dynamicValueString + "]";
     }
 
 }

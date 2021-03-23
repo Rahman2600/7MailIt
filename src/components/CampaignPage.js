@@ -3,7 +3,7 @@ import "../App.css";
 import scrap from '../assets/scrap.png';
 import multipleUserLogo from '../assets/multipleUserLogo.png';
 import userLogo from '../assets/userLogo.png';
-import sendSingleEmail from '../api-service'
+import sendSingleEmail from '../api-service.js'
 var AWS = require('aws-sdk');
 var S3 = require('aws-sdk/clients/s3');
 var mammoth = require("mammoth");
@@ -71,12 +71,13 @@ class CampaignPage extends React.Component {
                                     </input>
                                 </div>
                             </div>
+                            {this.state.dynamicValues.length > 0 ? 
                             <div className="row justify-content-space-evenly my-row2">
                                 Dynamic Values
                                 <div className="input-group mb-3">
                                     {this.createDynamicValueTextFields()}
                                 </div>
-                            </div>
+                            </div> : null }
                         </div>
                         <div className="row justify-content-right my-row1">
                                 <button type="button" className="btn btn-success" onClick={this.handleSubmit}>Submit</button>
@@ -208,7 +209,7 @@ class CampaignPage extends React.Component {
         if(!incorrectlyFomattedEmail && !emptyField) {
             this.setState({message: null});
             var header = { headers: {
-                "x-api-key": process.env.REACT_APP_AWS_SINGLE_EMAIL_CAMPAIGN_API_KEY
+                "x-api-key": "6oyO3enoUI9Uu26ZPtdXNA2YPPCbSWn2cFRrxwRh"
             }};
 
             var body = {
@@ -217,10 +218,11 @@ class CampaignPage extends React.Component {
                 templateId: this.state.templateName
             };
             sendSingleEmail(header, body).then(response => {
-                if(response.statusCode === 200) {
+                if(response.status === 200) {
                     this.setState({ message: this.messages.SUCCESS })
                 } else {
-                    this.setState({ message: this.messages.SINGLE_EMAIL_ERROR + response.statusCode})
+                    console.log(response);
+                    this.setState({ message: this.messages.SINGLE_EMAIL_ERROR + response.data})
                 }
             }).catch(err => {
                 this.setState({ message: this.messages.SINGLE_EMAIL_ERROR + err})

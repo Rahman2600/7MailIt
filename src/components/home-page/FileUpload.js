@@ -54,7 +54,7 @@ class FileUpload extends React.Component {
     }
 
     onFileUpload() {
-        var allowedExtensions = /(\.doc|\.docx)$/i;
+        var allowedExtensions = /(\.docx)$/i;
         var fileInput = this.state.selectedFile;
         var filePath;
 
@@ -73,7 +73,7 @@ class FileUpload extends React.Component {
                 this.props.onUploadSuccess();
             }).catch(error => {
                 console.log(error);
-                this.setState({ message: this.messages.UPLOAD_FAIL + error, uploading: false});
+                this.setState({ message: this.messages.UPLOAD_FAIL + ": " + error.message, uploading: false});
             });    
         }
     }
