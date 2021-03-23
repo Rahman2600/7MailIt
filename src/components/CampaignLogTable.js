@@ -34,6 +34,7 @@ class CampaignLogTable extends React.Component {
 
     dataToTable(data) {
         let columnTitles = [
+            {displayName:"File Name", apiName: "TemplateName"}, 
             {displayName:"Date of Campaign Launch", apiName: "SentDateTime"}, 
             {displayName:"No. of People Emailed", apiName: "NumEmailed"}, 
             {displayName:"No. of Emails Successfully Delivered", apiName: "NumSuccessful"},
@@ -55,7 +56,6 @@ class CampaignLogTable extends React.Component {
         }
         let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
         table.numRows = templateKeyColumn.content.length;
-        this.addLinksToCampaignPage(table);
         return table;
     }
 
