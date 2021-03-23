@@ -14,10 +14,10 @@ const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.
 
 AWS.config.update(
     {
-      accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+        accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
     }
-  );
+);
 
 class CampaignPage extends React.Component {
     constructor(props) {
@@ -105,13 +105,13 @@ class CampaignPage extends React.Component {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="row justify-content-space-evenly my-row2">
-                        <div className="input-group mb-3">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text" id="inputGroup-sizing-default">Subject Line</span>
+                        <div className="row justify-content-space-evenly my-row2">
+                            <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                    <span className="input-group-text" id="inputGroup-sizing-default">Subject Line</span>
+                                </div>
+                                <input type="text" className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" />
                             </div>
-                            <input type="text" className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" />
                         </div>
                         
                         <div className="row justify-content-left my-row1">
@@ -125,7 +125,8 @@ class CampaignPage extends React.Component {
                     </div>
                 </div>
             </div>
-        )};
+        );
+    }
 
     async componentDidMount() {
         var s3 = new AWS.S3();
