@@ -8,6 +8,9 @@
     padding-top: 20px;
 }
 
+.scroll {
+    width: 1950px;
+}
 .centered {
     position: absolute;
     top: 50%;

@@ -51,8 +51,8 @@ class TemplateLogTable extends React.Component {
 
     render() {
         return ( 
-            <div className="float-left col-lg-6 mr-1 pl-0 pr-1">
-                <Table data={this.state.table}/>
+            <div className="float-left col-lg-9 pl-0 pr-1">
+                {this.state.table? <Table data={this.state.table}/> : <Table loading={true}/>}
             </div>        
         );
     }
