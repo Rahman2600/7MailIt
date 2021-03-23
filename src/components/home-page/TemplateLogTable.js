@@ -10,21 +10,32 @@ class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {}
+        this.getTableData = this.getTableData.bind(this);
     }
 
     componentDidMount() {
-        var params = {
+        this.getTableData()
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.key != prevProps.key) {
+            this.getTableData()
+        }
+    }
+
+    getTableData() {
+        var data = JSON.stringify({
             "min": 0,
             "max": 5
-          };
+        });
           
-          var config = {
+       var config = {
             method: 'get',
             url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/template-logs-with-range',
             headers: { 
               'Content-Type': 'application/json'
             },
-            body : params
+            body : data
           };
           
           axios(config)
@@ -35,7 +46,7 @@ class TemplateLogTable extends React.Component {
           })
           .catch(function (error) {
             console.log(error);
-          });
+        });   
     }
 
     render() {
@@ -79,6 +90,10 @@ class TemplateLogTable extends React.Component {
         for (let row of data.body) {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
+                case "Details": {
+                    content.push({button: {displayName: "View", link: "/CampaignLogTable"}});
+                    break;
+                }
                 case "Campaign Logs": {
                     content.push({button: {displayName: "View", link: "/UnderConstructionPage"}});
                     break;
