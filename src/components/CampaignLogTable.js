@@ -25,6 +25,7 @@ class CampaignLogTable extends React.Component {
     }
 
     render() {
+        console.log(this.state.table)
         return ( 
             <div className="col-lg-9 pl-0 pr-1">
                 <Table data={this.state.table}/>
@@ -37,7 +38,7 @@ class CampaignLogTable extends React.Component {
             {displayName:"File Name", apiName: "TemplateName"}, 
             {displayName:"Date of Campaign Launch", apiName: "SentDateTime"}, 
             {displayName:"No. of People Emailed", apiName: "NumEmailed"}, 
-            {displayName:"No. of Emails Successfully Delivered", apiName: "NumSuccessful"},
+            {displayName:"No. of Emails Successfully Delivered", apiName: "NumSuccessfullyDelivered"},
             {displayName:"No. of Opened Emails", apiName: "NumOpened"},
             {displayName:"No. of Links Opened", apiName: "NumLinks"},
             {displayName:"Email Log", apiName: ""}
@@ -79,8 +80,27 @@ class CampaignLogTable extends React.Component {
                     }
                     break;
                 }
+                case "No. of People Emailed": {
+                    content.push(row['NumEmailed'].toString());
+                    break;
+                }
+                case "No. of Emails Successfully Delivered": {
+                    let value = row['NumSuccessfullyDelivered'].toString();
+                    content.push(value);
+                    break;
+                }
+                case "No. of Opened Emails": {
+                    let value = row['NumOpened'].toString();
+                    content.push(value);
+                    break;
+                }
+                case "No. of Links Opened": {
+                    let value = row['NumLinks'].toString();
+                    content.push(value);
+                    break;
+                }
                 default:
-                    if (apiName) {
+                    if (apiName) {;
                         content.push(row[columnTitle.apiName]);
                     }
                 }
