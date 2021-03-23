@@ -8,11 +8,15 @@ class HomePage extends React.Component {
 	}
 	render() {
 		return (
-        <div class="homepage">
-            <TemplateLogTable/>
-			<HomePageRight/>
-        </div>
-    );
+			<div className="scroll container-fluid">
+				<TemplateLogTable key={this.key}/>
+				<HomePageRight onUploadSuccess={this.onUploadSuccess}/>
+			</div>
+    	);
+	}
+
+	onUploadSuccess() {
+		this.forceUpdate();
 	}
     
 }

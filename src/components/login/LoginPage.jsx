@@ -58,6 +58,8 @@ const useStyles = makeStyles((theme) => ({
 function LoginPage() {
     const classes = useStyles();
     const [formState, updateFormState] = useState(initialFormState)
+    const [showErrorMsg,setShowErrorMsg] = useState(false); 
+    const [errorMsg,setErrorMsg] = useState(""); 
 
     function onChange(e) {
         e.persist()
@@ -74,6 +76,13 @@ function LoginPage() {
             updateFormState(() => ({...formState, formType: "signedIn"}))
             // whatNext()
         } catch (error) {
+            setShowErrorMsg(true);
+            if(error.message == "Password attempts exceeded")
+                setErrorMsg("Password attempts exceeded. Please wait before logging back in again.")
+            else if(error.message == "Incorrect username or password.")
+                setErrorMsg("Incorrect username or password")
+            else if(error.code == "UserNotFoundException")
+                setErrorMsg("User doesn't exist")
             console.log('error signing in', error);
         }
     }
@@ -152,6 +161,8 @@ function LoginPage() {
                                         control={<Checkbox value="remember" color="primary"/>}
                                         label="Remember me"
                                     />
+                                    
+                                    {showErrorMsg?<h6 style={{color: 'red'}}>{errorMsg}</h6>:null}
                                     <Button
                                         data-testid="loginpagetypography"
                                         type="submit"

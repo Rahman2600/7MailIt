@@ -18,7 +18,7 @@ class FileUpload extends React.Component {
     render() {
         return (
             <div>
-                <p class="mt-5 text-center">Upload New Template</p>
+                <p className="mt-5 text-center">Upload New Template</p>
                 {this.state.message != null ? 
                     <div 
                     className={
@@ -45,7 +45,7 @@ class FileUpload extends React.Component {
     }
 
     onFileUpload() {
-        var allowedExtensions = /(\.doc|\.docx)$/i;
+        var allowedExtensions = /(\.docx)$/i;
         var fileInput = this.state.selectedFile;
         var filePath;
 
@@ -65,7 +65,7 @@ class FileUpload extends React.Component {
                 window.location.reload();
             }).catch(error => {
                 console.log(error);
-                this.setState({ message: this.messages.UPLOAD_FAIL + error });
+                this.setState({ message: this.messages.UPLOAD_FAIL + ": " + error.message, uploading: false});
             });    
         }
             
