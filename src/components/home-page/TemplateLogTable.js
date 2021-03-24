@@ -88,12 +88,8 @@ class TemplateLogTable extends React.Component {
         for (let row of data.body) {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
-                case "Details": {
-                    content.push({button: {displayName: "View", link: "/CampaignLogTable"}});
-                    break;
-                }
                 case "Campaign Logs": {
-                    content.push({button: {displayName: "View", link: "/UnderConstructionPage"}});
+                    content.push({button: {displayName: "View", link: "/EmailLogTable"}});
                     break;
                 }
                 case "No. of Campaigns": {

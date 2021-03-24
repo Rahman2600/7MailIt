@@ -5,6 +5,7 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import HomePage from "./components/home-page/HomePage";
 import CampaignPage from "./components/CampaignPage";
 import CampaignLogTable from "./components/CampaignLogTable";
+import EmailLogTable from "./components/EmailLogTable";
 import UnderConstructionPage from './components/UnderConstructionPage';
 
 
@@ -18,6 +19,7 @@ function App() {
                     <Route exact path="/HomePage"><HomePage/></Route>
                     <Route path="/campaignPage/:templateKey" component={CampaignPage}/>
                     <Route path="/CampaignLogTable"><CampaignLogTable/></Route>
+                    <Route path="/EmailLogTable"><EmailLogTable/></Route>
                     <Route path="/UnderConstructionPage"><UnderConstructionPage/></Route>
                 </Switch>
             </BrowserRouter>
