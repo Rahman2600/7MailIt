@@ -14,29 +14,29 @@ class TemplateLogTable extends React.Component {
 
     componentDidMount() {
         var params = {
-            "min": 0,
-            "max": 5
-          };
+            min: "0",
+            max: "6"
+         };
           
-          var config = {
+        var config = {
             method: 'get',
             url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/template-logs-with-range',
             headers: { 
               'Content-Type': 'application/json'
             },
-            body : params
-          };
-          
-          axios(config)
+            params : params
+        };
+
+        axios(config)
           .then(response => {
             console.log(JSON.stringify(response.data));
             let table = this.dataToTable(response.data);
             console.log(table);
             this.setState({table: table})
-          })
-          .catch(function (error) {
+        })
+        .catch(function (error) {
             console.log(error);
-          });
+        });
     }
 
     render() {
