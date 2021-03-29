@@ -24,18 +24,18 @@ class TemplateLogTable extends React.Component {
     }
 
     getTableData() {
-        var data = JSON.stringify({
-            "min": 0,
-            "max": 5
-        });
+        // var data = JSON.stringify({
+        //     "min": 0,
+        //     "max": 5
+        // });
           
        var config = {
             method: 'get',
-            url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/template-logs-with-range',
+            url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs',
             headers: { 
-              'Content-Type': 'application/json'
-            },
-            body : data
+              'Content-Type': 'application/json',
+              'x-api-key': process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
+            }
           };
           
           axios(config)
