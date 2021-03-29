@@ -3,10 +3,10 @@ import axios from 'axios';
 import Table from "../components/Table";
 
 
-const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
+const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs"
 
 
-class CampaignLogTable extends React.Component {
+class EmailLogTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {}
@@ -36,12 +36,14 @@ class CampaignLogTable extends React.Component {
     dataToTable(data) {
         let columnTitles = [
             {displayName:"File Name", apiName: "TemplateName"}, 
-            {displayName:"Date of Campaign Launch", apiName: "SentDateTime"}, 
-            {displayName:"No. of People Emailed", apiName: "NumEmailed"}, 
-            {displayName:"No. of Emails Successfully Delivered", apiName: "NumSuccessfullyDelivered"},
-            {displayName:"No. of Opened Emails", apiName: "NumOpened"},
-            {displayName:"No. of Links Opened", apiName: "NumLinks"},
-            {displayName:"Email Log", apiName: ""}
+            {displayName:"Sent Date", apiName: "SentDateTime"}, 
+            {displayName:"Email Address", apiName: "EmailAddress"}, 
+            {displayName:"Delivery Status", apiName: "DeliveryStatus"}, 
+            {displayName:"Open Status", apiName: "OpenedStatus"}, 
+            {displayName:"Clicked Link Status", apiName: "ClickedLinkStatus"},
+            {displayName:"Dynamic Values", apiName: "DynamicValues"},  
+            {displayName:"Job Log ID", apiName: "JobLogId"}, 
+            {displayName:"Message ID", apiName: "MessageId"}, 
         ];
         let table = {columns: []};
         if (data.statusCode === 200) {
@@ -65,7 +67,7 @@ class CampaignLogTable extends React.Component {
         for (let row of data.body) {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
-                case "Date of Campaign Launch": {
+                case "Sent Date": {
                     let value = row[columnTitle.apiName];
                     if (value) {
                         let dateObj = new Date(value);
@@ -80,25 +82,42 @@ class CampaignLogTable extends React.Component {
                     }
                     break;
                 }
-                case "No. of People Emailed": {
-                    content.push(row['NumEmailed'].toString());
-                    break;
-                }
-                case "No. of Emails Successfully Delivered": {
-                    let value = row['NumSuccessfullyDelivered'].toString();
-                    content.push(value);
-                    break;
-                }
-                case "No. of Opened Emails": {
-                    let value = row['NumOpened'].toString();
-                    content.push(value);
-                    break;
-                }
-                case "No. of Links Opened": {
-                    let value = row['NumLinks'].toString();
-                    content.push(value);
-                    break;
-                }
+
+                // case "File Name": {
+                //     let value = row['TemplateName'].toString();
+                //     content.push(value);
+                //     break;
+                // }
+                // case "Sent Date": {
+                //     let value = row['SentDateTime'].toString();
+                //     content.push(value);
+                //     break;
+                // }
+                // case "Email Address": {
+                //     let value = row['EmailAddress'].toString();
+                //     content.push(value);
+                //     break;
+                // }
+                // case "Delivery Status": {
+                //     let value = row['DeliveryStatus'].toString();
+                //     content.push(value);
+                //     break;
+                // }
+                // case "Open Status": {
+                //     let value = row['OpenedStatus'].toString();
+                //     content.push(value);
+                //     break;
+                // }
+                // case "Clicked Link Status": {
+                //     let value = row['ClickedLinkStatus'].toString();
+                //     content.push(value);
+                //     break;
+                // }
+                // case "Dynamic Values": {
+                //     let value = row['DynamicValues'].toString();
+                //     content.push(value);
+                //     break;
+                // }
                 default:
                     if (apiName) {;
                         content.push(row[columnTitle.apiName]);
@@ -120,4 +139,4 @@ class CampaignLogTable extends React.Component {
 
 }
 
-export default CampaignLogTable;
+export default EmailLogTable;
