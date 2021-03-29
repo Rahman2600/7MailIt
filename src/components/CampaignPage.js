@@ -201,7 +201,7 @@ class CampaignPage extends React.Component {
     }
 
     handleSubjectLineChange(event) {
-        this.setState({emailAddress: event.target.value});
+        this.setState({subjectLine: event.target.value});
     }
 
     handleInputChange(event) {
@@ -220,7 +220,7 @@ class CampaignPage extends React.Component {
         let incorrectlyFomattedEmail = false;
         let emailContainsWhitespace = false;
         let emailAddress = this.state['emailAddress'];
-        let subjectLine = this.state['subjectLine'];
+        let subjectLine = this.state['subjectLine'].trimEnd();
 
         //Validate Email is of the correct format
         if(this.isEmptyStringOrNull(emailAddress)) {
@@ -309,8 +309,8 @@ class CampaignPage extends React.Component {
     }
 
     isEmptyStringOrNull(string) {
-        let stringWithoutWhitespace = new String(string);
-        return stringWithoutWhitespace == null || stringWithoutWhitespace === "";
+        console.log(string == null || string === "");
+        return string == null || string === "";
     }
 
 }
