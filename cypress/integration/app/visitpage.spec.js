@@ -75,7 +75,7 @@ context("Assertions", () => {
     //   cy.get('#emailSentAlert')
     //   .should('be.visible');
 
-    // });
+    });
   });
 
 
