@@ -80,10 +80,11 @@ class CampaignPage extends React.Component {
                             </div> : null }
                         </div>
                         <div className="row justify-content-right my-row1">
-                                <button type="button" className="btn btn-success" onClick={this.handleSubmit}>Submit</button>
+                                <button type="button" className="btn btn-success" id='button1' onClick={this.handleSubmit}>Submit</button>
                         </div>
                         {this.state.message != null ? 
-                            <div 
+                            <div id={
+                                this.state.message === this.messages.SUCCESS ? "emailSentAlert" : "emailSentFailed" }
                             className={
                                 this.state.message === this.messages.SUCCESS ? "alert alert-success" : "alert alert-danger" } 
                                 role="alert">
@@ -120,7 +121,7 @@ class CampaignPage extends React.Component {
                             Coming Soon!
                         </div>
                         <div className="row justify-content-right my-row1">
-                            <button type="button" className="btn btn-success">Submit</button>
+                            <button type="button" className="btn btn-success" id='button2'>Submit</button>
                         </div>
                     </div>
                 </div>
