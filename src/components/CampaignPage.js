@@ -309,7 +309,6 @@ class CampaignPage extends React.Component {
     }
 
     isEmptyStringOrNull(string) {
-        console.log(string == null || string === "");
         return string == null || string === "";
     }
 
