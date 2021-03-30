@@ -1,3 +1,57 @@
+Team Mail It! WIP Code Drop - March 30th, 2021 
+
+1. The “Update Temporary Credentials” page has been updated with more helping text for the user to understand the purpose of the page. More error handling has been added to ensure that whitespace cannot be present in the username and to ensure that the new and confirmed password match, and if the user tries to login from the “Update Temporary Credentials” page an error message will appear that will ask the user to sign in from the main authentication page. 
+
+
+2. The homepage has been rearranged to ensure the user will see all non-template grid elements on the left hand side. The team is currently working hard to have a “edit columns” option to add or remove columns to their discretion. The columns that will appear on default (and cannot be removed) will be Template Name, File Name, Upload Date, Create Email Campaign, and Campaign Logs. This feature has been prioritized to avoid horizontal scrolling on the homepage and should appear in the next deployment 
+
+
+3. The “Upload Template” process on the homepage has been updated with a Template Name field. In addition to this, more thorough dynamic value parsing/error handling: 
+-Only alpha-numeric and underscore characters will be permitted for creating dynamic value names 
+
+-Embedded dynamic values (i.e. ${ …. ${....}}) will not be permitted and an error will appear to indicate this issue 
+
+-Trailing dynamic values (i.e. ${.....) will not be permitted and an error will appear to indicate this issue 
+
+4.   The Campaign Page has had a few updates:
+ 
+-A subject line will be required when sending a single email campaign 
+
+-A “Return to Home” button appears at the top right corner of the page 
+
+-Email addresses used to send a single email can have trailing whitespace however no leading whitespace is permitted 
+
+-Currently the dynamic value fields for the single email campaign are only validated to ensure that they are not empty when the submit button is clicked. This validation will be discussed this evening with the sponsor. 
+
+5. Batch Email Campaign Creation is now available in the Create Email Campaign page:
+-The user must provide a csv file and a subject line to create a batch email campaign 
+
+-An example file has been provided in the UI for the user to reference when creating a csv file 
+
+PLEASE NOTE: this currently only works with happy path scenarios. The happy path scenario consists of the following criteria: 
+-An “Email Address” column with correctly formatted emails 
+-One column is present for each dynamic value. All columns are filled (i.e. no empty string cells as values) 
+-The csv file has a minimum of 3 valid entries. If a csv file has less than 3 valid entries the csv file will have an empty row and therefore an error message will appear in the user interface. The team is looking for a workaround to this. 
+
+6. Unsubscribing to emails 
+-Templates uploaded after March 30th will contain an unsubscribe link that when clicked on will unsubscribe the user. PLEASE NOTE: if you unsubscribe an email from this system you will need to notify Team Mail It! To add you back as a verified email address in SES 
+
+Upcoming Tasks For the Next Sprint 
+
+-Homepage fixes to avoid horizontal scrolling and to provide the user the ability to edit the columns visible on the page to their discretion 
+
+-The team is working to build the campaign and email log grids that are associated with each template 
+
+-Handling of negative paths in the batch email creation process to make the process more robust.
+
+-The security issue of being able to access any page through the URL without logging into the system will be fixed 
+
+-If time permits the team will try and start the internationalization and remove template stretch goals 
+
+
+
+
+
 Team Mail It! WIP Code Drop - March 23rd, 2021 
 
 1. The login page will now display an error message when a user provides an incorrect password and when the user exceeds the number of failed login attempts. 
