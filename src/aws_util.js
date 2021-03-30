@@ -3,7 +3,7 @@ import axios from 'axios'
 import fs from 'fs'
 import { type } from 'os';
 
-const uploadFile = async (fileInput,BUCKET_NAME) => {
+const uploadFile = async (fileInput,BUCKET_NAME, templateName) => {
     console.log(fileInput);
     if(typeof(fileInput) !== 'object' || !(fileInput instanceof File)) {
         
@@ -31,6 +31,7 @@ const uploadFile = async (fileInput,BUCKET_NAME) => {
         bucket: BUCKET_NAME,
         fileName: fileName,
         content: fileBase64String,
+        templateName: templateName,
         contentType: fileType
     };
 
