@@ -4,6 +4,7 @@ import scrap from '../assets/scrap.png';
 import multipleUserLogo from '../assets/multipleUserLogo.png';
 import userLogo from '../assets/userLogo.png';
 import sendSingleEmail from '../api-service.js'
+import { Link } from "react-router-dom";
 var AWS = require('aws-sdk');
 var S3 = require('aws-sdk/clients/s3');
 var mammoth = require("mammoth");
@@ -24,9 +25,11 @@ class CampaignPage extends React.Component {
         super(props);
         this.messages = Object.freeze({
             INCORRECT_EMAIL_FORMAT:   "Email Address is incorrectly formatted. Please provide a correctly formatted email and try again.",
+            EMAIL_CONTAINS_WHITESPACE: "Email Addresss contains whitespace. Please remove the whitespace and try again.",
             EMPTY_FIELD:  "At least one field is empty. Please fill all inputs above and try again.",
             SUCCESS: "Sucessfully sent email file",
-            SINGLE_EMAIL_ERROR: "The following response was recieved when trying to send your email: "
+            SINGLE_EMAIL_GENERAL_ERROR: "An error occured when trying to send your email, please check the console for more details.",
+            EMAIL_NOT_SES_VERIFIED: "This Email Address is not registered with this service. Please ask the team to register your email before continuing."
         });
         this.state = { 
             templateKey: this.props.match.params.templateKey,
@@ -34,10 +37,13 @@ class CampaignPage extends React.Component {
             dynamicValues: this.props.location.state.dynamicValues,
             templateName: this.props.location.state.templateName,
             emailAddress: '' ,
-            message: null}
+            message: null,
+            loading: false,
+            subjectLine: ""}
         
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleSubjectLineChange = this.handleSubjectLineChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -51,6 +57,12 @@ class CampaignPage extends React.Component {
                 <div className="row my-rows">
                     <div className="col-6 my-col img-responsive" dangerouslySetInnerHTML={{ __html: this.state.docHtml }} />
                     <div className="col-6 my-col">
+                        <Link 
+                            className="btn btn-primary float-right"
+                            role="button"
+                            to={"/HomePage"}>
+                            {"Return to Home Page"}
+                        </Link>
                         <div className="row my-row1"></div>
                         <div className="row justify-content-space-evenly my-row">
                             <img src={userLogo} className="img-rounded" width="30" height="30" />
@@ -62,11 +74,26 @@ class CampaignPage extends React.Component {
                                         <span className="input-group-text">Single Email Address</span>
                                     </div>
                                     <input 
-                                        type="email" 
+                                        type="text" 
                                         id="email-address"
                                         className="form-control" 
                                         aria-label="EmailAddress" 
                                         onChange={this.handleEmailChange} 
+                                        required>
+                                    </input>
+                                </div>
+                            </div>
+                            <div className="row justify-content-space-evenly my-row2">
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">Subject Line</span>
+                                    </div>
+                                    <input 
+                                        type="text" 
+                                        id="subject-line"
+                                        className="form-control" 
+                                        aria-label="subjectLine" 
+                                        onChange={this.handleSubjectLineChange} 
                                         required>
                                     </input>
                                 </div>
@@ -82,6 +109,13 @@ class CampaignPage extends React.Component {
                         <div className="row justify-content-right my-row1">
                                 <button type="button" className="btn btn-success" id='button1' onClick={this.handleSubmit}>Submit</button>
                         </div>
+                        {this.state.loading ? 
+                            <div className="horizontal-center">
+                                <div className="spinner-border text-primary" style={{width: "2rem", height: "2rem"}}
+                                role="status">
+                            </div>
+                        </div>: null
+                        }
                         {this.state.message != null ? 
                             <div id={
                                 this.state.message === this.messages.SUCCESS ? "emailSentAlert" : "emailSentFailed" }
@@ -114,12 +148,12 @@ class CampaignPage extends React.Component {
                                 <input type="text" className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" />
                             </div>
                         </div>
-                        
-                        <div className="row justify-content-left my-row1">
+
+                        {/* <div className="row justify-content-left my-row1">
                             <img src={scrap} className="img-rounded" width="50" height="50" />
                             <button type="button" className="btn btn-danger">Remove Template</button>
                             Coming Soon!
-                        </div>
+                        </div> */}
                         <div className="row justify-content-right my-row1">
                             <button type="button" className="btn btn-success" id='button2'>Submit</button>
                         </div>
@@ -163,8 +197,11 @@ class CampaignPage extends React.Component {
     }
 
     handleEmailChange(event) {
-        console.log(event);
         this.setState({emailAddress: event.target.value});
+    }
+
+    handleSubjectLineChange(event) {
+        this.setState({subjectLine: event.target.value});
     }
 
     handleInputChange(event) {
@@ -177,21 +214,37 @@ class CampaignPage extends React.Component {
     handleSubmit(event) {
         let dynamicValueInputs = document.getElementsByClassName('single-email');
         let emailAddressInput = document.getElementById('email-address');
+        let subjectLineInput = document.getElementById('subject-line');
         let dynamicValueObject = {};
         let emptyField = false;
         let incorrectlyFomattedEmail = false;
+        let emailContainsWhitespace = false;
         let emailAddress = this.state['emailAddress'];
-        console.log(emailAddress);
+        let subjectLine = this.state['subjectLine'].trimEnd();
+
         //Validate Email is of the correct format
         if(this.isEmptyStringOrNull(emailAddress)) {
             emailAddressInput.classList.add("inputError");
             emptyField = true;
-        } 
-        if(!this.isEmailCorrectlyFormatted(emailAddress)) {
+        }
+        emailAddress = emailAddress.trimEnd();
+        if (this.doesEmailContainWhitespace(emailAddress)) {
+            emailAddressInput.classList.add("inputError");
+            emailContainsWhitespace = true;
+        } else if(!this.isEmailCorrectlyFormatted(emailAddress)) {
             emailAddressInput.classList.add("inputError");
             incorrectlyFomattedEmail = true;
         } else {
             emailAddressInput.classList.remove("inputError");
+        }
+
+        //Validate Subject Line
+        if(this.isEmptyStringOrNull(subjectLine)) {
+            subjectLineInput.classList.add("inputError");
+            emptyField = true;
+        } else {
+            subjectLineInput.classList.remove("inputError");
+            dynamicValueObject['SUBJECT_LINE'] = this.state.subjectLine;
         }
         
         //Validate Dynamic Value Inputs are correctly formatted
@@ -204,43 +257,55 @@ class CampaignPage extends React.Component {
                 input.classList.remove("inputError");
                 dynamicValueObject[dynamicValue] = input.value;
             }
+        }    
+        
 
-        }
+        if(!incorrectlyFomattedEmail && !emptyField && !emailContainsWhitespace) {
+                this.setState({message: null});
+                var header = { headers: {
+                    "x-api-key": "6oyO3enoUI9Uu26ZPtdXNA2YPPCbSWn2cFRrxwRh"
+                }};
 
-        if(!incorrectlyFomattedEmail && !emptyField) {
-            this.setState({message: null});
-            var header = { headers: {
-                "x-api-key": "6oyO3enoUI9Uu26ZPtdXNA2YPPCbSWn2cFRrxwRh"
-            }};
+                var body = {
+                    emailAddress: emailAddress,
+                    dynamicValueStrings: JSON.stringify(dynamicValueObject),
+                    templateId: this.state.templateName
+                };
+                this.setState({loading: true});
+                sendSingleEmail(header, body).then(response => {
+                    this.setState({loading: false});
+                    if(response.status === 200) {
+                        this.setState({ message: this.messages.SUCCESS })
+                    } else {
+                        this.setState({ message: this.messages.SINGLE_EMAIL_ERROR + response.data})
+                    }
+                }).catch(error => {
+                    this.setState({loading: false});
+                    if(error.response.data.includes("Email address is not verified")) {
+                        this.setState({ message: this.messages.EMAIL_NOT_SES_VERIFIED})
+                    } else {
+                        console.log("Single Email Campaign Error: " + error.response);
+                        this.setState({ message: this.messages.SINGLE_EMAIL_ERROR})
+                    }
+                    
+                })
 
-            var body = {
-                emailAddress: emailAddress,
-                dynamicValueStrings: JSON.stringify(dynamicValueObject),
-                templateId: this.state.templateName
-            };
-            sendSingleEmail(header, body).then(response => {
-                if(response.status === 200) {
-                    this.setState({ message: this.messages.SUCCESS })
-                } else {
-                    console.log(response);
-                    this.setState({ message: this.messages.SINGLE_EMAIL_ERROR + response.data})
-                }
-            }).catch(err => {
-                this.setState({ message: this.messages.SINGLE_EMAIL_ERROR + err})
-            })
-            
         } else if(emptyField){
             this.setState({ message: this.messages.EMPTY_FIELD });
         } else if(incorrectlyFomattedEmail) {
-            this.setState({ message: this.messages.INCORRECT_EMAIL_FORMAT })
+            this.setState({ message: this.messages.INCORRECT_EMAIL_FORMAT });
+        } else if(emailContainsWhitespace) {
+            this.setState({ message: this.messages.EMAIL_CONTAINS_WHITESPACE});
         }
 
     }
 
     isEmailCorrectlyFormatted(email) {
         return email.match(EMAIL_FORMAT_REGEX);
+    }
 
-    
+    doesEmailContainWhitespace(email) {
+        return email.includes(" ");
     }
 
     isEmptyStringOrNull(string) {
