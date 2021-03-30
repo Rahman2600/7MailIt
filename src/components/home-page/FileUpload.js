@@ -43,10 +43,10 @@ class FileUpload extends React.Component {
                 }
                 <form>
                     <div className="form-group">
-                        <input type="file" className="form-control-file my-row0" id="fileUploadButton" onChange={this.onFileChange}/>
+                        <input type="file" className="form-control-file my-row2" id="fileUploadButton" onChange={this.onFileChange}/>
                     </div>
-                    <div className="row justify-content-space-evenly my-row0">
-                        <div className="input-group mb-3">
+                    <div className="row justify-content-space-evenly my-row2">
+                        <div className="input-group mb-2">
                             <div className="input-group-prepend">
                                 <span className="input-group-text">Template Name</span>
                             </div>
