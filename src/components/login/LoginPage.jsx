@@ -129,13 +129,18 @@ function LoginPage() {
                         user,               // the Cognito User Object
                         newPassword,       // the new password
                     ).then(user => {
+                        console.log("made it");
                         updateFormState(() => ({...formState, formType: "signedIn"}))
                         // at this time the user is logged in if no MFA required
                     }).catch(error => {
+                        console.log("made it here");
                         setShowErrorMsg(true);
                         setErrorMsg("An error has occured: " + error.message);
                     });
-                } 
+                } else {
+                    setShowErrorMsg(true);
+                    setErrorMsg("Cannot update a permanent password. Please login using the main authentication page. ");
+                }
             }).catch(error => {
                 signInErrorMessageProcessing(error);
             })
@@ -258,7 +263,7 @@ function LoginPage() {
                                         name="password"
                                         label="Temporary Password"
                                         type="password"
-                                        id="password"
+                                        id="temp-password"
                                         // autoComplete="current-password"
                                         onChange={onChange}
                                     />
@@ -270,7 +275,7 @@ function LoginPage() {
                                         name="newPassword"
                                         label="New Password"
                                         type="password"
-                                        id="password"
+                                        id="new-password"
                                         autoComplete="current-password"
                                         onChange={onChange}
                                     />
@@ -282,7 +287,7 @@ function LoginPage() {
                                         name="confirmPassword"
                                         label="Confirm New Password"
                                         type="password"
-                                        id="password"
+                                        id="confirm-password"
                                         autoComplete="current-password"
                                         onChange={onChange}
                                     />
