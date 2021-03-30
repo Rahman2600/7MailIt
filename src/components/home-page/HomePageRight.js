@@ -17,6 +17,7 @@ class HomePageRight extends React.Component {
                      id="logOutButton"
                      to={"/"}>Log Out
                  </Link>
+                 <div className="row my-row1"></div>
                 {/* <Link to="/CampaignLogTable">
                     <button  
                         id="viewLogButton" 
@@ -24,6 +25,7 @@ class HomePageRight extends React.Component {
                         View All Campaign Logs 
                     </button>
                 </Link> */}
+
                 <FileUpload onUploadSuccess={this.onUploadSuccess}/>
             </div> 
         )

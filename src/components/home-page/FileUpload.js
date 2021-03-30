@@ -21,6 +21,7 @@ class FileUpload extends React.Component {
     render() {
         return (
             <div>
+                <div className="row my-row1"></div>
                 <p className="mt-5 text-center">Upload New Template</p>
                 {this.state.message != null ? 
                     <div 
