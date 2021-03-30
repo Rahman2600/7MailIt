@@ -181,7 +181,7 @@ class CampaignPage extends React.Component {
         let emptyField = false;
         let incorrectlyFomattedEmail = false;
         let emailAddress = this.state['emailAddress'];
-        console.log(emailAddress);
+
         //Validate Email is of the correct format
         if(this.isEmptyStringOrNull(emailAddress)) {
             emailAddressInput.classList.add("inputError");
@@ -239,8 +239,6 @@ class CampaignPage extends React.Component {
 
     isEmailCorrectlyFormatted(email) {
         return email.match(EMAIL_FORMAT_REGEX);
-
-    
     }
 
     isEmptyStringOrNull(string) {
