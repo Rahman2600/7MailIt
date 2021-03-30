@@ -1,11 +1,9 @@
 import React from "react";
 import "../App.css";
-import scrap from '../assets/scrap.png';
-import multipleUserLogo from '../assets/multipleUserLogo.png';
 import userLogo from '../assets/userLogo.png';
 import sendSingleEmail from '../api-service.js'
+import BatchEmailCampaignCreation from "./BatchEmailCampaignCreation";
 var AWS = require('aws-sdk');
-var S3 = require('aws-sdk/clients/s3');
 var mammoth = require("mammoth");
 
 const BUCKET_NAME = "docxtemplates"
@@ -93,36 +91,7 @@ class CampaignPage extends React.Component {
                             :
                             <div></div>
                         }
-                        <div className="row my-row1"></div>
-                        <div className="row justify-content-space-evenly my-row">
-                            <img src={multipleUserLogo} className="img-rounded" width="50" height="50" />
-                        </div>
-                        Coming Soon!
-                        <div className="row justify-content-space-evenly my-row2">
-                            <div className="input-group mb-3">
-                                <div className="custom-file">
-                                    <input type="file" className="custom-file-input" id="inputGroupFile02" />
-                                    <label className="custom-file-label" for="inputGroupFile02">CSV File Upload</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row justify-content-space-evenly my-row2">
-                            <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text" id="inputGroup-sizing-default">Subject Line</span>
-                                </div>
-                                <input type="text" className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" />
-                            </div>
-                        </div>
-                        
-                        <div className="row justify-content-left my-row1">
-                            <img src={scrap} className="img-rounded" width="50" height="50" />
-                            <button type="button" className="btn btn-danger">Remove Template</button>
-                            Coming Soon!
-                        </div>
-                        <div className="row justify-content-right my-row1">
-                            <button type="button" className="btn btn-success" id='button2'>Submit</button>
-                        </div>
+                        <BatchEmailCampaignCreation templateName={this.state.templateName} />
                     </div>
                 </div>
             </div>

@@ -1,18 +1,21 @@
 import React from "react";
+import {createBatchEmailCampaign} from "../aws_util";
+import scrap from '../assets/scrap.png';
+import multipleUserLogo from '../assets/multipleUserLogo.png';
 
 class BatchEmailCampaignCreation extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = { templateName: props.templateName, selectedFile: '', subjectLine: '', message: null, loading: false};
 		this.messages = Object.freeze({
-            WRONG_FILE_TYPE:   "Wrong template file type. Upload a .csv file",
+            WRONG_FILE_TYPE:   "The file does not have the correct type. Please upload a .csv file",
             BATCH_EMAIL_CREATION_FAIL:  "An error occured when creating the batch email campaign. Please refer to the console for more details.",
-            NO_FILE: "Please upload a correctly formatted .csv file.",
+            EMPTY_FIELD: "There is at least one empty field. Please upload a correctly formatted .csv file and provide a subject line to continue.",
             SUCCESS: "Sucessfully created a batch email campaign."
         });
 
 		this.onFileUpload = this.onFileUpload.bind(this);
-        this.onSubjectLineChange = this.onBatchEmailSubjectLineChange.bind(this);
+        this.onSubjectLineChange = this.onSubjectLineChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 	}
 
@@ -25,14 +28,12 @@ class BatchEmailCampaignCreation extends React.Component {
 				</div>
 				<div className="row justify-content-space-evenly my-row2">
 					<div className="input-group mb-3">
-						<div className="custom-file">
-							<input 
-								type="file" 
-								className="custom-file-input" 
-								id="inputGroupFile02" 
-								onChange={this.onFileUpload}/>
-							<label className="custom-file-label" for="inputGroupFile02">CSV File Upload</label>
-						</div>
+						
+                	<form>
+                    	<div className="form-group">
+                        	<input type="file" className="form-control-file" id="fileUploadButton" onChange={this.onFileUpload}/>
+                    	</div>
+               		</form>
 					</div>
 				</div>
 				<div className="row justify-content-space-evenly my-row2">
@@ -56,13 +57,32 @@ class BatchEmailCampaignCreation extends React.Component {
 					<button type="button" className="btn btn-danger">Remove Template</button>
 					Coming Soon!
 				</div> */}
+				
 				<div className="row justify-content-right my-row1">
 					<button 
 						type="button" 
 						className="btn btn-success" 
 						id='button2'
-						onClick={this.onFileUpload}>Submit</button>
+						onClick={this.onSubmit}>Submit</button>
 				</div>
+				{this.state.loading ? 
+                    <div className="horizontal-center">
+                        <div className="spinner-border text-primary" style={{width: "2rem", height: "2rem"}}
+                            role="status">
+                        </div>
+                    </div>: null
+                }
+				{this.state.message != null ? 
+					<div id={
+                        	this.state.message === this.messages.SUCCESS ? "emailSentAlert" : "emailSentFailed" }
+                        className={
+                            this.state.message === this.messages.SUCCESS ? "alert alert-success" : "alert alert-danger" } 
+                            role="alert">
+                            {`${this.state.message}`} 
+                    </div>
+                    :
+                    <div></div>
+                }
 			</div>
 		);
 	}
@@ -78,12 +98,12 @@ class BatchEmailCampaignCreation extends React.Component {
 	onSubmit(event) {
         //Validate Subject Line
 		let subjectLineInput = document.getElementById('subject-line-batch-email');
-        let emptyField = false;
+        let emptySubjectLine = false;
         let subjectLine = this.state['subjectLine'].trimEnd();
 		
 		if(this.isEmptyStringOrNull(subjectLine)) {
             subjectLineInput.classList.add("inputError");
-            emptyField = true;
+            emptySubjectLine = true;
         } else {
             subjectLineInput.classList.remove("inputError");
         }
@@ -97,18 +117,19 @@ class BatchEmailCampaignCreation extends React.Component {
             filePath = fileInput.name;
         }
 
-        if (!fileInput) {
-            this.setState({message: this.messages.NO_FILE});
-        } else if(!allowedExtensions.exec(filePath)){    
+		let templateName = this.state.templateName;
+
+        if (!fileInput || emptySubjectLine) {
+            this.setState({message: this.messages.EMPTY_FIELD});
+		} else if(!allowedExtensions.exec(filePath)){    
             this.setState({message: this.messages.WRONG_FILE_TYPE});
         } else {
-            this.setState({uploading: true});
-            uploadFile(fileInput, 'docxtemplates').then(() => {
-                this.setState({ message: this.messages.SUCCESS, uploading: false});
-                this.props.onUploadSuccess();
+            this.setState({loading: true});
+            createBatchEmailCampaign(fileInput, subjectLine, templateName).then(() => {
+                this.setState({ message: this.messages.SUCCESS, loading: false});
             }).catch(error => {
-                console.log(error);
-                this.setState({ message: this.messages.UPLOAD_FAIL + ": " + error.message, uploading: false});
+                console.log("Batch Email Campaign Error: " + error.message);
+                this.setState({ message: this.messages.BATCH_EMAIL_CREATION_FAIL, loading: false});
             });    
         }
 	}
