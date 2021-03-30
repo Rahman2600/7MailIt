@@ -65,7 +65,7 @@ class TemplateLogTable extends React.Component {
             {displayName:"Team", apiName: "Team"},
             {displayName:"Dynamic Values", apiName: "DynamicValues"},
             {displayName:"Create Email Campaign", apiName: "UploadStatus"},
-            {displayName:"Campaign Logs", apiName: ""}
+            //{displayName:"Campaign Logs", apiName: ""}
         ];
         let table = {columns: []};
         if (data.statusCode === 200) {

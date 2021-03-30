@@ -17,13 +17,13 @@ class HomePageRight extends React.Component {
                      id="logOutButton"
                      to={"/"}>Log Out
                  </Link>
-                <Link to="/UnderConstructionPage">
+                {/* <Link to="/UnderConstructionPage">
                     <button  
                         id="viewLogButton" 
                         className="btn btn-primary btn-block mt-5"> 
                         View All Campaign Logs 
                     </button>
-                </Link>
+                </Link> */}
                 <FileUpload onUploadSuccess={this.onUploadSuccess}/>
             </div> 
         )
