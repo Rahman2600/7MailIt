@@ -20,7 +20,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {Redirect} from "react-router";
 
 const initialFormState = {
-    username: "", email: "", password: "", newPassword: "", authCode: "", formType: "signIn"
+    username: "", email: "", password: "", confirmPassword: "", newPassword: "", authCode: "", formType: "signIn"
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -70,20 +70,22 @@ function LoginPage() {
 
     async function signIn(e) {
         e.preventDefault()
+        setShowErrorMsg(false);
+        setErrorMsg("");
         const {email, password} = formState
-        try {
-            await Auth.signIn(email, password);
-            updateFormState(() => ({...formState, formType: "signedIn"}))
-            // whatNext()
-        } catch (error) {
+        if(email.includes(" ")) {
             setShowErrorMsg(true);
-            if(error.message == "Password attempts exceeded")
-                setErrorMsg("Password attempts exceeded. Please wait before logging back in again.")
-            else if(error.message == "Incorrect username or password.")
-                setErrorMsg("Incorrect username or password")
-            else if(error.code == "UserNotFoundException")
-                setErrorMsg("User doesn't exist")
-            console.log('error signing in', error);
+            setErrorMsg("The email address cannot contain any white space.");
+        } else if(email === "" || password === "") {
+            setShowErrorMsg(true);
+            setErrorMsg("The email address or password cannot be empty.");
+        } else {
+            try {
+                await Auth.signIn(email, password);
+                updateFormState(() => ({...formState, formType: "signedIn"}))
+            } catch (error) {
+                signInErrorMessageProcessing(error);
+            }
         }
     }
 
@@ -92,10 +94,35 @@ function LoginPage() {
         updateFormState(() => ({...formState, formType: "confirmCredentials"}))
     }
 
+    const signInErrorMessageProcessing = (error) => {
+            setShowErrorMsg(true);
+            switch(error.message) {
+                case "Password attempts exceeded.":
+                    setErrorMsg("Password attempts exceeded. Please wait 5 minutes before logging back in again.");
+                    break;
+                case "Username cannot be empty.":
+                case "Incorrect username or password.":
+                case "User does not exist.":
+                    setErrorMsg(error.message);
+                    break;
+                default:
+                    setErrorMsg("An error has occured. More details contained in the console.");
+                    break;
+            }
+            console.log('Authentication error:', error);
+    }
+
     async function confirmAndSignIn(e) {
-        e.preventDefault()
-        const {email, password, newPassword} = formState
-        Auth.signIn(email, password)
+        e.preventDefault();
+        setShowErrorMsg(false);
+        setErrorMsg("");
+        const {email, password, newPassword, confirmPassword} = formState
+        if(confirmPassword !== newPassword) {
+            setShowErrorMsg(true);
+            setErrorMsg("New and confirmed password do not match.")
+        } else {
+            setShowErrorMsg(false);
+            Auth.signIn(email, password)
             .then(user => {
                 if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
                     Auth.completeNewPassword(
@@ -104,15 +131,16 @@ function LoginPage() {
                     ).then(user => {
                         updateFormState(() => ({...formState, formType: "signedIn"}))
                         // at this time the user is logged in if no MFA required
-                    }).catch(e => {
-                        console.log(e);
+                    }).catch(error => {
+                        setShowErrorMsg(true);
+                        setErrorMsg("An error has occured: " + error.message);
                     });
-                } else {
-                    // other situations
-                }
-            }).catch(e => {
-            console.log(e);
-        })
+                } 
+            }).catch(error => {
+                signInErrorMessageProcessing(error);
+            })
+        }
+        
     }
 
     return (
@@ -156,10 +184,6 @@ function LoginPage() {
                                         autoComplete="current-password"
                                         placeholder="password"
                                         onChange={onChange}
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox value="remember" color="primary"/>}
-                                        label="Remember me"
                                     />
                                     
                                     {showErrorMsg?<h6 style={{color: 'red'}}>{errorMsg}</h6>:null}
@@ -208,7 +232,10 @@ function LoginPage() {
                                     <LockOutlinedIcon />
                                 </Avatar>
                                 <Typography component="h1" variant="h5">
-                                    Update Credentials
+                                    Update Temporary Credentials
+                                </Typography>
+                                <Typography component="h9" variant="h8">
+                                    This page is only intended to update temporary credentials. 
                                 </Typography>
                                 <form className={classes.form} noValidate>
                                     <TextField
@@ -252,7 +279,7 @@ function LoginPage() {
                                         margin="normal"
                                         required
                                         fullWidth
-                                        name="newPassword"
+                                        name="confirmPassword"
                                         label="Confirm New Password"
                                         type="password"
                                         id="password"
@@ -263,6 +290,7 @@ function LoginPage() {
                                     {/*    control={<Checkbox value="remember" color="primary" />}*/}
                                     {/*    label="Remember me"*/}
                                     {/*/>*/}
+                                    {showErrorMsg?<h6 style={{color: 'red'}}>{errorMsg}</h6>:null}
                                     <Button
                                         type="submit"
                                         fullWidth
@@ -271,7 +299,7 @@ function LoginPage() {
                                         className={classes.submit}
                                         onClick={confirmAndSignIn}
                                     >
-                                        Sign In
+                                        Update Password and Sign In
                                     </Button>
                                     <Grid container>
                                         {/*<Grid item xs>*/}
@@ -282,7 +310,7 @@ function LoginPage() {
                                         <Grid item>
                                             <Link
                                                 href="/" variant="body2">
-                                                {"Already Confirmed? Sign In!"}
+                                                {"Temporary Password Already Changed? Click Here!"}
                                             </Link>
                                         </Grid>
                                     </Grid>
