@@ -48,16 +48,13 @@ const uploadFile = async (fileInput,BUCKET_NAME) => {
     
 };
 
-const createBatchEmailCampaign = async(fileInput, subjectLine, templateName) => {
+const createBatchEmailCampaign = async(fileInput, subjectLine, templateName, dynamicValues) => {
     if(typeof(fileInput) !== 'object' || !(fileInput instanceof File)) {
         throw Error("File input is not of type File");
     }
 
     // read content from the file
     var fileBase64String = await encodeFileAsBase64String(fileInput);
-    var fileType = fileInput.type;
-    var fileName = fileInput.name;
-
     // setting up s3 upload parameters
     try {
      var header = { headers: {
@@ -65,9 +62,8 @@ const createBatchEmailCampaign = async(fileInput, subjectLine, templateName) => 
      }};
 
     var body = {
-        fileName: fileName,
         fileContent: fileBase64String,
-        contentType: fileType,
+        dynamicValues: dynamicValues,
         subjectLine: subjectLine,
         templateId: templateName
     };

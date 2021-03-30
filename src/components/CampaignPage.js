@@ -125,7 +125,7 @@ class CampaignPage extends React.Component {
                             :
                             <div></div>
                         }
-                        <BatchEmailCampaignCreation templateName={this.state.templateName} />
+                        <BatchEmailCampaignCreation dynamicValues={this.state.dynamicValues} templateName={this.state.templateName} />
                     </div>
                 </div>
             </div>
