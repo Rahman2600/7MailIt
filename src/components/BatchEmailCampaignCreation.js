@@ -27,10 +27,11 @@ class BatchEmailCampaignCreation extends React.Component {
 				<div className="row justify-content-space-evenly my-row">
 					<img src={multipleUserLogo} className="img-rounded" width="50" height="50" />
 				</div>
-				Please submit a .csv file formatted similar to this 
-				<Link to="/Example_File.csv" target="_blank" download> example </Link>
-				file.
-				<div className="row justify-content-space-evenly my-row2">
+				<div className="row my-row1">
+					{"Please submit a .csv file formatted similar to this :"}
+					<Link to="/Example_File.csv" target="_blank" download>{"example file."}</Link>
+				</div>
+				<div className="row justify-content-space-evenly my-row1">
 					<div className="input-group mb-3">
 						
                 	<form>
@@ -40,7 +41,7 @@ class BatchEmailCampaignCreation extends React.Component {
                		</form>
 					</div>
 				</div>
-				<div className="row justify-content-space-evenly my-row2">
+				<div className="row justify-content-space-evenly my-row1">
 					<div className="input-group mb-3">
 						<div className="input-group-prepend">
 							<span className="input-group-text" id="inputGroup-sizing-default">Subject Line</span>
