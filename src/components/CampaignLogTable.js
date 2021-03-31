@@ -3,7 +3,7 @@ import axios from 'axios';
 import Table from "../components/Table";
 
 
-const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
+// const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
 
 
 class CampaignLogTable extends React.Component {
@@ -13,16 +13,57 @@ class CampaignLogTable extends React.Component {
         
     }
 
-    componentDidMount() {
-        var header = { headers: {
-             "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
-        }};
-        axios.get(DATA_LINK, header).then(response => {
-            let table = this.dataToTable(response.data);
-            console.log(table);
-            this.setState({table: table})
-        });
+    // var header = { headers: {
+    //      "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
+    // }};
+    // axios.get(DATA_LINK, header).then(response => {
+    //     let table = this.dataToTable(response.data);
+    //     console.log(table);
+    //     this.setState({table: table})
+    // });
+
+
+
+
+
+    // TODO
+    // 1) obtain data from LogDataset, using logData POST API and getcampaignlogdata lambda
+    // 2) populate the front end table
+    getLogTableData() {
+        // var data = JSON.stringify({
+        //     "min": 0,
+        //     "max": 5
+        // });
+
+        var config = {
+            method: 'get',
+            url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
+            }
+        };
+
+        axios(config)
+            .then(response => {
+                this.sortTemplateLogs(response.data);
+                let table = this.dataToTable(response.data);
+                this.setState({table: table})
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
+
+    componentDidMount() {
+        this.getLogTableData()
+    }
+
+
+
+
+
+
 
     render() {
         console.log(this.state.table)
