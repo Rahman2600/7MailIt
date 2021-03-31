@@ -36,11 +36,12 @@ class CampaignLogTable extends React.Component {
         // });
 
         var config = {
-            method: 'get',
-            url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs',
+            method: 'post',
+            // url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs',
+            url: 'https://ue4fr66yvj.execute-api.us-east-1.amazonaws.com/logStage', // this is the right one for POST logData - solved!
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
+                'x-api-key': process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY  // I belive you need to create api key in  api getaway => logdata => settings
             }
         };
 
