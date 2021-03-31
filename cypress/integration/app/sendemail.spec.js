@@ -34,6 +34,9 @@ context("Assertions", () => {
       cy.get('#email-address')
         .should('be.visible')
         .type('gurveer.kaur.aulakh@gmail.com');
+        cy.get('#subject-line')
+        .should('be.visible')
+        .type('EmailSubject');
       cy.get('input[aria-label="NAME"]')
         .should('be.visible')
         .type('abc');

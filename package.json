@@ -55,7 +55,7 @@
   "devDependencies": {
     "aws-sdk": "^2.848.0",
     "concurrently": "^5.3.0",
-    "cypress": "^6.4.0",
+    "cypress": "^6.7.0",
     "fs": "0.0.1-security",
     "wait-on": "^5.2.1"
   }
