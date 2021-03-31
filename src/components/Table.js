@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 /**  
- * - Table is passed data as a prop 
  * 
- * - data is in the form of
+ * @param {Array} data is in the form of
+ * 
  * {numRows: <number>, columns: [
  *  <column> 
  *  (, <column>)*
@@ -17,8 +17,14 @@ import { Link } from "react-router-dom";
  * 
  * - button links to the route given by link
  * 
- * - Table has a loading state set it to true when data is not yet available to trigger the loading spinner.
- * You can pass in the data as soon as it is available and table would be rendered
+ * @param {Array} columns
+ * 
+ * Specifies which of the columns in the data should be shown in table
+ * 
+ * @param {boolean} loading 
+ * 
+ * If loading is true table shows a loading spinner and ignores the data prop
+ * 
 */
 
 class Table extends React.Component {
@@ -58,7 +64,11 @@ class Table extends React.Component {
     renderTableHeader() {
         return (
             <tr>
-                {this.props.data.columns.map((column, i) => { return <th key={i}>{column.title}</th> })}
+                {this.props.data.columns.map((column, i) => { 
+                    if (this.renderColumn(column.title)) {
+                        return <th key={i}>{column.title}</th>;
+                    }
+                })}
             </tr>
         )
     }
@@ -74,11 +84,13 @@ class Table extends React.Component {
     renderRow(i) {
         return (
             this.props.data.columns.map((current, j) => { 
-                return (
-                    <td key={j}> 
-                        {this.renderCell(current.content[i])}
-                     </td>
-                )
+                if (this.renderColumn(current.title)) {
+                    return (
+                        <td key={j}> 
+                            {this.renderCell(current.content[i])}
+                         </td>
+                    )
+                }
             })  
         )
     }
@@ -101,6 +113,11 @@ class Table extends React.Component {
                     </div>)
             }
         }
+    }
+
+    renderColumn(columnName) {
+        let columnsToShow = this.props.columns;
+        return !columnsToShow || columnsToShow.includes(columnName);
     }
 
 }

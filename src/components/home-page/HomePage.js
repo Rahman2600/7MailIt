@@ -7,13 +7,13 @@ class HomePage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onUploadSuccess = this.onUploadSuccess.bind(this);
-		this.key = 0;
+		this.id = 0;
 	}
 	render() {
-		this.key += 1;
+		this.id += 1;
 		return (
 			<div className="scroll container-fluid">
-				<TemplateLogTable key={this.key}/>
+				<TemplateLogTable id={this.id}/>
 				<HomePageRight onUploadSuccess={this.onUploadSuccess}/>
 			</div>
     	);
