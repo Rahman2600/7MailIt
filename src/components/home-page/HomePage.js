@@ -12,7 +12,7 @@ class HomePage extends React.Component {
 	render() {
 		this.id += 1;
 		return (
-			<div className="scroll container-fluid">
+			<div className="scroll container-fluid" style={{"max-width": "100%"}}>
 				<TemplateLogTable id={this.id}/>
 				<HomePageRight onUploadSuccess={this.onUploadSuccess}/>
 			</div>
