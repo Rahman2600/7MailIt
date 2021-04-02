@@ -91,7 +91,8 @@ class TemplateLogTable extends React.Component {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
                 case "Campaign Logs": {
-                    content.push({button: {displayName: "View", link: "/EmailLogTable"}});
+                    let actualFileName = row[0];
+                    content.push({button: {displayName: "View", link: "/EmailLogTable/${template"}, fileName: actualFileName });
                     break;
                 }
                 case "Dynamic Values": {
