@@ -15,7 +15,6 @@ class HomePage extends React.Component {
 			<div className="scroll container-fluid" style={{"max-width": "100%"}}>
 				<HomePageRight onUploadSuccess={this.onUploadSuccess}/>
 				<TemplateLogTable id={this.id}/>
-				<TemplateLogTable key={this.key}/>
 			</div>
     	);
 	}
