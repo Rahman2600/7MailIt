@@ -19,7 +19,17 @@ import { Link } from "react-router-dom";
  * 
  * @param {Array} columns
  * 
- * Specifies which of the columns in the data should be shown in table
+ * - specifies which columns should be shown in table if columns is not specified all columns are shown
+ * 
+ * - columns is an array of {title: <string> ,sort: <boolean> }
+ * 
+ * - title is the title of a column we want included in the table
+ * - sort is an optional field that indicates whether we should be able to sort column, columns with sort
+ * set to true have a sorting button beside them in table.
+ * 
+ * - Default sorting order is alphabetical order of strings
+ * 
+ * 
  * 
  * @param {boolean} loading 
  * 
@@ -66,7 +76,14 @@ class Table extends React.Component {
             <tr>
                 {this.props.data.columns.map((column, i) => { 
                     if (this.renderColumn(column.title)) {
-                        return <th key={i}>{column.title}</th>;
+                        return ( 
+                            <th key={i}>
+                                {column.title}
+                                {this.addSortButtonToColumn(column.title)? 
+                                <span className="float-right sort">&#9660;</span> :
+                                                            <span></span>}
+                            </th>
+                        );
                     }
                 })}
             </tr>
@@ -117,7 +134,17 @@ class Table extends React.Component {
 
     renderColumn(columnName) {
         let columnsToShow = this.props.columns;
-        return !columnsToShow || columnsToShow.includes(columnName);
+        return !columnsToShow || columnsToShow.map(({title}) => title).includes(columnName);
+    }
+
+    addSortButtonToColumn(columnName) {
+        let columnsToShow = this.props.columns;
+        for(let {title, sort} of columnsToShow) {
+            if (columnName == title && sort) {
+                return true;
+            }
+        } 
+        return false;
     }
 
 }
