@@ -63,7 +63,7 @@ class CampaignPage extends React.Component {
                     
                     <div className="col-6 my-col">
                         <Link 
-                            className="btn btn-primary float-right"
+                            className="btn btn-primary float-right mt-2"
                             role="button"
                             to={"/HomePage"}>
                             {"Return to Home Page"}
