@@ -80,7 +80,9 @@ class Table extends React.Component {
                             <th key={i}>
                                 {column.title}
                                 {this.addSortButtonToColumn(column.title)? 
-                                <span className="float-right sort">&#9660;</span> :
+                                <div className="btn-group-vertical float-right">
+                                    <span>&#9650;</span> 
+                                </div> :
                                                             <span></span>}
                             </th>
                         );
