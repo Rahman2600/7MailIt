@@ -25,10 +25,10 @@ class EmailLogTable extends React.Component {
     }
 
     render() {
-        console.log(this.state.table)
+        let table = this.state.table;
         return ( 
-            <div className="col-lg-9 pl-0 pr-1">
-                <Table data={this.state.table}/>
+            <div style={{"max-width": "100%"}}>
+                {table? <Table data={table} columns={this.state.columns}/> : <Table loading={true}/>}
             </div>        
         );
     }

@@ -214,6 +214,7 @@ function LoginPage() {
                                                 // href="/ConfirmCredentials" variant="body2"
                                                 href="#"
                                                 onClick={confirmCredentials}
+                                                id="change-password-link"
                                             >
                                                 {"Update Temporary Password Here!"}
                                             </a>
@@ -299,6 +300,7 @@ function LoginPage() {
                                     <Button
                                         type="submit"
                                         fullWidth
+                                        id="update-password-button"
                                         variant="contained"
                                         color="primary"
                                         className={classes.submit}

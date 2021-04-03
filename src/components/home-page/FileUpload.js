@@ -61,7 +61,7 @@ class FileUpload extends React.Component {
                         </div>
                     </div>
                 </form>
-                <button className="btn btn-primary btn-block mt-5" onClick={this.onFileUpload}> Submit </button>
+                <button className="btn btn-primary btn-block mt-5" id="template-Submit" onClick={this.onFileUpload}> Submit </button>
             </div>
         )
     }
