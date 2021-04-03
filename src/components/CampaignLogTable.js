@@ -38,7 +38,7 @@ class CampaignLogTable extends React.Component {
     // alternalte approach with api logData and lambda getcampaignLogData: 'https://ue4fr66yvj.execute-api.us-east-1.amazonaws.com/logStage',
     getLogTableData() {
         console.log("getLogTableData is running")
-        var apiString = "https://2rsf9haj99.execute-api.us-east-1.amazonaws.com/queryLogs/templateId"
+        var apiString = "https://2rsf9haj99.execute-api.us-east-1.amazonaws.com/queryLogs/templateId/"
         var templateId = this.state.templateName;
         var queryString =  apiString.concat(templateId);
         var config = {
@@ -55,9 +55,9 @@ class CampaignLogTable extends React.Component {
         axios(config)
             .then(response => {
                 console.log(response.data)
-                // this.sortTemplateLogs(response.data);
-                // let table = this.dataToTable(response.data);
-                // this.setState({table: table})
+                //TODO make new functiont to parse the return values into proper format
+                let table = this.dataToTable(response.data.items);
+                this.setState({table: table})
             })
             .catch(function (error) {
                 console.log(error);
@@ -67,11 +67,6 @@ class CampaignLogTable extends React.Component {
     componentDidMount() {
         this.getLogTableData()
     }
-
-
-
-
-
 
 
     render() {
@@ -86,7 +81,7 @@ class CampaignLogTable extends React.Component {
 
     dataToTable(data) {
         let columnTitles = [
-            {displayName:"File Name", apiName: "TemplateName"}, 
+            {displayName:"File Name", apiName: "TemplateName"},
             {displayName:"Date of Campaign Launch", apiName: "SentDateTime"}, 
             {displayName:"No. of People Emailed", apiName: "NumEmailed"}, 
             {displayName:"No. of Emails Successfully Delivered", apiName: "NumSuccessfullyDelivered"},
@@ -94,7 +89,10 @@ class CampaignLogTable extends React.Component {
             {displayName:"No. of Links Opened", apiName: "NumLinks"},
             {displayName:"Email Log", apiName: ""}
         ];
+
         let table = {columns: []};
+        // let items = data.items
+
         if (data.statusCode === 200) {
             for (let i = 0; i < columnTitles.length; i++) {
                 let columnTitle = columnTitles[i];
