@@ -82,6 +82,7 @@ class TemplateLogTable extends React.Component {
         let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
         table.numRows = templateKeyColumn.content.length;
         this.addLinksToCampaignPage(table);
+        this.addLinksToCampaignLogTable(table)
         return table;
     }
 
@@ -91,7 +92,7 @@ class TemplateLogTable extends React.Component {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
                 case "Campaign Logs": {
-                    content.push({button: {displayName: "View", link: ""}});
+                    content.push({button: {displayName: "View", link: "", data: ""}});
                     break;
                 }
                 case "Dynamic Values": {
@@ -152,17 +153,16 @@ class TemplateLogTable extends React.Component {
     }
 
     addLinksToCampaignLogTable(table) {
-        let fileNameColumn = this.getColumnWithDisplayName("File Name", table);
-        let templateNameCoumn = this.getColumnWithDisplayName("Template Name", table);
-        let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
-        let statusColumn = this.getColumnWithDisplayName("Create Email Campaign", table);
-        let content = statusColumn.content;
+        let templateNameColumn = this.getColumnWithDisplayName("Template Name", table);
+        let CampaignLogsColumn = this.getColumnWithDisplayName("Campaign Logs", table);
+        let content = CampaignLogsColumn.content;
+
         for(let i = 0; i < content.length; i++) {
             let current = content[i];
             if (typeof current === "object") {
-                current.button.link = `CampaignLogTable/${fileNameColumn.content[i]}`;
-                current.button.data = {dynamicValues: JSON.parse(this.commaSeperatedStringToArray(dynamicValuesColumn.content[i])),
-                    templateName: templateNameCoumn.content[i]};
+                current.button.link = `CampaignLogTable/`;
+                current.button.data = {
+                    templateName: templateNameColumn.content[i]};
             }
         }
     }

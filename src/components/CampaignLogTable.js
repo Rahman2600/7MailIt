@@ -9,8 +9,8 @@ import Table from "../components/Table";
 class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
-        
+        this.state = {
+            templateName: this.props.location.state.templateName
     }
 
     // var header = { headers: {
