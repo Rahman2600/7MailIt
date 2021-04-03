@@ -10,7 +10,9 @@ class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            templateName: this.props.location.state.templateName
+            templateName: "1"
+            // this.props.location.state.templateName
+        }
     }
 
     // var header = { headers: {
@@ -22,6 +24,10 @@ class CampaignLogTable extends React.Component {
     //     this.setState({table: table})
     // });
 
+    // var data = JSON.stringify({
+    //     "min": 0,
+    //     "max": 5
+    // });
 
 
 
@@ -29,27 +35,29 @@ class CampaignLogTable extends React.Component {
     // TODO
     // 1) obtain data from LogDataset, using logData POST API and getcampaignlogdata lambda
     // 2) populate the front end table
+    // alternalte approach with api logData and lambda getcampaignLogData: 'https://ue4fr66yvj.execute-api.us-east-1.amazonaws.com/logStage',
     getLogTableData() {
-        // var data = JSON.stringify({
-        //     "min": 0,
-        //     "max": 5
-        // });
-        var queryString = "https://2rsf9haj99.execute-api.us-east-1.amazonaws.com/queryLogs/templateId/" + 1
+        console.log("getLogTableData is running")
+        var apiString = "https://2rsf9haj99.execute-api.us-east-1.amazonaws.com/queryLogs/templateId"
+        var templateId = this.state.templateName;
+        var queryString =  apiString.concat(templateId);
         var config = {
             method: 'get',
             url: queryString,
-                'https://ue4fr66yvj.execute-api.us-east-1.amazonaws.com/logStage', // this is the right one for POST logData - solved!
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY  // I belive you need to create api key in  api getaway => logdata => settings
+                'x-api-key': "S1VsUgcBCv14uSiR2yPPfaLlxGXv5FYdkdbOWUV6"
             }
         };
+        // process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
+        // I created the following key, but how do I use it: S1VsUgcBCv14uSiR2yPPfaLlxGXv5FYdkdbOWUV6
 
         axios(config)
             .then(response => {
-                this.sortTemplateLogs(response.data);
-                let table = this.dataToTable(response.data);
-                this.setState({table: table})
+                console.log(response.data)
+                // this.sortTemplateLogs(response.data);
+                // let table = this.dataToTable(response.data);
+                // this.setState({table: table})
             })
             .catch(function (error) {
                 console.log(error);
@@ -67,6 +75,7 @@ class CampaignLogTable extends React.Component {
 
 
     render() {
+        console.log("render is running")
         console.log(this.state.table)
         return ( 
             <div className="col-lg-9 pl-0 pr-1">
