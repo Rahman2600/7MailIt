@@ -91,8 +91,7 @@ class TemplateLogTable extends React.Component {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
                 case "Campaign Logs": {
-                    let actualFileName = row[0];
-                    content.push({button: {displayName: "View", link: "/EmailLogTable/${template"}, fileName: actualFileName });
+                    content.push({button: {displayName: "View", link: ""}});
                     break;
                 }
                 case "Dynamic Values": {
@@ -148,6 +147,22 @@ class TemplateLogTable extends React.Component {
                 current.button.link = `campaignPage/${fileNameColumn.content[i]}`;
                 current.button.data = {dynamicValues: JSON.parse(this.commaSeperatedStringToArray(dynamicValuesColumn.content[i])), 
                                        templateName: templateNameCoumn.content[i]};
+            }
+        }
+    }
+
+    addLinksToCampaignLogTable(table) {
+        let fileNameColumn = this.getColumnWithDisplayName("File Name", table);
+        let templateNameCoumn = this.getColumnWithDisplayName("Template Name", table);
+        let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
+        let statusColumn = this.getColumnWithDisplayName("Create Email Campaign", table);
+        let content = statusColumn.content;
+        for(let i = 0; i < content.length; i++) {
+            let current = content[i];
+            if (typeof current === "object") {
+                current.button.link = `CampaignLogTable/${fileNameColumn.content[i]}`;
+                current.button.data = {dynamicValues: JSON.parse(this.commaSeperatedStringToArray(dynamicValuesColumn.content[i])),
+                    templateName: templateNameCoumn.content[i]};
             }
         }
     }
