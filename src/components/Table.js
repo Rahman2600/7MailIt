@@ -23,6 +23,20 @@ import { Link } from "react-router-dom";
 class Table extends React.Component {
     constructor(props) {
         super(props);
+        this.observer = new IntersectionObserver(
+            this.handleObserver.bind(this),
+            options
+        )
+        var options = {
+            root: null, // Page as root
+            rootMargin: '0px',
+            threshold: 1.0
+        };
+        this.observer.observe(this.loadingRef);
+    }
+
+    handleObserver() {
+
     }
 
     render() {
@@ -61,7 +75,11 @@ class Table extends React.Component {
     renderTableBody() {
         return (
             [...Array(this.props.data.numRows).keys()].map((i) => {
-                return <tr key={i} >{this.renderRow(i)}</tr>;               
+                if (i === this.props.data.numRows) {
+                    return <tr ref={loadingRef => (this.loadingRef = loadingRef)} key={i} >{this.renderRow(i)}</tr>;  
+                } else {
+                    return <tr key={i} >{this.renderRow(i)}</tr>;  
+                }              
             })
         )
     }

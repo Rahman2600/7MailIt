@@ -39,6 +39,11 @@ class TemplateLogTable extends React.Component {
             console.log(JSON.stringify(response));
             let table = this.dataToTable(response);
             console.log(table);
+            const observer = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    
+                }
+            })
             this.setState({table: table, maxElem: max})
         })
         .catch(function (error) {
