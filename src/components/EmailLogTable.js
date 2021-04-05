@@ -3,7 +3,7 @@ import axios from 'axios';
 import Table from "../components/Table";
 
 
-const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs"
+// const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs"
 
 
 class EmailLogTable extends React.Component {

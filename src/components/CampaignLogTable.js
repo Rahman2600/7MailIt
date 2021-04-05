@@ -10,7 +10,7 @@ class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            templateName: "1"
+            templateName: "0"
             // this.props.location.state.templateName
         }
     }
@@ -54,9 +54,12 @@ class CampaignLogTable extends React.Component {
 
         axios(config)
             .then(response => {
-                console.log(response.data)
-                //TODO make new functiont to parse the return values into proper format
-                let table = this.dataToTable(response.data.items);
+                // console.log("response.data is;", response.data)
+                let separatedCampaigns = this.separateCampaigns(response.data.Items);
+                // console.log("separatedCampaigns is :", separatedCampaigns)
+                let rowInformation = this.makeRowInformation(separatedCampaigns);
+                // console.log("rowInformation is: ", rowInformation)
+                let table = this.dataToTable(rowInformation);
                 this.setState({table: table})
             })
             .catch(function (error) {
@@ -70,7 +73,6 @@ class CampaignLogTable extends React.Component {
 
 
     render() {
-        console.log("render is running")
         console.log(this.state.table)
         return ( 
             <div className="col-lg-9 pl-0 pr-1">
@@ -79,9 +81,64 @@ class CampaignLogTable extends React.Component {
         );
     }
 
+    separateCampaigns(data) {
+        let campaignMap = new Map();
+        var i;
+        for (i = 0; i < data.length; i++) {
+            // The C might not be capitalised, as seen in lambda
+            if (campaignMap.has(data[i].CampaignId.S)) {
+                campaignMap.get(data[i].CampaignId.S).push(data[i])
+            } else {
+                let campaignArray = []
+                campaignArray.push(data[i])
+                campaignMap.set(data[i].CampaignId.S, campaignArray)
+            }
+        }
+            return campaignMap
+    }
+
+
+    makeRowInformation(separatedCampaigns) {
+        var i;
+        let tableForm = [];
+        for (let [key, value] of separatedCampaigns) {
+            let campaignId = key;
+            let sentDateTime = value[0].SentDateTime.S;
+            let numEmailed = 0;
+            let numSuccessfullyDelivered = 0;
+            let numOpened = 0;
+            let numLinks = 0;
+            console.log(value.length)
+            for (i = 0; i < value.length; i++) {
+
+                numEmailed ++;
+                if (value[i].DeliveryStatus.S === "Delivered") {
+                    numSuccessfullyDelivered ++;
+                }
+                if (value[i].OpenedStatus.S === "Opened") {
+                    numOpened ++;
+                }
+                if (!(value[i].ClickedLinkStatus.S === "Clicked")) {
+                    numLinks ++;
+                }
+            }
+
+            let row = {
+                CampaignId: campaignId,
+                SentDateTime: sentDateTime,
+                NumEmailed: numEmailed,
+                NumSuccessfullyDelivered: numSuccessfullyDelivered,
+                NumOpened: numOpened,
+                NumLinks: numLinks
+            }
+            tableForm.push(row)
+        }
+        return tableForm;
+    }
+
     dataToTable(data) {
         let columnTitles = [
-            {displayName:"File Name", apiName: "TemplateName"},
+            {displayName:"CampaignId", apiName: "CampaignId"},
             {displayName:"Date of Campaign Launch", apiName: "SentDateTime"}, 
             {displayName:"No. of People Emailed", apiName: "NumEmailed"}, 
             {displayName:"No. of Emails Successfully Delivered", apiName: "NumSuccessfullyDelivered"},
@@ -93,40 +150,25 @@ class CampaignLogTable extends React.Component {
         let table = {columns: []};
         // let items = data.items
 
-        if (data.statusCode === 200) {
-            for (let i = 0; i < columnTitles.length; i++) {
-                let columnTitle = columnTitles[i];
-                table.columns.push({
-                    title: columnTitle.displayName,
-                    content: this.getContent(columnTitle, data)
-                });
-            }
-        } else {
-            console.log("Request failed with " + data.statusCode)
+        for (let i = 0; i < columnTitles.length; i++) {
+            let columnTitle = columnTitles[i];
+            table.columns.push({
+                title: columnTitle.displayName,
+                content: this.getContent(columnTitle, data)
+            });
         }
-        let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
+        let templateKeyColumn = this.getColumnWithDisplayName("CampaignId", table);
         table.numRows = templateKeyColumn.content.length;
         return table;
     }
 
     getContent(columnTitle, data) {
         let content = [];
-        for (let row of data.body) {
+        for (let row of data) {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
                 case "Date of Campaign Launch": {
-                    let value = row[columnTitle.apiName];
-                    if (value) {
-                        let dateObj = new Date(value);
-                        var date = dateObj.getDate();
-                        var month = dateObj.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
-                        var year = dateObj.getFullYear();
-                            
-                        var dateString = date + "/" + month + "/" + year;
-                        content.push(dateString);
-                    } else {
-                        content.push(" ");
-                    }
+                        content.push(row["SentDateTime"]);
                     break;
                 }
                 case "No. of People Emailed": {
@@ -134,22 +176,24 @@ class CampaignLogTable extends React.Component {
                     break;
                 }
                 case "No. of Emails Successfully Delivered": {
-                    let value = row['NumSuccessfullyDelivered'].toString();
-                    content.push(value);
+                    content.push(row['NumSuccessfullyDelivered'].toString());
                     break;
                 }
                 case "No. of Opened Emails": {
-                    let value = row['NumOpened'].toString();
-                    content.push(value);
+                    content.push(row['NumOpened'].toString());
                     break;
                 }
                 case "No. of Links Opened": {
-                    let value = row['NumLinks'].toString();
-                    content.push(value);
+                    // let value = row['NumLinks'].toString();
+                    content.push(row['NumLinks'].toString());
+                    break;
+                }
+                case "Email Log": {
+                    content.push({button: {displayName: "View", link: "/EmailLogTable", data: ""}});
                     break;
                 }
                 default:
-                    if (apiName) {;
+                    if (apiName) {
                         content.push(row[columnTitle.apiName]);
                     }
                 }
