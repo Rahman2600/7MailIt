@@ -8,6 +8,7 @@ class FileUpload extends React.Component {
         this.messages = Object.freeze({
             WRONG_FILE_TYPE:   "Wrong template file type. Upload a .doc or .docx file",
             UPLOAD_FAIL:  "Upload Failure",
+            REMOVE_FAILED: "Template Removal failed",
             EMPTY_FIELD: "At least one field is empty. Please fill in both fields to continue.",
             TEMPLATE_NAME_INCORRECT_FORMAT: "The template name can only contain alpha numeric characters, underscores and/or hyphens",
             EMPTY_TEMPLATE_NAME: "The template name is empty. Please provide a template name to continue.",
@@ -60,9 +61,28 @@ class FileUpload extends React.Component {
                             </input>
                         </div>
                     </div>
+                    
                 </form>
                 <button className="btn btn-primary btn-block mt-5" onClick={this.onFileUpload}> Submit </button>
-            </div>
+                <p className="mt-5 text-center">Remove a Template</p>
+                <div className="row justify-content-space-evenly my-row2">
+                        <div className="input-group mb-2">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">Template Name</span>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="template-name"
+                                className="form-control" 
+                                aria-label="TemplateName" 
+                                onChange={this.onTemplateNameChange} 
+                                required>
+                            </input>
+                        </div>
+                    </div>
+                    <button className="btn btn-primary btn-block mt-5" onClick={this.onFileRemove}> Submit </button>
+                </div>
+            
         )
     }
 
@@ -73,6 +93,8 @@ class FileUpload extends React.Component {
     onTemplateNameChange(event) {
         this.setState({ templateName: event.target.value});
     }
+
+    
 
     onFileUpload() {
         //Validate template name
@@ -112,12 +134,51 @@ class FileUpload extends React.Component {
             this.setState({message: this.messages.WRONG_FILE_TYPE});
         } else {
             this.setState({uploading: true});
+            removeTemplate(templateName).then(() => {
+                this.setState({ message: this.messages.SUCCESS, processing: false});
+                this.props.onUploadSuccess();
+            }).catch(error => {
+                console.log(error);
+                this.setState({ message: this.messages.UPLOAD_FAIL + ": " + error.message, uploading: false});
+            });    
+        }
+    }
+
+    onFileRemove() {
+        //Validate template name
+        let templateNameInput = document.getElementById('template-name');
+        let isEmptyField = false;
+        let isTemplateNameCorrectFormat = true;
+        let templateName = this.state['templateName'];
+
+        this.setState({message: null});
+        if(this.isEmptyStringOrNull(templateName.trim())) {
+            isEmptyField = true;
+            templateNameInput.classList.add("inputError");
+        } else {
+            templateNameInput.classList.remove("inputError");
+        }
+
+        if(!this.isTemplateNameFormattedCorrectly(templateName)) {
+            isTemplateNameCorrectFormat = false;
+            templateNameInput.classList.add("inputError");
+        } else {
+            templateNameInput.classList.remove("inputError");
+        }
+
+        
+       if(!isTemplateNameCorrectFormat) {
+            this.setState({message: this.messages.TEMPLATE_NAME_INCORRECT_FORMAT});
+        }else if(!allowedExtensions.exec(filePath)){    
+            this.setState({message: this.messages.WRONG_FILE_TYPE});
+        } else {
+            this.setState({uploading: true});
             uploadFile(fileInput, 'docxtemplates', templateName).then(() => {
                 this.setState({ message: this.messages.SUCCESS, uploading: false});
                 this.props.onUploadSuccess();
             }).catch(error => {
                 console.log(error);
-                this.setState({ message: this.messages.UPLOAD_FAIL + ": " + error.message, uploading: false});
+                this.setState({ message: this.messages.REMOVE_FAILED + ": " + error.message, uploading: false});
             });    
         }
     }
