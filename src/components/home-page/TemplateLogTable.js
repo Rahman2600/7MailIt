@@ -12,6 +12,7 @@ class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
         this.defaultColumns = ["File Name", "Template Name", "Upload Date", "Create Email Campaign", "Campaign Logs"];
+        this.sortableColumns = ["File Name",  "Template Name", "Upload Date", "Team"];
         this.state = {table: null, editingColumns: false, columns: []};
         this.getTableData = this.getTableData.bind(this);
         this.onEditColumns = this.onEditColumns.bind(this);
@@ -73,7 +74,11 @@ class TemplateLogTable extends React.Component {
                     }).filter((element) => element != null)} onChange={this.onSelectedColumnsChange}/>
                 </div>
                 : <div></div>}
-                {table? <Table data={table} columns={this.state.columns}/> : <Table loading={true}/>}
+                {table? <Table data={table} 
+                columns={this.state.columns.map((column) => {
+                    return {title: column, sort: this.sortableColumns.includes(column)}
+                })}/> : 
+                <Table loading={true}/>}
             </div>        
         );
     }
