@@ -1,26 +1,25 @@
 import React from "react";
 import axios from 'axios';
 
-import Table from "../Table"
+import Table from "../Table";
+import Pagination from "../Pagination";
 
-
-const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
 const PAGE_SIZE = 16; //to be dynamically set based on screen size in the future
 
 class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {maxElem: 0}
+        this.state = {page: 0}
+        this.onChangePage = this.onChangePage.bind(this);
     }
 
     componentDidMount() {
-        this.loadNextPage();
+        this.loadPage(0);
     }
 
-    loadNextPage() {
-        let maxElem = this.state.maxElem;
-        let min = maxElem + 1;
-        let max = maxElem + PAGE_SIZE;
+    loadPage(i) {
+        let min = PAGE_SIZE * i + 1;
+        let max = min + PAGE_SIZE - 1;
         var params = {
             min: min,
             max: max
@@ -39,12 +38,7 @@ class TemplateLogTable extends React.Component {
             console.log(JSON.stringify(response));
             let table = this.dataToTable(response);
             console.log(table);
-            const observer = new IntersectionObserver(entries => {
-                if (entries[0].isIntersecting) {
-                    
-                }
-            })
-            this.setState({table: table, maxElem: max})
+            this.setState({table: table, page: i})
         })
         .catch(function (error) {
             console.log(error);
@@ -54,13 +48,16 @@ class TemplateLogTable extends React.Component {
     render() {
         return ( 
             <div className="col-lg-9 pl-0 pr-1">
-                <Table data={this.state.table} onNextPage={this.onNextPage}/>
+                <Pagination current={0} max={6} onChangePage={this.onChangePage}/> 
+                <Table data={this.state.table}/>
             </div>        
         );
     }
 
-    onNextPage() {
-
+    onChangePage(i) {
+        if (this.state.page !== i) {
+            this.loadPage(i);
+        }   
     }
 
     dataToTable(data) {
