@@ -1,5 +1,5 @@
 import React from "react";
-import {convertToTemplate,uploadFile} from "../../aws_util"
+import {convertToTemplate,uploadFile, removeFile} from "../../aws_util"
 
 class FileUpload extends React.Component {
     constructor(props) {
@@ -169,11 +169,9 @@ class FileUpload extends React.Component {
         
        if(!isTemplateNameCorrectFormat) {
             this.setState({message: this.messages.TEMPLATE_NAME_INCORRECT_FORMAT});
-        }else if(!allowedExtensions.exec(filePath)){    
-            this.setState({message: this.messages.WRONG_FILE_TYPE});
-        } else {
+        }else {
             this.setState({uploading: true});
-            uploadFile(fileInput, 'docxtemplates', templateName).then(() => {
+            removeFile(templateName).then(() => {
                 this.setState({ message: this.messages.SUCCESS, uploading: false});
                 this.props.onUploadSuccess();
             }).catch(error => {
