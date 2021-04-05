@@ -5,19 +5,26 @@ import Table from "../Table"
 
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
+const PAGE_SIZE = 16; //to be dynamically set based on screen size in the future
 
 class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {maxElem: 0}
     }
 
     componentDidMount() {
+        this.loadNextPage();
+    }
+
+    loadNextPage() {
+        let maxElem = this.state.maxElem;
+        let min = maxElem + 1;
+        let max = maxElem + PAGE_SIZE;
         var params = {
-            min: "0",
-            max: "16"
+            min: min,
+            max: max
          };
-          
         var config = {
             method: 'get',
             url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/template-logs-with-range',
@@ -32,7 +39,7 @@ class TemplateLogTable extends React.Component {
             console.log(JSON.stringify(response));
             let table = this.dataToTable(response);
             console.log(table);
-            this.setState({table: table})
+            this.setState({table: table, maxElem: max})
         })
         .catch(function (error) {
             console.log(error);
@@ -42,9 +49,13 @@ class TemplateLogTable extends React.Component {
     render() {
         return ( 
             <div className="col-lg-9 pl-0 pr-1">
-                <Table data={this.state.table}/>
+                <Table data={this.state.table} onNextPage={this.onNextPage}/>
             </div>        
         );
+    }
+
+    onNextPage() {
+
     }
 
     dataToTable(data) {
