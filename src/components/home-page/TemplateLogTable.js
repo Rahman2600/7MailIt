@@ -4,7 +4,7 @@ import axios from 'axios';
 import Table from "../Table";
 import Pagination from "../Pagination";
 
-const PAGE_SIZE = 17; //to be dynamically set based on screen size in the future
+const PAGE_SIZE = 17; //dynamically set based on screen size?
 
 class TemplateLogTable extends React.Component {
     constructor(props) {
