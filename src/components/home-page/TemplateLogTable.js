@@ -15,7 +15,7 @@ class TemplateLogTable extends React.Component {
     componentDidMount() {
         var params = {
             min: "0",
-            max: "6"
+            max: "16"
          };
           
         var config = {
@@ -29,8 +29,8 @@ class TemplateLogTable extends React.Component {
 
         axios(config)
           .then(response => {
-            console.log(JSON.stringify(response.data));
-            let table = this.dataToTable(response.data);
+            console.log(JSON.stringify(response));
+            let table = this.dataToTable(response);
             console.log(table);
             this.setState({table: table})
         })
@@ -58,7 +58,7 @@ class TemplateLogTable extends React.Component {
             {displayName:"Campaign Logs", apiName: ""}
         ];
         let table = {columns: []};
-        if (data.statusCode === 200) {
+        if (data.statusCode === 200 || data.status === 200) {
             for (let i = 0; i < columnTitles.length; i++) {
                 let columnTitle = columnTitles[i];
                 table.columns.push({
@@ -77,7 +77,7 @@ class TemplateLogTable extends React.Component {
 
     getContent(columnTitle, data) {
         let content = [];
-        for (let row of data.body) {
+        for (let row of data.data) {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
                 case "Campaign Logs": {
