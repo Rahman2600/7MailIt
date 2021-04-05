@@ -9,16 +9,17 @@ const PAGE_SIZE = 17; //dynamically set based on screen size?
 class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {page: 0}
+        this.state = {page: 1}
         this.onChangePage = this.onChangePage.bind(this);
     }
 
     componentDidMount() {
-        this.loadPage(0);
+        this.loadPage(1);
     }
 
     loadPage(i) {
-        let min = PAGE_SIZE * i + 1;
+        this.setState({loading: true});
+        let min = PAGE_SIZE * (i - 1) + 1;
         let max = min + PAGE_SIZE - 1;
         var params = {
             min: min,
@@ -38,7 +39,7 @@ class TemplateLogTable extends React.Component {
             console.log(JSON.stringify(response));
             let table = this.dataToTable(response);
             console.log(table);
-            this.setState({table: table, page: i})
+            this.setState({table: table, page: i, loading: false})
         })
         .catch(function (error) {
             console.log(error);
@@ -48,8 +49,17 @@ class TemplateLogTable extends React.Component {
     render() {
         return ( 
             <div className="col-lg-9 pl-0 pr-1">
-                <Pagination current={0} max={6} onChangePage={this.onChangePage}/> 
-                <Table data={this.state.table}/>
+                <Pagination current={this.state.page} max={6} onChangePage={this.onChangePage}/> 
+                {this.state.loading ? 
+                    <div className="center">
+                        <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}}
+                        role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                </div> :
+                <div>
+                    <Table data={this.state.table}/>
+                </div>}   
             </div>        
         );
     }

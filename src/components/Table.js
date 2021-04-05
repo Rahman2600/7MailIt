@@ -51,11 +51,6 @@ class Table extends React.Component {
         }
     }
 
-    onChangePage(i) {
-        this.props.requestData(i);
-    }
-
-
     renderTableHeader() {
         return (
             <tr>
