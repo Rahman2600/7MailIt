@@ -18,6 +18,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import {Redirect} from "react-router";
+import PropTypes from 'prop-types';
 
 const initialFormState = {
     username: "", email: "", password: "", confirmPassword: "", newPassword: "", authCode: "", formType: "signIn"
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function LoginPage() {
+function LoginPage({updateUser}) {
     const classes = useStyles();
     const [formState, updateFormState] = useState(initialFormState)
     const [showErrorMsg,setShowErrorMsg] = useState(false); 
@@ -83,6 +84,9 @@ function LoginPage() {
             try {
                 await Auth.signIn(email, password);
                 updateFormState(() => ({...formState, formType: "signedIn"}))
+                const user  = await Auth.currentAuthenticatedUser();
+                console.log(updateUser)
+                updateUser(user)
             } catch (error) {
                 signInErrorMessageProcessing(error);
             }
@@ -337,6 +341,10 @@ function LoginPage() {
             }
         </div>
     );
+}
+
+LoginPage.propTypes = {
+    updateUser: PropTypes.func.isRequired
 }
 
 export default LoginPage
