@@ -11,28 +11,25 @@ import {Auth} from "aws-amplify";
 
 function App() {
 
-    const [user, updateUser] = useState(null);
-
-    async function checkUser() {
-        try {
-            const user = await Auth.currentAuthenticatedUser();
-            console.log("The user is : ", user)
-            // updateUser(user)
-        } catch (e) {
-            console.log("user authentification in app.js failed", e)
-        }
-    }
-
-    useEffect(() => {
-            checkUser().then(user => updateUser(user))
-            console.log("user at checkUser is :", user);
-        }, []
-    )
-
-    if (!user) {
-        return <LoginPage updateUser={updateUser}/>
-    } else {
-        console.log("reached browserRoute")
+    // const [user, updateUser] = useState(null);
+    //
+    // async function checkUser() {
+    //     try {
+    //         const user = await Auth.currentAuthenticatedUser();
+    //     } catch (e) {
+    //         console.log(e)
+    //     }
+    // }
+    //
+    // useEffect(() => {
+    //         checkUser().then(user => updateUser(user))
+    //         console.log("user at checkUser is :", user);
+    //     }, []
+    // )
+    //
+    // if (!user) {
+    //     return <LoginPage updateUser={updateUser}/>
+    // } else {
         return (
             <div>
                 <BrowserRouter>
