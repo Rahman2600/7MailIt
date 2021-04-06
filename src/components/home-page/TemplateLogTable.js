@@ -4,21 +4,33 @@ import axios from 'axios';
 import Table from "../Table";
 import Pagination from "../Pagination";
 import PageDataStore from "../../model/PageDataStore";
+import CheckList from "../CheckList"
+
 
 const NUM_TEMPLATES_ON_PAGE = 17; //dynamically set based on screen size?
 
 class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {page: 1}
+        this.state = {page: 1, table: null, editingColumns: false, columns: []}
         this.pageDataStore = new PageDataStore();
         this.onChangePage = this.onChangePage.bind(this);
         this.getNumPages = this.getNumPages.bind(this);
+        this.defaultColumns = ["File Name", "Template Name", "Upload Date", "Create Email Campaign", "Campaign Logs"];
+        this.sortableColumns = ["File Name",  "Template Name", "Upload Date", "Team"];
+        this.onEditColumns = this.onEditColumns.bind(this);
+        this.onSelectedColumnsChange = this.onSelectedColumnsChange.bind(this);
     }
 
     componentDidMount() {
         this.getNumTemplates();
-        this.loadPage(1);
+        this.loadPage(this.state.page);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.id != prevProps.id) {
+            this.loadPage(this.state.page);
+        }
     }
 
     loadPage(i) {
@@ -77,24 +89,33 @@ class TemplateLogTable extends React.Component {
     }
 
     render() {
-        console.log(this.state.numTemplates);
-        console.log(this.state.loading);
-        console.log(this.state.table);
+        let table = this.state.table;
+        if (table) {
+            let columns = table.columns.map(({title}) => title);
+           //console.log(columns);
+        }
         return ( 
-            <div className="col-lg-9 pl-0 pr-1">
-                {this.state.loading || !this.state.numTemplates ?
-                <div>
-                    <div className="center">
-                        <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}}
-                        role="status">
-                            <span className="sr-only">Loading...</span>
-                        </div>
-                    </div> 
-                </div> :
+            <div className="float-left col-lg-9 pl-0 pr-1">
+                <h1 className="mt-2">Template logs</h1>
+                <button className="btn btn-primary mb-2" onClick={this.onEditColumns}> Edit columns </button>
+                {this.state.editingColumns && table ? 
+                <div className="mb-2">
+                    <CheckList list={table.columns.map(({title}) => {
+                        if (!this.defaultColumns.includes(title)) {
+                            return {value: title, checked: true}
+                        }
+                    }).filter((element) => element != null)} onChange={this.onSelectedColumnsChange}/>
+                </div>
+                : <div></div>}
+                {table && this.state.numTemplates?
                 <div>
                     <Pagination current={this.state.page} max={this.getNumPages()} onChangePage={this.onChangePage}/>
-                    <Table data={this.state.table} /> 
-                </div>}
+                    <Table data={table} 
+                    columns={this.state.columns.map((column) => {
+                        return {title: column, sort: this.sortableColumns.includes(column)}
+                    })}/> 
+                </div>: 
+                <Table loading={true}/>}
             </div>        
         );
     }
@@ -115,7 +136,23 @@ class TemplateLogTable extends React.Component {
                 this.loadPage(i);
             }
             
-        }   
+        }
+    }
+
+    onSelectedColumnsChange(checkedStates) {
+        let additionalColumns = [];
+        for (let {value, checked} of checkedStates) {
+            if (checked) {
+                additionalColumns.push(value);
+            }
+        }
+        this.setState({columns: this.defaultColumns.concat(additionalColumns)})
+    }
+
+    onEditColumns() {
+        if (this.state.table != null) {
+            this.setState({editingColumns: !this.state.editingColumns});
+        }
     }
 
     dataToTable(data) {
@@ -124,7 +161,7 @@ class TemplateLogTable extends React.Component {
             {displayName:"Template Name", apiName: "TemplateName"}, 
             {displayName:"Upload Date", apiName: "DocUploadDateTime"},
             {displayName:"Team", apiName: "Team"},
-            {displayName:"No. of Campaigns", apiName: ""},
+            {displayName:"Dynamic Values", apiName: "DynamicValues"},
             {displayName:"Create Email Campaign", apiName: "UploadStatus"},
             {displayName:"Campaign Logs", apiName: ""}
         ];
@@ -152,17 +189,21 @@ class TemplateLogTable extends React.Component {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
                 case "Campaign Logs": {
-                    content.push({button: {displayName: "View", link: "/UnderConstructionPage"}});
+                    content.push({button: {displayName: "View", link: "/EmailLogTable"}});
                     break;
                 }
-                case "No. of Campaigns": {
-                    content.push("TODO");
+                case "Dynamic Values": {
+                    let value = row[columnTitle.apiName];
+
+                    let commaList = this.arrayToCommaSeperatedString(value);
+                    //Need to remove this once dynamic value parsing is complete
+                    content.push(commaList);
                     break;
                 }
                 case "Create Email Campaign": {
                     let value = row[columnTitle.apiName];
                     if (value == "Ready") {
-                        content.push({button: {displayName:"Ready", link:""}});
+                        content.push({button: {displayName:"Ready", link:"", data: ""}});
                     } else {
                         content.push(value);
                     }
@@ -193,13 +234,17 @@ class TemplateLogTable extends React.Component {
     }
 
     addLinksToCampaignPage(table) {
-        let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
+        let fileNameColumn = this.getColumnWithDisplayName("File Name", table);
+        let templateNameCoumn = this.getColumnWithDisplayName("Template Name", table);
+        let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
         let statusColumn = this.getColumnWithDisplayName("Create Email Campaign", table);
         let content = statusColumn.content;
         for(let i = 0; i < content.length; i++) {
             let current = content[i];
             if (typeof current === "object") {
-                current.button.link = `campaignPage/${templateKeyColumn.content[i]}`;
+                current.button.link = `campaignPage/${fileNameColumn.content[i]}`;
+                current.button.data = {dynamicValues: JSON.parse(this.commaSeperatedStringToArray(dynamicValuesColumn.content[i])), 
+                                       templateName: templateNameCoumn.content[i]};
             }
         }
     }
@@ -212,6 +257,24 @@ class TemplateLogTable extends React.Component {
         }
     }
 
+    sortTemplateLogs(templateLogs) {
+        templateLogs.body.sort((a, b) => {
+            let dateA = new Date(a.DocUploadDateTime);
+            let dateB = new Date(b.DocUploadDateTime)
+            return dateB - dateA;
+        });
+    }
+
+    arrayToCommaSeperatedString(dynamicValueString) {
+        let newString = dynamicValueString
+                            .replace("]", "");
+        newString = newString.replace("[", "");
+        return newString;
+    }
+
+    commaSeperatedStringToArray(dynamicValueString) {
+        return "[" + dynamicValueString + "]";
+    }
 
 }
 

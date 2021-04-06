@@ -2,31 +2,109 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 /**  
- * - Table is passed data as a prop 
  * 
- * - data is in the form of
+ * @param {Array} data is in the form of
+ * 
  * {numRows: <number>, columns: [
  *  <column> 
  *  (, <column>)*
  * ]}
- * <column> ::= {title: <string>, content:[<string>, <button>]} 
+ * <column> ::= {title: <string>, content:[list of <content>]}
+ * <content> := <string> | <button>
  * <button> ::= {button: {displayName: <string>, link: <string>}}
  * 
  * - link should be string in the form of an HTML link e.g "/HomePage"
  * 
  * - button links to the route given by link
  * 
- * - Table can handle data loading, if data is null loading spinner is displayed on the page and 
- * table is displayed as soon as data is available
+ * @param {Array} columns
+ * 
+ * - specifies which columns should be shown in table if columns is not specified all columns are shown
+ * 
+ * - columns is an array of {title: <string> ,sort: <boolean> }
+ * 
+ * - title is the title of a column we want included in the table
+ * - sort is an optional field that indicates whether we should be able to sort column, columns with sort
+ * set to true have a sorting button beside them in table.
+ * 
+ * - Default sorting order is alphabetical order of strings
+ * 
+ * 
+ * 
+ * @param {boolean} loading 
+ * 
+ * If loading is true table shows a loading spinner and ignores the data prop
+ * 
 */
 
 class Table extends React.Component {
+    
     constructor(props) {
         super(props);
+        this.state = {
+            data: this.props.data,
+            columnsAscending: [true,true,true,true]
+        }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.data) {
+            this.setState(nextProps);
+            console.log("nextProps",this.state.data);
+        }
+    }
+
+    handleSorting = (column) => {
+        console.log("initial state",this.state.data)
+        let dataCopy = JSON.parse(JSON.stringify(this.state.data))        //array1.forEach(this.props.data => console.log(element))
+        let arr = dataCopy.columns
+        //console.log('state before sorted:', this.state.data.columns[column].content);
+        //console.log('dataCopy before sorted', dataCopy.columns[column].content)
+
+        //bubble sort with the weird object 2d array 
+        let n = arr[column].content.length;
+        for (let i = 0; i < n-1; i++)
+            for (let j = 0; j < n-i-1; j++)
+                if(this.state.columnsAscending[column] == true) {
+                    if (arr[column].content[j] > arr[column].content[j+1]) {
+                        // swap arr[j+1] and arr[j]
+                    for(let k = 0; k < arr.length;k++) {
+                        let temp = arr[k].content[j];
+                        arr[k].content[j] = arr[k].content[j+1];
+                        arr[k].content[j+1] = temp;
+                    }
+                    }
+            } else {
+                if (arr[column].content[j] < arr[column].content[j+1]) {
+                    // swap arr[j+1] and arr[j]
+                for(let k = 0; k < arr.length;k++) {
+                    let temp = arr[k].content[j];
+                    arr[k].content[j] = arr[k].content[j+1];
+                    arr[k].content[j+1] = temp;
+                }
+                }
+            }
+        let columnsAscendingCopy = [...this.state.columnsAscending];
+        columnsAscendingCopy[column] = !columnsAscendingCopy[column]
+        this.setState({data:dataCopy,columnsAscending:columnsAscendingCopy})
+                //this.setState(this.props.data.columns[i].content); 
+        //console.log('state after sorted:', this.state.data.columns[column].content);
+        //console.log('dataCopy after sorted', dataCopy.columns[column].content)
+    }
+
+
     render() {
-        if (this.props.data) {
+        if (this.props.loading) {
+            return (
+                <div className="vertical-horizontal-center">
+                    <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}}
+                    role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div>
+            );
+        } else if (this.props.data) {
+            console.log(this.props.data);
             return (
                 <div>
                     <table className="table table-striped" >
@@ -41,12 +119,7 @@ class Table extends React.Component {
             );
         } else {
             return (
-                <div className="center">
-                    <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}}
-                    role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
+                <div> Error: Loading not set to true and data not available </div>
             );
         }
     }
@@ -54,27 +127,43 @@ class Table extends React.Component {
     renderTableHeader() {
         return (
             <tr>
-                {this.props.data.columns.map((column, i) => { return <th key={i}>{column.title}</th> })}
+                {this.state.data.columns.map((column, i) => { 
+                    if (this.renderColumn(column.title)) {
+                        console.log(column.title);
+                        return ( 
+                            <th key={i}>
+                                {column.title}
+                                {this.addSortButtonToColumn(column.title)? 
+                                <button className="btn-group-vertical float-right" onClick={() => this.handleSorting(i)}>
+                                    <span>&#9650;</span> 
+                                </button> :
+                                                            <span></span>}
+                            </th>
+                        );
+                    }
+                })}
             </tr>
         )
     }
 
     renderTableBody() {
         return (
-            [...Array(this.props.data.numRows).keys()].map((i) => {
-                    return <tr key={i} >{this.renderRow(i)}</tr>;  
-            })              
+            [...Array(this.state.data.numRows).keys()].map((i) => {
+                return <tr key={i} >{this.renderRow(i)}</tr>;               
+            })
         )
     }
 
     renderRow(i) {
         return (
-            this.props.data.columns.map((current, j) => { 
-                return (
-                    <td key={j}> 
-                        {this.renderCell(current.content[i])}
-                     </td>
-                )
+            this.state.data.columns.map((current, j) => { 
+                if (this.renderColumn(current.title)) {
+                    return (
+                        <td key={j}> 
+                            {this.renderCell(current.content[i])}
+                         </td>
+                    )
+                }
             })  
         )
     }
@@ -85,17 +174,33 @@ class Table extends React.Component {
             return cell;
         } else if (type === "object") {
             if (Object.keys(cell)[0] === "button") {
+                let data = cell.button.data ? cell.button.data : null;
                 return (
                     <div className="d-flex justify-content-center">
                         <Link 
                             className="btn btn-primary"
                             role="button"
-                            to={cell.button.link}> 
+                            to={{pathname:cell.button.link, state: data}}>
                             {cell.button.displayName}
                         </Link>
                     </div>)
             }
         }
+    }
+
+    renderColumn(columnName) {
+        let columnsToShow = this.props.columns;
+        return !columnsToShow || columnsToShow.map(({title}) => title).includes(columnName);
+    }
+
+    addSortButtonToColumn(columnName) {
+        let columnsToShow = this.props.columns;
+        for(let {title, sort} of columnsToShow) {
+            if (columnName == title && sort) {
+                return true;
+            }
+        } 
+        return false;
     }
 
 }
