@@ -37,7 +37,7 @@ class CampaignLogTable extends React.Component {
     // 2) populate the front end table
     // alternalte approach with api logData and lambda getcampaignLogData: 'https://ue4fr66yvj.execute-api.us-east-1.amazonaws.com/logStage',
     getLogTableData() {
-        console.log("getLogTableData is running")
+        // console.log("getLogTableData is running")
         var apiString = "https://2rsf9haj99.execute-api.us-east-1.amazonaws.com/queryLogs/templateId/"
         var templateId = this.state.templateName;
         var queryString =  apiString.concat(templateId);
@@ -184,12 +184,16 @@ class CampaignLogTable extends React.Component {
                     break;
                 }
                 case "No. of Links Opened": {
-                    // let value = row['NumLinks'].toString();
                     content.push(row['NumLinks'].toString());
                     break;
                 }
                 case "Email Log": {
-                    content.push({button: {displayName: "View", link: "/EmailLogTable", data: ""}});
+                    content.push({
+                        button: {
+                            displayName: "View",
+                            link: `EmailLogTable/`,
+                            data: {templateName: this.state.templateName, campaignId: row['CampaignId']},
+                            }});
                     break;
                 }
                 default:

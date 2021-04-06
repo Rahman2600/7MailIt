@@ -1,28 +1,61 @@
 import React from "react";
 import axios from 'axios';
 import Table from "../components/Table";
+import CampaignLogTable from "../components/CampaignLogTable";
 
 
 // const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs"
-
+let fakeData = {"Count":3,"Items":[{"EmailAddress":{"S":"teamMailItTest@gmail.com"},"OpenedStatus":{"S":"N/A"},"ClickedLinkStatus":{"S":"N/A"},"TemplateId":{"S":"0"},"MessageId":{"S":"0"},"SentDateTime":{"S":"04-01-2021"},"DeliveryStatus":{"S":"Delivered"},"DynamicValues":{"S":"{\"NAME\": \"Hugh\", \"AMOUNT\": \"$1,000,000\", \"PROMO_CODE\": \"www.google.com\"}"},"CampaignId":{"S":"0"}},{"EmailAddress":{"S":"teamMailItTest@gmail.com"},"OpenedStatus":{"S":"N/A"},"ClickedLinkStatus":{"S":"N/A"},"TemplateId":{"S":"0"},"MessageId":{"S":"1"},"SentDateTime":{"S":"04-01-2021"},"DeliveryStatus":{"S":"Delivered"},"DynamicValues":{"S":"{\"NAME\": \"Hugh\", \"AMOUNT\": \"$1,000,000\", \"PROMO_CODE\": \"www.google.com\"}"},"CampaignId":{"S":"0"}},{"EmailAddress":{"S":"teamMailItTest@gmail.com"},"OpenedStatus":{"S":"N/A"},"ClickedLinkStatus":{"S":"N/A"},"TemplateId":{"S":"0"},"MessageId":{"S":"2"},"SentDateTime":{"S":"04-01-2021"},"DeliveryStatus":{"S":"Delivered"},"DynamicValues":{"S":"{\"NAME\": \"Hugh\", \"AMOUNT\": \"$1,000,000\", \"PROMO_CODE\": \"www.google.com\"}"},"CampaignId":{"S":"1"}}],"ScannedCount":3}
 
 class EmailLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
-        
+        console.log(this.props.location.state.templateName)
+        console.log(this.props.location.state.campaignId)
+        this.state = {
+            templateName: this.props.location.state.templateName,
+            campaignId: this.props.location.state.campaignId
+        }
+    }
+
+    getEmailTableData() {
+        var apiString = "https://2rsf9haj99.execute-api.us-east-1.amazonaws.com/queryLogs/templateId/"
+        let obj = `{tpId:${this.state.templateName},cpId:${this.state.campaignId}}`;
+        var queryString =  apiString.concat(obj);
+        var config = {
+            method: 'get',
+            url: queryString,
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': "S1VsUgcBCv14uSiR2yPPfaLlxGXv5FYdkdbOWUV6"
+            }
+        };
+
+        axios(config)
+            .then(response => {
+                // console.log("response.data is;", response.data.Items)
+
+                // let table = this.dataToTable(response.data.Items);
+                let table = this.dataToTable(fakeData);
+                this.setState({table: table})
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     componentDidMount() {
-        var header = { headers: {
-             "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
-        }};
-        axios.get(DATA_LINK, header).then(response => {
-            let table = this.dataToTable(response.data);
-            console.log(table);
-            this.setState({table: table})
-        });
+        this.getEmailTableData()
     }
+    // var header = { headers: {
+    //      "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
+    // }};
+    // axios.get(DATA_LINK, header).then(response => {
+    //     let table = this.dataToTable(response.data);
+    //     console.log(table);
+    //     this.setState({table: table})
+    // });
+
 
     render() {
         let table = this.state.table;
@@ -35,15 +68,12 @@ class EmailLogTable extends React.Component {
 
     dataToTable(data) {
         let columnTitles = [
-            {displayName:"File Name", apiName: "TemplateName"}, 
+            {displayName:"Message Id", apiName: "MessageId"},
             {displayName:"Sent Date", apiName: "SentDateTime"}, 
             {displayName:"Email Address", apiName: "EmailAddress"}, 
             {displayName:"Delivery Status", apiName: "DeliveryStatus"}, 
             {displayName:"Open Status", apiName: "OpenedStatus"}, 
             {displayName:"Clicked Link Status", apiName: "ClickedLinkStatus"},
-            {displayName:"Dynamic Values", apiName: "DynamicValues"},  
-            {displayName:"Job Log ID", apiName: "JobLogId"}, 
-            {displayName:"Message ID", apiName: "MessageId"}, 
         ];
         let table = {columns: []};
         if (data.statusCode === 200) {
@@ -67,61 +97,39 @@ class EmailLogTable extends React.Component {
         for (let row of data.body) {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
-                case "Sent Date": {
-                    let value = row[columnTitle.apiName];
-                    if (value) {
-                        let dateObj = new Date(value);
-                        var date = dateObj.getDate();
-                        var month = dateObj.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
-                        var year = dateObj.getFullYear();
-                            
-                        var dateString = date + "/" + month + "/" + year;
-                        content.push(dateString);
-                    } else {
-                        content.push(" ");
-                    }
+                case "Message Id": {
+                    content.push(row['MessageId']);
                     break;
                 }
-
-                // case "File Name": {
-                //     let value = row['TemplateName'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Sent Date": {
-                //     let value = row['SentDateTime'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Email Address": {
-                //     let value = row['EmailAddress'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Delivery Status": {
-                //     let value = row['DeliveryStatus'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Open Status": {
-                //     let value = row['OpenedStatus'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Clicked Link Status": {
-                //     let value = row['ClickedLinkStatus'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Dynamic Values": {
-                //     let value = row['DynamicValues'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                default:
-                    if (apiName) {;
-                        content.push(row[columnTitle.apiName]);
-                    }
+                case "Sent Date": {
+                    let value = row['SentDateTime'];
+                    content.push(value);
+                    break;
+                }
+                case "Email Address": {
+                    let value = row['EmailAddress'];
+                    content.push(value);
+                    break;
+                }
+                case "Delivery Status": {
+                    let value = row['DeliveryStatus'].toString();
+                    content.push(value);
+                    break;
+                }
+                case "Open Status": {
+                    let value = row['OpenedStatus'].toString();
+                    content.push(value);
+                    break;
+                }
+                case "Clicked Link Status": {
+                    let value = row['ClickedLinkStatus'].toString();
+                    content.push(value);
+                    break;
+                }
+                // default:
+                //     if (apiName) {
+                //         content.push(row[columnTitle.apiName]);
+                //     }
                 }
         }
         return content;
