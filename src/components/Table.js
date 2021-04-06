@@ -49,11 +49,11 @@ class Table extends React.Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.data) {
             this.setState(nextProps);
-            console.log("nextProps",this.state.data);
+            //console.log("nextProps",this.state.data);
         }
     }
     handleSorting = (column) => {
-        console.log("initial state",this.state.data)
+        // ("initial state",this.state.data)
         let dataCopy = JSON.parse(JSON.stringify(this.state.data))        //array1.forEach(this.props.data => console.log(element))
         let arr = dataCopy.columns
         //console.log('state before sorted:', this.state.data.columns[column].content);
@@ -183,7 +183,7 @@ class Table extends React.Component {
 
     renderColumn(columnName) {
         let columnsToShow = this.props.columns;
-        return !columnsToShow || columnsToShow.map(({title}) => title).includes(columnName);
+        return !columnsToShow || columnsToShow.length == 0 || columnsToShow.map(({title}) => title).includes(columnName);
     }
 
     addSortButtonToColumn(columnName) {

@@ -52,12 +52,9 @@ class TemplateLogTable extends React.Component {
 
         axios(config)
           .then(response => {
-            console.log("done");
-            // console.log(JSON.stringify(response));
             let table = this.dataToTable(response);
             this.pageDataStore.addPage(i, table);
-            // console.log(table);
-            this.setState({table: table, page: i, columns: table.columns.map(({title}) => title), loading: false})
+            this.setState({table: table, page: i, loading: false})
         })
         .catch(function (error) {
             console.log(error);
@@ -65,7 +62,6 @@ class TemplateLogTable extends React.Component {
     }
 
     getNumTemplates () {
-        console.log("starting");
         var params = {
             min: 0,
             max: 0
@@ -81,7 +77,6 @@ class TemplateLogTable extends React.Component {
         axios(config)
           .then(response => {
             this.setState({numTemplates: response.data[0].tID});
-            console.log(this.state.numTemplates);
         })
         .catch(function (error) {
             console.log(error);
@@ -92,7 +87,6 @@ class TemplateLogTable extends React.Component {
         let table = this.state.table;
         if (table) {
             let columns = table.columns.map(({title}) => title);
-           //console.log(columns);
         }
         return ( 
             <div className="float-left col-lg-9 pl-0 pr-1">
@@ -118,30 +112,9 @@ class TemplateLogTable extends React.Component {
         );
     }
 
-    getColumnsPropToTable() {
-        let columns = this.state.columns.map((column) => {
-            return {title: column, sort: this.sortableColumns.includes(column)}
-        });
-        console.log(columns);
-        return columns;
-    }
-
-    getNumPages() {
-        let numPages = Math.round(this.state.numTemplates/NUM_TEMPLATES_ON_PAGE);
-        console.log(numPages);
-        return numPages;
-    }
-
-    onChangePage(i) {
-        if (this.state.page !== i) {
-            if (this.pageDataStore.hasPage(i)) {
-                console.log("hasPage");
-                this.setState({table: this.pageDataStore.getPage(i), page: i});
-                
-            } else {
-                this.loadPage(i);
-            }
-            
+    onEditColumns() {
+        if (this.state.table != null) {
+            this.setState({editingColumns: !this.state.editingColumns});
         }
     }
 
@@ -155,9 +128,29 @@ class TemplateLogTable extends React.Component {
         this.setState({columns: this.defaultColumns.concat(additionalColumns)})
     }
 
-    onEditColumns() {
-        if (this.state.table != null) {
-            this.setState({editingColumns: !this.state.editingColumns});
+    getColumnsPropToTable() {
+        let columns = this.state.columns.map((column) => {
+            return {title: column, sort: this.sortableColumns.includes(column)}
+        })
+        console.log(columns);
+        return columns;
+    }
+
+
+    getNumPages() {
+        let numPages = Math.round(this.state.numTemplates/NUM_TEMPLATES_ON_PAGE);
+        return numPages;
+    }
+
+    onChangePage(i) {
+        if (this.state.page !== i) {
+            if (this.pageDataStore.hasPage(i)) {
+                this.setState({table: this.pageDataStore.getPage(i), page: i});
+                
+            } else {
+                this.loadPage(i);
+            }
+            
         }
     }
 

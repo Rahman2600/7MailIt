@@ -14,7 +14,6 @@ class CheckList extends React.Component {
     }
     
     render() {
-        console.log(this.state);
         return (
             <ul className="list-group">
                 {this.state.checkStates.map((element) => {
