@@ -57,7 +57,7 @@ class TemplateLogTable extends React.Component {
             let table = this.dataToTable(response);
             this.pageDataStore.addPage(i, table);
             // console.log(table);
-            this.setState({table: table, page: i, loading: false})
+            this.setState({table: table, page: i, columns: table.columns.map(({title}) => title), loading: false})
         })
         .catch(function (error) {
             console.log(error);
@@ -107,17 +107,23 @@ class TemplateLogTable extends React.Component {
                     }).filter((element) => element != null)} onChange={this.onSelectedColumnsChange}/>
                 </div>
                 : <div></div>}
-                {table && this.state.numTemplates?
+                {table && this.state.numTemplates && !this.state.loading?
                 <div>
                     <Pagination current={this.state.page} max={this.getNumPages()} onChangePage={this.onChangePage}/>
                     <Table data={table} 
-                    columns={this.state.columns.map((column) => {
-                        return {title: column, sort: this.sortableColumns.includes(column)}
-                    })}/> 
+                    columns={this.getColumnsPropToTable()}/> 
                 </div>: 
                 <Table loading={true}/>}
             </div>        
         );
+    }
+
+    getColumnsPropToTable() {
+        let columns = this.state.columns.map((column) => {
+            return {title: column, sort: this.sortableColumns.includes(column)}
+        });
+        console.log(columns);
+        return columns;
     }
 
     getNumPages() {

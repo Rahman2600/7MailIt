@@ -42,21 +42,24 @@ class Table extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: this.props.data,
             columnsAscending: [true,true,true,true]
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.data) {
-            this.setState(nextProps);
-            console.log("nextProps",this.state.data);
-        }
-    }
+    // componentWillReceiveProps(nextProps) {
+    //     if(nextProps.data) {
+    //         this.setState(nextProps);
+    //         console.log("nextProps",this.state.data);
+    //     }
+    //     if (nextProps.columns) {
+    //         this.setState(nextProps);
+    //     }
+    // }
 
     handleSorting = (column) => {
-        console.log("initial state",this.state.data)
-        let dataCopy = JSON.parse(JSON.stringify(this.state.data))        //array1.forEach(this.props.data => console.log(element))
+        console.log(this.props.data);
+        console.log("initial state",this.props.data)
+        let dataCopy = JSON.parse(JSON.stringify(this.props.data))        //array1.forEach(this.props.data => console.log(element))
         let arr = dataCopy.columns
         //console.log('state before sorted:', this.state.data.columns[column].content);
         //console.log('dataCopy before sorted', dataCopy.columns[column].content)
@@ -104,7 +107,6 @@ class Table extends React.Component {
                 </div>
             );
         } else if (this.props.data) {
-            console.log(this.props.data);
             return (
                 <div>
                     <table className="table table-striped" >
@@ -127,7 +129,7 @@ class Table extends React.Component {
     renderTableHeader() {
         return (
             <tr>
-                {this.state.data.columns.map((column, i) => { 
+                {this.props.data.columns.map((column, i) => { 
                     if (this.renderColumn(column.title)) {
                         console.log(column.title);
                         return ( 
@@ -147,8 +149,9 @@ class Table extends React.Component {
     }
 
     renderTableBody() {
+        console.log(this.props.data);
         return (
-            [...Array(this.state.data.numRows).keys()].map((i) => {
+            [...Array(this.props.data.numRows).keys()].map((i) => {
                 return <tr key={i} >{this.renderRow(i)}</tr>;               
             })
         )
@@ -156,7 +159,7 @@ class Table extends React.Component {
 
     renderRow(i) {
         return (
-            this.state.data.columns.map((current, j) => { 
+            this.props.data.columns.map((current, j) => { 
                 if (this.renderColumn(current.title)) {
                     return (
                         <td key={j}> 
