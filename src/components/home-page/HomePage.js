@@ -4,7 +4,8 @@ import HomePageRight from "./HomePageRight";
 import "../../styles/HomePage.css"
 import {Auth} from "aws-amplify";
 import LoginPage from "../login/LoginPage";
-import {checkUser, user} from "../login/useCheckUser";
+import useCheckUser from "../login/useCheckUser";
+import {Redirect} from "react-router";
 
 
 class HomePage extends React.Component {
@@ -12,21 +13,31 @@ class HomePage extends React.Component {
 		super(props);
 		this.onUploadSuccess = this.onUploadSuccess.bind(this);
 		this.id = 0;
+		this.state = {
+			authenticated: useCheckUser.user,
+		}
 	}
 
-// 	useEffect(() => {
-// 	checkUser;
-// }, []
-// )
+	// async checkUser() {
+	// 	try {
+	// 		const user = await Auth.currentAuthenticatedUser();
+	// 		if (user) {
+	// 			this.state.authenticated = true
+	// 		}
+	// 	} catch (e) {
+	// 		console.log(e)
+	// 	}
+	// }
 
 	onUploadSuccess() {
 		this.forceUpdate();
 	}
 
 	render() {
-		checkUser
-		if (!user) {
-			return <LoginPage/>
+		console.log(this.state.authenticated)
+		if (!this.state.authenticated) {
+			// return <LoginPage/>
+			return <Redirect to="/" />
 		} else {
 			this.id += 1;
 			return (

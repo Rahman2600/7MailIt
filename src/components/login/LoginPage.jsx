@@ -19,6 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import {Redirect} from "react-router";
 import PropTypes from 'prop-types';
+import useCheckUser from "./useCheckUser";
 
 const initialFormState = {
     username: "", email: "", password: "", confirmPassword: "", newPassword: "", authCode: "", formType: "signIn"
@@ -60,8 +61,8 @@ function LoginPage() {
     const classes = useStyles();
     const [formState, updateFormState] = useState(initialFormState)
     const [showErrorMsg,setShowErrorMsg] = useState(false); 
-    const [errorMsg,setErrorMsg] = useState(""); 
-
+    const [errorMsg,setErrorMsg] = useState("");
+    const { user, checkUser } = useCheckUser();
     function onChange(e) {
         e.persist()
         updateFormState(() => ({...formState, [e.target.name]: e.target.value}))
@@ -85,8 +86,9 @@ function LoginPage() {
                 await Auth.signIn(email, password);
                 updateFormState(() => ({...formState, formType: "signedIn"}))
                 const user  = await Auth.currentAuthenticatedUser();
-                console.log(updateUser)
-                updateUser(user)
+                await checkUser()
+                // console.log(updateUser)
+                // updateUser(user)
             } catch (error) {
                 signInErrorMessageProcessing(error);
             }

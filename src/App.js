@@ -34,8 +34,9 @@ function App() {
             <div>
                 <BrowserRouter>
                     <Switch>
-                        <Route exact path="/" render={(props) => <LoginPage updateUser={(user) => updateUser(user)} {...props} />} />
-                        {/*<Route path="/" component={LoginPage} exact/>*/}
+                        {/*<Route exact path="/" render={(props) => <LoginPage updateUser={(user) => updateUser(user)} {...props} />} />*/}
+                        {/*<Route exact path="/" <LoginPage /> />*/}
+                        <Route path="/" component={LoginPage} exact/>
                         <Route exact path="/HomePage"><HomePage/></Route>
                         <Route path="/campaignPage/:templateKey" component={CampaignPage}/>
                         <Route path="/CampaignLogTable"><CampaignLogTable/></Route>
