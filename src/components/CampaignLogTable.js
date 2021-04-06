@@ -9,10 +9,10 @@ import Table from "../components/Table";
 class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            templateName: "0"
-            // this.props.location.state.templateName
-        }
+        console.log(props)
+        // this.state = {
+        //     templateName:props.location.state.templateName
+        // }
     }
 
     // var header = { headers: {
@@ -188,6 +188,8 @@ class CampaignLogTable extends React.Component {
                     break;
                 }
                 case "Email Log": {
+                    console.log("this.state.templateName is:", this.state.templateName)
+                    console.log("row['CampaignId'] is:", row['CampaignId'])
                     content.push({
                         button: {
                             displayName: "View",
