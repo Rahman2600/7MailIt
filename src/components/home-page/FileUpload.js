@@ -134,7 +134,7 @@ class FileUpload extends React.Component {
             this.setState({message: this.messages.WRONG_FILE_TYPE});
         } else {
             this.setState({uploading: true});
-            removeTemplate(templateName).then(() => {
+            uploadFile(fileInput, 'docxtemplates', templateName).then(() => {
                 this.setState({ message: this.messages.SUCCESS, processing: false});
                 this.props.onUploadSuccess();
             }).catch(error => {
