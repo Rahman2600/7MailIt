@@ -3,24 +3,28 @@ import axios from 'axios';
 
 import Table from "../Table";
 import Pagination from "../Pagination";
+import PageDataStore from "../../model/PageDataStore";
 
-const PAGE_SIZE = 17; //dynamically set based on screen size?
+const NUM_TEMPLATES_ON_PAGE = 17; //dynamically set based on screen size?
 
 class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {page: 1}
+        this.pageDataStore = new PageDataStore();
         this.onChangePage = this.onChangePage.bind(this);
+        this.getNumPages = this.getNumPages.bind(this);
     }
 
     componentDidMount() {
+        this.getNumTemplates();
         this.loadPage(1);
     }
 
     loadPage(i) {
         this.setState({loading: true});
-        let min = PAGE_SIZE * (i - 1) + 1;
-        let max = min + PAGE_SIZE - 1;
+        let min = NUM_TEMPLATES_ON_PAGE * (i - 1) + 1;
+        let max = min + NUM_TEMPLATES_ON_PAGE - 1;
         var params = {
             min: min,
             max: max
@@ -36,9 +40,11 @@ class TemplateLogTable extends React.Component {
 
         axios(config)
           .then(response => {
-            console.log(JSON.stringify(response));
+            console.log("done");
+            // console.log(JSON.stringify(response));
             let table = this.dataToTable(response);
-            console.log(table);
+            this.pageDataStore.addPage(i, table);
+            // console.log(table);
             this.setState({table: table, page: i, loading: false})
         })
         .catch(function (error) {
@@ -46,27 +52,69 @@ class TemplateLogTable extends React.Component {
         });
     }
 
+    getNumTemplates () {
+        console.log("starting");
+        var params = {
+            min: 0,
+            max: 0
+         };
+        var config = {
+            method: 'get',
+            url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/template-logs-with-range',
+            headers: { 
+              'Content-Type': 'application/json'
+            },
+            params : params
+        };
+        axios(config)
+          .then(response => {
+            this.setState({numTemplates: response.data[0].tID});
+            console.log(this.state.numTemplates);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
     render() {
+        console.log(this.state.numTemplates);
+        console.log(this.state.loading);
+        console.log(this.state.table);
         return ( 
             <div className="col-lg-9 pl-0 pr-1">
-                <Pagination current={this.state.page} max={6} onChangePage={this.onChangePage}/> 
-                {this.state.loading ? 
+                {this.state.loading || !this.state.numTemplates ?
+                <div>
                     <div className="center">
                         <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}}
                         role="status">
                             <span className="sr-only">Loading...</span>
                         </div>
+                    </div> 
                 </div> :
                 <div>
-                    <Table data={this.state.table}/>
-                </div>}   
+                    <Pagination current={this.state.page} max={this.getNumPages()} onChangePage={this.onChangePage}/>
+                    <Table data={this.state.table} /> 
+                </div>}
             </div>        
         );
     }
 
+    getNumPages() {
+        let numPages = Math.round(this.state.numTemplates/NUM_TEMPLATES_ON_PAGE);
+        console.log(numPages);
+        return numPages;
+    }
+
     onChangePage(i) {
         if (this.state.page !== i) {
-            this.loadPage(i);
+            if (this.pageDataStore.hasPage(i)) {
+                console.log("hasPage");
+                this.setState({table: this.pageDataStore.getPage(i), page: i});
+                
+            } else {
+                this.loadPage(i);
+            }
+            
         }   
     }
 
