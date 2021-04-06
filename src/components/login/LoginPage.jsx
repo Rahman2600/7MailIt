@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function LoginPage({updateUser}) {
+function LoginPage() {
     const classes = useStyles();
     const [formState, updateFormState] = useState(initialFormState)
     const [showErrorMsg,setShowErrorMsg] = useState(false); 
@@ -343,9 +343,9 @@ function LoginPage({updateUser}) {
     );
 }
 
-LoginPage.propTypes = {
-    updateUser: PropTypes.func.isRequired
-}
+// LoginPage.propTypes = {
+//     updateUser: PropTypes.func.isRequired
+// }
 
 export default LoginPage
 
