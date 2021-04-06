@@ -10,9 +10,10 @@ class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
         console.log(props)
-        // this.state = {
-        //     templateName:props.location.state.templateName
-        // }
+        this.state = {
+            templateName: "0"
+            // this.props.location.state.templateName
+        }
     }
 
     // var header = { headers: {
