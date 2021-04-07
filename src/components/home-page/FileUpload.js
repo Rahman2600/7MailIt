@@ -4,7 +4,8 @@ import {convertToTemplate,uploadFile, removeFile} from "../../aws_util"
 class FileUpload extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { selectedFile: '', templateName:'', templateNameR: '', message: null, removal_message: null, uploading: false}
+        this.state = { selectedFile: '', templateName:'', templateNameR: '', message: null, removal_message: null, uploading: false,
+        checking: false}
         this.messages = Object.freeze({
             WRONG_FILE_TYPE:   "Wrong template file type. Upload a .doc or .docx file",
             UPLOAD_FAIL:  "Upload Failure",
@@ -87,6 +88,16 @@ class FileUpload extends React.Component {
                     :
                     <div></div>
                 }
+                {this.state.checking ? 
+                    <div className="horizontal-center">
+                        <div className="spinner-border text-primary" style={{width: "3rem", height: "3rem"}}
+                        role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                    </div> :
+                    <div></div>
+                }
+
                 <div className="row justify-content-space-evenly my-row2">
                         <div className="input-group mb-2">
                             <div className="input-group-prepend">
@@ -199,13 +210,13 @@ class FileUpload extends React.Component {
        if(!isTemplateNameCorrectFormatR) {
             this.setState({removal_message: this.removal_message.TEMPLATE_NAME_INCORRECT_FORMAT});
         }else {
-            this.setState({uploading: true});
+            this.setState({checking: true});
             removeFile(templateNameR).then(() => {
-                this.setState({ removal_message: this.removal_message.SUCCESSR, uploading: false});
+                this.setState({ removal_message: this.removal_message.SUCCESSFUL_REMOVAL, checking: false});
                 this.props.onUploadSuccess();
             }).catch(error => {
                 console.log(error);
-                this.setState({ removal_messagee: this.removal_message.REMOVE_FAILED, uploading: false});
+                this.setState({ removal_message: this.removal_message.REMOVE_FAILED, checking: false});
             });    
         }
 
