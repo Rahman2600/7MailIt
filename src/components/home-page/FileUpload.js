@@ -174,7 +174,7 @@ class FileUpload extends React.Component {
         } else {
             this.setState({uploading: true});
             uploadFile(fileInput, 'docxtemplates', templateName).then(() => {
-                this.setState({ message: this.messages.SUCCESS, processing: false,uploading: false });
+                this.setState({ message: this.messages.SUCCESS, processing: false, uploading: false });
                 this.props.onUploadSuccess();
             }).catch(error => {
                 console.log(error);
