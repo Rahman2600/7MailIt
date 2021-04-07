@@ -84,9 +84,9 @@ function LoginPage() {
         } else {
             try {
                 await Auth.signIn(email, password);
+                // const user  = await Auth.currentAuthenticatedUser();
+                checkUser().then((boolean)=>{ console.log})
                 updateFormState(() => ({...formState, formType: "signedIn"}))
-                const user  = await Auth.currentAuthenticatedUser();
-                await checkUser()
                 // console.log(updateUser)
                 // updateUser(user)
             } catch (error) {

@@ -8,24 +8,40 @@ export default function useCheckUser() {
     const [user, setUser] = useState(false);
 
     async function checkUser() {
-            try {
-                const token = await Auth.currentAuthenticatedUser();
-                // console.log(token)
-                if (token){
-                    // user = true;
-                    // console.log("what")
+        return new Promise((resolve, reject) => {
+            Auth.currentAuthenticatedUser().then((token) => {
+                if (token) {
                     setUser(true)
+                    resolve(true)
+
+                } else {
+                    reject("User authentification failed")
                 }
-                // console.log(user);
-            } catch (e) {
-                console.log(e)
-            }
-        }
+            }).catch((e) => {
+                reject(e)
+            });
+        })
+    }
 
 
 
+
+        //         }))
+        //         // const token = await Auth.currentAuthenticatedUser();
+        //         // console.log(token)
+        //         if (token){
+        //             user = true;
+        //             console.log("what")
+        //             // setUser(true)
+        //         }
+        //
+        //
+        //         console.log("user at useCheckUser is:", user);
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
+        // }
     return {
-
         checkUser: checkUser,
         user: user
     }

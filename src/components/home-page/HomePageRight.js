@@ -12,6 +12,7 @@ class HomePageRight extends React.Component {
     async signOut(e) {
         try {
             await Auth.signOut();
+            console.log("signed Out!")
         } catch (error) {
             console.log('error signing out: ', error);
         }

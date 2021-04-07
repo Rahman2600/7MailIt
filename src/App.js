@@ -8,9 +8,11 @@ import CampaignLogTable from "./components/CampaignLogTable";
 import EmailLogTable from "./components/EmailLogTable";
 import UnderConstructionPage from './components/UnderConstructionPage';
 import {Auth} from "aws-amplify";
+import useCheckUser from "./components/login/useCheckUser";
 
 function App() {
 
+    const { user, checkUser } = useCheckUser();
     // const [user, updateUser] = useState(null);
     //
     // async function checkUser() {
@@ -37,7 +39,7 @@ function App() {
                         {/*<Route exact path="/" render={(props) => <LoginPage updateUser={(user) => updateUser(user)} {...props} />} />*/}
                         {/*<Route exact path="/" <LoginPage /> />*/}
                         <Route path="/" component={LoginPage} exact/>
-                        <Route exact path="/HomePage"><HomePage/></Route>
+                        <Route exact path="/HomePage"><HomePage user={user}/></Route>
                         <Route path="/campaignPage/:templateKey" component={CampaignPage}/>
                         <Route path="/CampaignLogTable"><CampaignLogTable/></Route>
                         <Route path="/EmailLogTable"><EmailLogTable/></Route>
