@@ -12,7 +12,16 @@ import useCheckUser from "./components/login/useCheckUser";
 
 function App() {
 
+
     const { user, checkUser } = useCheckUser();
+
+    useEffect(() => {
+        checkUser()
+        console.log("useEffect user value is", user)
+        }
+        , [user]
+    )
+
     // const [user, updateUser] = useState(null);
     //
     // async function checkUser() {

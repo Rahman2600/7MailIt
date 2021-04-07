@@ -12,8 +12,8 @@ export default function useCheckUser() {
             Auth.currentAuthenticatedUser().then((token) => {
                 if (token) {
                     setUser(true)
-                    resolve(true)
-
+                    console.log("reached line 15 of useCheckUser")
+                    resolve()
                 } else {
                     reject("User authentification failed")
                 }
@@ -43,7 +43,7 @@ export default function useCheckUser() {
         // }
     return {
         checkUser: checkUser,
-        user: user
+        user
     }
 }
 // //
