@@ -1,6 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import Table from "../components/Table";
+import {Redirect} from "react-router";
 
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs"
@@ -9,8 +10,8 @@ const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/ema
 class EmailLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
-        
+        this.state = {
+            authenticated: this.props.user,}
     }
 
     componentDidMount() {
@@ -25,12 +26,16 @@ class EmailLogTable extends React.Component {
     }
 
     render() {
-        let table = this.state.table;
-        return ( 
-            <div style={{"max-width": "100%"}}>
-                {table? <Table data={table} columns={this.state.columns}/> : <Table loading={true}/>}
-            </div>        
-        );
+        if (this.state.authenticated !== true) {
+            return <Redirect to="/"/>
+        } else {
+            let table = this.state.table;
+            return (
+                <div style={{"max-width": "100%"}}>
+                    {table ? <Table data={table} columns={this.state.columns}/> : <Table loading={true}/>}
+                </div>
+            );
+        }
     }
 
     dataToTable(data) {

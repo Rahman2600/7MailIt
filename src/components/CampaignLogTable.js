@@ -1,6 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import Table from "../components/Table";
+import {Redirect} from "react-router";
 
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
@@ -9,8 +10,9 @@ const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/cam
 class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
-        
+        this.state = {
+            authenticated: this.props.user,
+        }
     }
 
     componentDidMount() {
@@ -25,12 +27,16 @@ class CampaignLogTable extends React.Component {
     }
 
     render() {
-        console.log(this.state.table)
-        return ( 
-            <div className="col-lg-9 pl-0 pr-1">
-                <Table data={this.state.table}/>
-            </div>        
-        );
+        console.log("this.state.authenticated", this.state.authenticated)
+            if (this.state.authenticated !== true) {
+                return <Redirect to="/" />
+            } else {
+                return (
+                    <div className="col-lg-9 pl-0 pr-1">
+                        <Table data={this.state.table}/>
+                    </div>
+                );
+            }
     }
 
     dataToTable(data) {
@@ -100,7 +106,7 @@ class CampaignLogTable extends React.Component {
                     break;
                 }
                 default:
-                    if (apiName) {;
+                    if (apiName) {
                         content.push(row[columnTitle.apiName]);
                     }
                 }

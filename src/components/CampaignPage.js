@@ -4,6 +4,7 @@ import userLogo from '../assets/userLogo.png';
 import sendSingleEmail from '../api-service.js'
 import BatchEmailCampaignCreation from "./BatchEmailCampaignCreation";
 import { Link } from "react-router-dom";
+import {Redirect} from "react-router";
 var AWS = require('aws-sdk');
 var mammoth = require("mammoth");
 
@@ -37,7 +38,9 @@ class CampaignPage extends React.Component {
             emailAddress: '' ,
             message: null,
             loading: false,
-            subjectLine: ""}
+            subjectLine: "",
+            authenticated: this.props.user
+        }
         
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -46,97 +49,101 @@ class CampaignPage extends React.Component {
     }
 
     render() {
-        return (
-            <div className="container-fluid my-container">
-                <div className="row my-rows" style={{ textAlign: 'center' }}>
-                    <div className="col-6 my-col">Preview Template</div>
-                    <div className="col-6 my-col">Create Email Campaign</div>
-                </div>
-                <div className="row my-rows">
-                    {this.state.docHtml? 
-                    <div className="col-6 my-col img-responsive" dangerouslySetInnerHTML={{ __html: this.state.docHtml }} /> :
-                    <div className="col-6 my-col">
-                    <div className="vertical-horizontal-center">
-                        <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}} role="status"></div>
+        if (this.state.authenticated !== true) {
+            return <Redirect to="/" />
+        } else {
+            return (
+                <div className="container-fluid my-container">
+                    <div className="row my-rows" style={{ textAlign: 'center' }}>
+                        <div className="col-6 my-col">Preview Template</div>
+                        <div className="col-6 my-col">Create Email Campaign</div>
                     </div>
-                    </div>}
-                    
-                    <div className="col-6 my-col">
-                        <Link 
-                            className="btn btn-primary float-right mt-2"
-                            role="button"
-                            to={"/HomePage"}>
-                            {"Return to Home Page"}
-                        </Link>
-                        <div className="row my-row1"></div>
-                        <div className="row justify-content-space-evenly my-row">
-                            <img src={userLogo} className="img-rounded" width="30" height="30" />
-                        </div>
-                        <div className="form-group">
-                            <div className="row justify-content-space-evenly my-row2">
-                                <div className="input-group mb-3">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text">Single Email Address</span>
-                                    </div>
-                                    <input 
-                                        type="text" 
-                                        id="email-address"
-                                        className="form-control" 
-                                        aria-label="EmailAddress" 
-                                        onChange={this.handleEmailChange} 
-                                        required>
-                                    </input>
+                    <div className="row my-rows">
+                        {this.state.docHtml?
+                            <div className="col-6 my-col img-responsive" dangerouslySetInnerHTML={{ __html: this.state.docHtml }} /> :
+                            <div className="col-6 my-col">
+                                <div className="vertical-horizontal-center">
+                                    <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}} role="status"></div>
                                 </div>
+                            </div>}
+
+                        <div className="col-6 my-col">
+                            <Link
+                                className="btn btn-primary float-right mt-2"
+                                role="button"
+                                to={"/HomePage"}>
+                                {"Return to Home Page"}
+                            </Link>
+                            <div className="row my-row1"></div>
+                            <div className="row justify-content-space-evenly my-row">
+                                <img src={userLogo} className="img-rounded" width="30" height="30" />
                             </div>
-                            <div className="row justify-content-space-evenly my-row2">
-                                <div className="input-group mb-3">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text">Subject Line</span>
+                            <div className="form-group">
+                                <div className="row justify-content-space-evenly my-row2">
+                                    <div className="input-group mb-3">
+                                        <div className="input-group-prepend">
+                                            <span className="input-group-text">Single Email Address</span>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            id="email-address"
+                                            className="form-control"
+                                            aria-label="EmailAddress"
+                                            onChange={this.handleEmailChange}
+                                            required>
+                                        </input>
                                     </div>
-                                    <input 
-                                        type="text" 
-                                        id="subject-line"
-                                        className="form-control" 
-                                        aria-label="subjectLine" 
-                                        onChange={this.handleSubjectLineChange} 
-                                        required>
-                                    </input>
                                 </div>
+                                <div className="row justify-content-space-evenly my-row2">
+                                    <div className="input-group mb-3">
+                                        <div className="input-group-prepend">
+                                            <span className="input-group-text">Subject Line</span>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            id="subject-line"
+                                            className="form-control"
+                                            aria-label="subjectLine"
+                                            onChange={this.handleSubjectLineChange}
+                                            required>
+                                        </input>
+                                    </div>
+                                </div>
+                                {this.state.dynamicValues.length > 0 ?
+                                    <div className="row justify-content-space-evenly my-row2">
+                                        Dynamic Values
+                                        <div className="input-group mb-3">
+                                            {this.createDynamicValueTextFields()}
+                                        </div>
+                                    </div> : null }
                             </div>
-                            {this.state.dynamicValues.length > 0 ? 
-                            <div className="row justify-content-space-evenly my-row2">
-                                Dynamic Values
-                                <div className="input-group mb-3">
-                                    {this.createDynamicValueTextFields()}
-                                </div>
-                            </div> : null }
-                        </div>
-                        <div className="row justify-content-right my-row1">
+                            <div className="row justify-content-right my-row1">
                                 <button type="button" className="btn btn-success" id='button1' onClick={this.handleSubmit}>Submit</button>
+                            </div>
+                            {this.state.loading ?
+                                <div className="horizontal-center">
+                                    <div className="spinner-border text-primary" style={{width: "2rem", height: "2rem"}}
+                                         role="status">
+                                    </div>
+                                </div>: null
+                            }
+                            {this.state.message != null ?
+                                <div id={
+                                    this.state.message === this.messages.SUCCESS ? "emailSentAlert" : "emailSentFailed" }
+                                     className={
+                                         this.state.message === this.messages.SUCCESS ? "alert alert-success" : "alert alert-danger" }
+                                     role="alert">
+                                    {`${this.state.message}`}
+                                </div>
+                                :
+                                <div></div>
+                            }
+                            <BatchEmailCampaignCreation dynamicValues={this.state.dynamicValues} templateName={this.state.templateName} />
                         </div>
-                        {this.state.loading ? 
-                            <div className="horizontal-center">
-                                <div className="spinner-border text-primary" style={{width: "2rem", height: "2rem"}}
-                                role="status">
-                            </div>
-                        </div>: null
-                        }
-                        {this.state.message != null ? 
-                            <div id={
-                                this.state.message === this.messages.SUCCESS ? "emailSentAlert" : "emailSentFailed" }
-                            className={
-                                this.state.message === this.messages.SUCCESS ? "alert alert-success" : "alert alert-danger" } 
-                                role="alert">
-                                {`${this.state.message}`} 
-                            </div>
-                            :
-                            <div></div>
-                        }
-                        <BatchEmailCampaignCreation dynamicValues={this.state.dynamicValues} templateName={this.state.templateName} />
                     </div>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 
     async componentDidMount() {
