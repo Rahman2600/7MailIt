@@ -54,7 +54,7 @@ const removeFile = async (templateName) => {
     // setting up s3 upload parameters
     try {
      var header = { headers: {
-        "x-api-key": process.env.EACT_APP_AWS_TEMPLATE_API_KEY
+        "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_API_KEY
      }};
 
     var body = {
@@ -62,7 +62,7 @@ const removeFile = async (templateName) => {
     };
 
     //Create and send API request to /template endpoint
-    const res = await axios.post(`https://zzrc6grroe.execute-api.us-east-1.amazonaws.com/init`, 
+    const res = await axios.post(`https://zzrc6grroe.execute-api.us-east-1.amazonaws.com/removal/remove`, 
                                     body, header);
     if(res.data.statusCode !== 200) {
         console.log(res);
