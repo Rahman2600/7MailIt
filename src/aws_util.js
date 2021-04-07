@@ -49,6 +49,31 @@ const uploadFile = async (fileInput,BUCKET_NAME, templateName) => {
     
 };
 
+const removeFile = async (templateName) => {
+    
+    // setting up s3 upload parameters
+    try {
+     var header = { headers: {
+        "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_API_KEY
+     }};
+
+    var body = {
+        templateName: templateName,
+    };
+
+    //Create and send API request to /template endpoint
+    const res = await axios.post(`https://zzrc6grroe.execute-api.us-east-1.amazonaws.com/removal/remove`, 
+                                    body, header);
+    if(res.data.statusCode !== 200) {
+        console.log(res);
+        throw new Error(res.data.body);
+    }
+    } catch (err) {
+      throw err;
+    }
+    
+};
+
 const createBatchEmailCampaign = async(fileInput, subjectLine, templateName, dynamicValues) => {
     if(typeof(fileInput) !== 'object' || !(fileInput instanceof File)) {
         throw Error("File input is not of type File");
@@ -99,4 +124,4 @@ const encodeFileAsBase64String = async (fileInput) => {
    });
 };
 
-export {uploadFile, createBatchEmailCampaign}
+export {uploadFile, createBatchEmailCampaign, removeFile}
