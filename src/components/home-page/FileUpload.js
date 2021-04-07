@@ -1,6 +1,8 @@
 import React from "react";
 import {convertToTemplate,uploadFile, removeFile} from "../../aws_util"
 
+
+
 class FileUpload extends React.Component {
     constructor(props) {
         super(props);
