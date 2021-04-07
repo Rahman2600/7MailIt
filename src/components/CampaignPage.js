@@ -53,10 +53,17 @@ class CampaignPage extends React.Component {
                     <div className="col-6 my-col">Create Email Campaign</div>
                 </div>
                 <div className="row my-rows">
-                    <div className="col-6 my-col img-responsive" dangerouslySetInnerHTML={{ __html: this.state.docHtml }} />
+                    {this.state.docHtml? 
+                    <div className="col-6 my-col img-responsive" dangerouslySetInnerHTML={{ __html: this.state.docHtml }} /> :
+                    <div className="col-6 my-col">
+                    <div className="vertical-horizontal-center">
+                        <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}} role="status"></div>
+                    </div>
+                    </div>}
+                    
                     <div className="col-6 my-col">
                         <Link 
-                            className="btn btn-primary float-right"
+                            className="btn btn-primary float-right mt-2"
                             role="button"
                             to={"/HomePage"}>
                             {"Return to Home Page"}
