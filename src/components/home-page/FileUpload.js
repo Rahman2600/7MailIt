@@ -15,11 +15,9 @@ class FileUpload extends React.Component {
             SUCCESS: "Sucessfully uploaded file"
         });
         this.removal_message = Object.freeze({
-            REMOVE_FAILED: "Template Removal failed. Please verify Template Name corresponds to an Active Template",
+            REMOVE_FAILED: "Template Removal failed. Please verify Template Name corresponds to an Active Template.",
             EMPTY_FIELD: "The text field is empty. Please enter a Template Name to continue.",
             TEMPLATE_NAME_INCORRECT_FORMAT: "The template name can only contain alpha numeric characters, underscores and/or hyphens. This does not appear to be a valid Template Name. ",
-            NO_TEMPLATE_FOUND: "Failed to find template. Please ensure that Template Name is correct.",
-            EMPTY_TEMPLATE_NAME: "The template name is empty. Please provide a template name to continue.",
             SUCCESSFUL_REMOVAL: "Sucessfully removed a template"
         });
         this.onFileChange = this.onFileChange.bind(this);
