@@ -8,7 +8,11 @@ import Table from "../components/Table";
 class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props)
+        // console.log("reached line 12 of CampaignLogTable")
+        // console.log("printing props:", this.props);
+        // console.log("printing this.props.location:", this.props.location);
+        // console.log("printing props.location.state:", props.location.state);
+        // console.log("printing props.location.state.templateName:", props.location.state.templateName);
         this.state = {
             templateName: "0"
             // this.props.location.state.templateName
@@ -75,7 +79,6 @@ class CampaignLogTable extends React.Component {
 
 
     render() {
-        console.log(this.state.table)
         return ( 
             <div className="col-lg-9 pl-0 pr-1">
                 <Table data={this.state.table}/>
@@ -110,7 +113,6 @@ class CampaignLogTable extends React.Component {
             let numSuccessfullyDelivered = 0;
             let numOpened = 0;
             let numLinks = 0;
-            console.log(value.length)
             for (i = 0; i < value.length; i++) {
 
                 numEmailed ++;
@@ -190,8 +192,8 @@ class CampaignLogTable extends React.Component {
                     break;
                 }
                 case "Email Log": {
-                    console.log("this.state.templateName is:", this.state.templateName)
-                    console.log("row['CampaignId'] is:", row['CampaignId'])
+                    // console.log("this.state.templateName is:", this.state.templateName)
+                    // console.log("row['CampaignId'] is:", row['CampaignId'])
                     content.push({
                         button: {
                             displayName: "View",

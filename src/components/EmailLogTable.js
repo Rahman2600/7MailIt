@@ -10,8 +10,11 @@ let fakeData = {"Count":3,"Items":[{"EmailAddress":{"S":"teamMailItTest@gmail.co
 class EmailLogTable extends React.Component {
     constructor(props) {
         super(props);
-        console.log(this.props.location.state.templateName)
-        console.log(this.props.location.state.campaignId)
+        // console.log("reached line 13 of EmailLogTable")
+        // console.log("printing this.props:", this.props);
+        // console.log("printing this.props.location:", this.props.location);
+        // console.log("printing this.props.location.state:", props.location.state);
+        // console.log("printing this.props.location.state.templateName:", props.location.state.templateName);
         this.state = {
             templateName: this.props.location.state.templateName,
             campaignId: this.props.location.state.campaignId
