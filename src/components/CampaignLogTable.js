@@ -2,7 +2,6 @@ import React from "react";
 import axios from 'axios';
 import Table from "../components/Table";
 
-
 // const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
 
 
@@ -39,13 +38,15 @@ class CampaignLogTable extends React.Component {
     // alternalte approach with api logData and lambda getcampaignLogData: 'https://ue4fr66yvj.execute-api.us-east-1.amazonaws.com/logStage',
     getLogTableData() {
         // console.log("getLogTableData is running")
-        var apiString = "https://2rsf9haj99.execute-api.us-east-1.amazonaws.com/queryLogs/templateId/"
+        var apiString = "https://ue4fr66yvj.execute-api.us-east-1.amazonaws.com/logStage/?templateId="
         var templateId = this.state.templateName;
-        var queryString =  apiString.concat(templateId);
+        var queryString =  apiString.concat('"' + templateId + '"');
         var config = {
-            method: 'get',
+            method: 'post',
             url: queryString,
             headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
                 'Content-Type': 'application/json',
                 'x-api-key': "S1VsUgcBCv14uSiR2yPPfaLlxGXv5FYdkdbOWUV6"
             }
