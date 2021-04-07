@@ -205,9 +205,7 @@ class FileUpload extends React.Component {
 
         if (isEmptyFieldR) {
             this.setState({removal_message: this.removal_message.EMPTY_FIELD});
-        }
-        
-       if(!isTemplateNameCorrectFormatR) {
+        } else if(!isTemplateNameCorrectFormatR) {
             this.setState({removal_message: this.removal_message.TEMPLATE_NAME_INCORRECT_FORMAT});
         }else {
             this.setState({checking: true});
@@ -219,6 +217,8 @@ class FileUpload extends React.Component {
                 this.setState({ removal_message: this.removal_message.REMOVE_FAILED, checking: false});
             });    
         }
+
+        
 
        
     }
