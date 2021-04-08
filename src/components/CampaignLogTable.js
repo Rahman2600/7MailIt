@@ -3,7 +3,6 @@ import axios from 'axios';
 import Table from "../components/Table";
 import { ContactlessOutlined } from "@material-ui/icons";
 
-
 // const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
 
 
@@ -22,13 +21,16 @@ class CampaignLogTable extends React.Component {
     getLogTableData() {
         console.log(this.props);
         // console.log("getLogTableData is running")
+
         var apiString = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs?templateId="
         var templateId = this.state.templateName;
-        var queryString =  apiString.concat(templateId);
+        var queryString =  apiString.concat('"' + templateId + '"');
         var config = {
-            method: 'get',
+            method: 'post',
             url: queryString,
             headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
                 'Content-Type': 'application/json',
                 'x-api-key': "8nobK0hMri7W16vHzMj0S1SfOC5m7sPU4zxNBFX8"
             }
