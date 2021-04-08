@@ -47,7 +47,11 @@ class TemplateLogTable extends React.Component {
           .then(response => {
             this.sortTemplateLogs(response.data);
             let table = this.dataToTable(response.data);
-            this.setState({table: table, columns: table.columns.map(({title}) => title)})
+            this.setState({table: table, columns: table.columns.map(({title}) => {
+                if(this.defaultColumns.includes(title)) {
+                    return title;
+                }
+            })})
           })
           .catch(function (error) {
             console.log(error);
@@ -68,7 +72,7 @@ class TemplateLogTable extends React.Component {
                 <div className="mb-2">
                     <CheckList list={table.columns.map(({title}) => {
                         if (!this.defaultColumns.includes(title)) {
-                            return {value: title, checked: true}
+                            return {value: title, checked: false}
                         }
                     }).filter((element) => element != null)} onChange={this.onSelectedColumnsChange}/>
                 </div>
@@ -193,11 +197,10 @@ class TemplateLogTable extends React.Component {
         let templateNameColumn = this.getColumnWithDisplayName("Template Name", table);
         let CampaignLogsColumn = this.getColumnWithDisplayName("Campaign Logs", table);
         let content = CampaignLogsColumn.content;
-
         for(let i = 0; i < content.length; i++) {
             let current = content[i];
             if (typeof current === "object") {
-                current.button.link = `CampaignLogTable/`;
+                current.button.link = `CampaignLogTable`;
                 current.button.data = {
                     templateName: templateNameColumn.content[i]};
             }

@@ -1,6 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import Table from "../components/Table";
+import { ContactlessOutlined } from "@material-ui/icons";
 
 // const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
 
@@ -8,41 +9,20 @@ import Table from "../components/Table";
 class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
-        // console.log("reached line 12 of CampaignLogTable")
-        // console.log("printing props:", this.props);
-        // console.log("printing this.props.location:", this.props.location);
-        // console.log("printing props.location.state:", props.location.state);
-        // console.log("printing props.location.state.templateName:", props.location.state.templateName);
         this.state = {
-            templateName: "0"
-            // this.props.location.state.templateName
+            templateName: this.props.location.state.templateName
         }
     }
-
-    // var header = { headers: {
-    //      "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
-    // }};
-    // axios.get(DATA_LINK, header).then(response => {
-    //     let table = this.dataToTable(response.data);
-    //     console.log(table);
-    //     this.setState({table: table})
-    // });
-
-    // var data = JSON.stringify({
-    //     "min": 0,
-    //     "max": 5
-    // });
-
-
-
 
     // TODO
     // 1) obtain data from LogDataset, using logData POST API and getcampaignlogdata lambda
     // 2) populate the front end table
     // alternalte approach with api logData and lambda getcampaignLogData: 'https://ue4fr66yvj.execute-api.us-east-1.amazonaws.com/logStage',
     getLogTableData() {
+        console.log(this.props);
         // console.log("getLogTableData is running")
-        var apiString = "https://ue4fr66yvj.execute-api.us-east-1.amazonaws.com/logStage/?templateId="
+
+        var apiString = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs?templateId="
         var templateId = this.state.templateName;
         var queryString =  apiString.concat('"' + templateId + '"');
         var config = {
@@ -52,19 +32,15 @@ class CampaignLogTable extends React.Component {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
                 'Content-Type': 'application/json',
-                'x-api-key': "S1VsUgcBCv14uSiR2yPPfaLlxGXv5FYdkdbOWUV6"
+                'x-api-key': "8nobK0hMri7W16vHzMj0S1SfOC5m7sPU4zxNBFX8"
             }
         };
-        // process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
-        // I created the following key, but how do I use it: S1VsUgcBCv14uSiR2yPPfaLlxGXv5FYdkdbOWUV6
 
         axios(config)
             .then(response => {
-                // console.log("response.data is;", response.data)
-                let separatedCampaigns = this.separateCampaigns(response.data.Items);
-                // console.log("separatedCampaigns is :", separatedCampaigns)
+                let separatedCampaigns = this.separateCampaigns(response.data.body.Items);
+                console.log("separatedCampaigns is :", separatedCampaigns)
                 let rowInformation = this.makeRowInformation(separatedCampaigns);
-                // console.log("rowInformation is: ", rowInformation)
                 let table = this.dataToTable(rowInformation);
                 this.setState({table: table})
             })
