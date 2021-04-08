@@ -1,6 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import Table from "../components/Table";
+import { ContactlessOutlined } from "@material-ui/icons";
 
 
 // const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
@@ -9,14 +10,8 @@ import Table from "../components/Table";
 class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
-        // console.log("reached line 12 of CampaignLogTable")
-        // console.log("printing props:", this.props);
-        // console.log("printing this.props.location:", this.props.location);
-        // console.log("printing props.location.state:", props.location.state);
-        // console.log("printing props.location.state.templateName:", props.location.state.templateName);
         this.state = {
-            templateName: "0"
-            // this.props.location.state.templateName
+            templateName: this.props.location.state.templateName
         }
     }
 
@@ -42,8 +37,9 @@ class CampaignLogTable extends React.Component {
     // 2) populate the front end table
     // alternalte approach with api logData and lambda getcampaignLogData: 'https://ue4fr66yvj.execute-api.us-east-1.amazonaws.com/logStage',
     getLogTableData() {
+        console.log(this.props);
         // console.log("getLogTableData is running")
-        var apiString = "https://2rsf9haj99.execute-api.us-east-1.amazonaws.com/queryLogs/templateId/"
+        var apiString = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs/"
         var templateId = this.state.templateName;
         var queryString =  apiString.concat(templateId);
         var config = {
