@@ -3,9 +3,6 @@ import axios from 'axios';
 import Table from "../components/Table";
 import { ContactlessOutlined } from "@material-ui/icons";
 
-// const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
-
-
 class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
@@ -14,23 +11,16 @@ class CampaignLogTable extends React.Component {
         }
     }
 
-    // TODO
-    // 1) obtain data from LogDataset, using logData POST API and getcampaignlogdata lambda
-    // 2) populate the front end table
-    // alternalte approach with api logData and lambda getcampaignLogData: 'https://ue4fr66yvj.execute-api.us-east-1.amazonaws.com/logStage',
     getLogTableData() {
-        console.log(this.props);
-        // console.log("getLogTableData is running")
-
         var apiString = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs?templateId="
         var templateId = this.state.templateName;
         var queryString =  apiString.concat('"' + templateId + '"');
         var config = {
-            method: 'post',
+            method: 'get',
             url: queryString,
             headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                // 'Access-Control-Allow-Origin': '*',
+                // 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
                 'Content-Type': 'application/json',
                 'x-api-key': "8nobK0hMri7W16vHzMj0S1SfOC5m7sPU4zxNBFX8"
             }
@@ -38,10 +28,7 @@ class CampaignLogTable extends React.Component {
 
         axios(config)
             .then(response => {
-                let separatedCampaigns = this.separateCampaigns(response.data.body.Items);
-                console.log("separatedCampaigns is :", separatedCampaigns)
-                let rowInformation = this.makeRowInformation(separatedCampaigns);
-                let table = this.dataToTable(rowInformation);
+                let table = this.dataToTable(response.data.body);
                 this.setState({table: table})
             })
             .catch(function (error) {
@@ -53,67 +40,12 @@ class CampaignLogTable extends React.Component {
         this.getLogTableData()
     }
 
-
     render() {
         return ( 
             <div className="col-lg-9 pl-0 pr-1">
                 <Table data={this.state.table}/>
             </div>        
         );
-    }
-
-    separateCampaigns(data) {
-        let campaignMap = new Map();
-        var i;
-        for (i = 0; i < data.length; i++) {
-            // The C might not be capitalised, as seen in lambda
-            if (campaignMap.has(data[i].CampaignId.S)) {
-                campaignMap.get(data[i].CampaignId.S).push(data[i])
-            } else {
-                let campaignArray = []
-                campaignArray.push(data[i])
-                campaignMap.set(data[i].CampaignId.S, campaignArray)
-            }
-        }
-            return campaignMap
-    }
-
-
-    makeRowInformation(separatedCampaigns) {
-        var i;
-        let tableForm = [];
-        for (let [key, value] of separatedCampaigns) {
-            let campaignId = key;
-            let sentDateTime = value[0].SentDateTime.S;
-            let numEmailed = 0;
-            let numSuccessfullyDelivered = 0;
-            let numOpened = 0;
-            let numLinks = 0;
-            for (i = 0; i < value.length; i++) {
-
-                numEmailed ++;
-                if (value[i].DeliveryStatus.S === "Delivered") {
-                    numSuccessfullyDelivered ++;
-                }
-                if (value[i].OpenedStatus.S === "Opened") {
-                    numOpened ++;
-                }
-                if (!(value[i].ClickedLinkStatus.S === "Clicked")) {
-                    numLinks ++;
-                }
-            }
-
-            let row = {
-                CampaignId: campaignId,
-                SentDateTime: sentDateTime,
-                NumEmailed: numEmailed,
-                NumSuccessfullyDelivered: numSuccessfullyDelivered,
-                NumOpened: numOpened,
-                NumLinks: numLinks
-            }
-            tableForm.push(row)
-        }
-        return tableForm;
     }
 
     dataToTable(data) {
@@ -128,8 +60,6 @@ class CampaignLogTable extends React.Component {
         ];
 
         let table = {columns: []};
-        // let items = data.items
-
         for (let i = 0; i < columnTitles.length; i++) {
             let columnTitle = columnTitles[i];
             table.columns.push({
@@ -187,7 +117,6 @@ class CampaignLogTable extends React.Component {
         return content;
     }
 
-
     getColumnWithDisplayName(displayName, table) {
         for (let column of table.columns) {
             if (column.title === displayName) {
@@ -195,8 +124,6 @@ class CampaignLogTable extends React.Component {
             }
         }
     }
-
-
 }
 
 export default CampaignLogTable;
