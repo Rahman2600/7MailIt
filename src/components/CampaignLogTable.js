@@ -15,23 +15,6 @@ class CampaignLogTable extends React.Component {
         }
     }
 
-    // var header = { headers: {
-    //      "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
-    // }};
-    // axios.get(DATA_LINK, header).then(response => {
-    //     let table = this.dataToTable(response.data);
-    //     console.log(table);
-    //     this.setState({table: table})
-    // });
-
-    // var data = JSON.stringify({
-    //     "min": 0,
-    //     "max": 5
-    // });
-
-
-
-
     // TODO
     // 1) obtain data from LogDataset, using logData POST API and getcampaignlogdata lambda
     // 2) populate the front end table
@@ -39,7 +22,7 @@ class CampaignLogTable extends React.Component {
     getLogTableData() {
         console.log(this.props);
         // console.log("getLogTableData is running")
-        var apiString = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs/"
+        var apiString = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs?templateId="
         var templateId = this.state.templateName;
         var queryString =  apiString.concat(templateId);
         var config = {
@@ -47,19 +30,15 @@ class CampaignLogTable extends React.Component {
             url: queryString,
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': "S1VsUgcBCv14uSiR2yPPfaLlxGXv5FYdkdbOWUV6"
+                'x-api-key': "8nobK0hMri7W16vHzMj0S1SfOC5m7sPU4zxNBFX8"
             }
         };
-        // process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
-        // I created the following key, but how do I use it: S1VsUgcBCv14uSiR2yPPfaLlxGXv5FYdkdbOWUV6
 
         axios(config)
             .then(response => {
-                // console.log("response.data is;", response.data)
-                let separatedCampaigns = this.separateCampaigns(response.data.Items);
-                // console.log("separatedCampaigns is :", separatedCampaigns)
+                let separatedCampaigns = this.separateCampaigns(response.data.body.Items);
+                console.log("separatedCampaigns is :", separatedCampaigns)
                 let rowInformation = this.makeRowInformation(separatedCampaigns);
-                // console.log("rowInformation is: ", rowInformation)
                 let table = this.dataToTable(rowInformation);
                 this.setState({table: table})
             })
