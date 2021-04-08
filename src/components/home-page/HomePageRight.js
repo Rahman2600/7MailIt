@@ -10,9 +10,9 @@ class HomePageRight extends React.Component {
 
     render() {
         return (
-             <div className="float-right col-lg-3 ">
+             <div className="float-left col-lg-3 ">
                  <Link
-                     className="btn btn-primary mt-5 ml-5 mr-5 mb-5 float-right"
+                     className="btn btn-primary mt-5 ml-5 mr-5 mb-5 float-left"
                      role="button"
                      id="logOutButton"
                      to={"/"}>Log Out

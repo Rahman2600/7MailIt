@@ -1,24 +1,38 @@
 import React from "react";
-import {convertToTemplate,uploadFile} from "../../aws_util"
+import {convertToTemplate,uploadFile, removeFile} from "../../aws_util"
+
+
 
 class FileUpload extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { selectedFile: '', message: null, uploading: false}
+        this.state = { selectedFile: '', templateName:'', templateNameR: '', message: null, removal_message: null, uploading: false,
+        checking: false}
         this.messages = Object.freeze({
             WRONG_FILE_TYPE:   "Wrong template file type. Upload a .doc or .docx file",
             UPLOAD_FAIL:  "Upload Failure",
-            NO_FILE: "Please upload an Email template document",
+            EMPTY_FIELD: "At least one field is empty. Please fill in both fields to continue.",
+            TEMPLATE_NAME_INCORRECT_FORMAT: "The template name can only contain alpha numeric characters, underscores and/or hyphens",
+            EMPTY_TEMPLATE_NAME: "The template name is empty. Please provide a template name to continue.",
             SUCCESS: "Sucessfully uploaded file"
         });
+        this.removal_message = Object.freeze({
+            REMOVE_FAILED: "Template Removal failed. Please verify Template Name corresponds to an Active Template.",
+            EMPTY_FIELD: "The text field is empty. Please enter a Template Name to continue.",
+            TEMPLATE_NAME_INCORRECT_FORMAT: "The template name can only contain alpha numeric characters, underscores and/or hyphens. This does not appear to be a valid Template Name. ",
+            SUCCESSFUL_REMOVAL: "Sucessfully removed a template"
+        });
         this.onFileChange = this.onFileChange.bind(this);
+        this.onTemplateNameChange = this.onTemplateNameChange.bind(this);
+        this.onTemplateNameChangeR = this.onTemplateNameChangeR.bind(this);
         this.onFileUpload = this.onFileUpload.bind(this);
+        this.onFileRemove = this.onFileRemove.bind(this);
     }
 
     render() {
         return (
             <div>
-                <p className="mt-5 text-center">Upload New Template</p>
+                <p className="mt-5 text-center">New Template:</p>
                 {this.state.message != null ? 
                     <div 
                     className={
@@ -40,20 +54,111 @@ class FileUpload extends React.Component {
                 }
                 <form>
                     <div className="form-group">
-                        <input type="file" className="form-control-file" id="fileUploadButton" onChange={this.onFileChange}/>
+                        <input type="file" className="form-control-file my-row2" id="fileUploadButton" onChange={this.onFileChange}/>
                     </div>
+                    <div className="row justify-content-space-evenly my-row2">
+                        <div className="input-group mb-2">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">Template Name</span>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="template-name"
+                                className="form-control" 
+                                aria-label="TemplateName" 
+                                onChange={this.onTemplateNameChange} 
+                                required>
+                            </input>
+                        </div>
+                    </div>
+                    
                 </form>
-                <button className="btn btn-primary btn-block mt-5" onClick={this.onFileUpload}> Submit </button>
-            </div>
+
+
+                <button className="btn btn-primary btn-block mt-5" onClick={this.onFileUpload}> Submit Template</button>
+
+
+
+                <p className="mt-5 text-center">Remove a Template</p>
+                {this.state.removal_message != null ? 
+                    <div 
+                    className={
+                        this.state.removal_message === this.removal_message.SUCCESSFUL_REMOVAL ? "alert alert-success" : "alert alert-danger" } 
+                        role="alert">
+                        {`${this.state.removal_message}`} 
+                    </div>
+                    :
+                    <div></div>
+                }
+                {this.state.checking ? 
+                    <div className="horizontal-center">
+                        <div className="spinner-border text-primary" style={{width: "3rem", height: "3rem"}}
+                        role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                    </div> :
+                    <div></div>
+                }
+
+                <div className="row justify-content-space-evenly my-row2">
+                        <div className="input-group mb-2">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">Template Name</span>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="template-nameR"
+                                className="form-control" 
+                                aria-label="TemplateNameR" 
+                                onChange={this.onTemplateNameChangeR} 
+                                required>
+                            </input>
+                        </div>
+                    </div>
+                    <button className="btn btn-primary btn-block mt-5" onClick={this.onFileRemove}> Remove Template </button>
+                </div>
+            
+
+
         )
     }
 
     onFileChange(event) {
-        console.log(event.target.files[0]);
         this.setState({ selectedFile: event.target.files[0], message: null });
     }
 
+    onTemplateNameChange(event) {
+        this.setState({ templateName: event.target.value});
+    }
+
+    onTemplateNameChangeR(event) {
+        this.setState({ templateNameR: event.target.value});
+    }
+
+    
+
     onFileUpload() {
+        //Validate template name
+        let templateNameInput = document.getElementById('template-name');
+        let isEmptyField = false;
+        let isTemplateNameCorrectFormat = true;
+        let templateName = this.state['templateName'];
+
+        this.setState({message: null});
+        if(this.isEmptyStringOrNull(templateName.trim())) {
+            isEmptyField = true;
+            templateNameInput.classList.add("inputError");
+        } else {
+            templateNameInput.classList.remove("inputError");
+        }
+
+        if(!this.isTemplateNameFormattedCorrectly(templateName)) {
+            isTemplateNameCorrectFormat = false;
+            templateNameInput.classList.add("inputError");
+        } else {
+            templateNameInput.classList.remove("inputError");
+        }
+
         var allowedExtensions = /(\.docx)$/i;
         var fileInput = this.state.selectedFile;
         var filePath;
@@ -61,21 +166,74 @@ class FileUpload extends React.Component {
         if (fileInput) {
             filePath = fileInput.name;
         }
-
-        if (!fileInput) {
-            this.setState({message: this.messages.NO_FILE});
-        } else if(!allowedExtensions.exec(filePath)){    
+        
+        if (!fileInput || isEmptyField) {
+            this.setState({message: this.messages.EMPTY_FIELD});
+        } else if(!isTemplateNameCorrectFormat) {
+            this.setState({message: this.messages.TEMPLATE_NAME_INCORRECT_FORMAT});
+        }else if(!allowedExtensions.exec(filePath)){    
             this.setState({message: this.messages.WRONG_FILE_TYPE});
         } else {
             this.setState({uploading: true});
-            uploadFile(fileInput, 'docxtemplates').then(() => {
-                this.setState({ message: this.messages.SUCCESS, uploading: false});
+            uploadFile(fileInput, 'docxtemplates', templateName).then(() => {
+                this.setState({ message: this.messages.SUCCESS, processing: false, uploading: false });
                 this.props.onUploadSuccess();
             }).catch(error => {
                 console.log(error);
                 this.setState({ message: this.messages.UPLOAD_FAIL + ": " + error.message, uploading: false});
             });    
         }
+    }
+
+    onFileRemove() {
+        //Validate template name
+        let templateNameInputR = document.getElementById('template-nameR');
+        let isEmptyFieldR = false;
+        let isTemplateNameCorrectFormatR = true;
+        let templateNameR = this.state['templateNameR'];
+
+        this.setState({removal_message: null});
+        if(this.isEmptyStringOrNull(templateNameR.trim())) {
+            isEmptyFieldR = true;
+            templateNameInputR.classList.add("inputError");
+        } else {
+            templateNameInputR.classList.remove("inputError");
+        }
+
+        if(!this.isTemplateNameFormattedCorrectly(templateNameR)) {
+            isTemplateNameCorrectFormatR = false;
+            templateNameInputR.classList.add("inputError");
+        } else {
+            templateNameInputR.classList.remove("inputError");
+        }
+
+        if (isEmptyFieldR) {
+            this.setState({removal_message: this.removal_message.EMPTY_FIELD});
+        } else if(!isTemplateNameCorrectFormatR) {
+            this.setState({removal_message: this.removal_message.TEMPLATE_NAME_INCORRECT_FORMAT});
+        }else {
+            this.setState({checking: true});
+            removeFile(templateNameR).then(() => {
+                this.setState({ removal_message: this.removal_message.SUCCESSFUL_REMOVAL, checking: false});
+                this.props.onUploadSuccess();
+            }).catch(error => {
+                console.log(error);
+                this.setState({ removal_message: this.removal_message.REMOVE_FAILED, checking: false});
+            });    
+        }
+
+        
+
+       
+    }
+
+    isEmptyStringOrNull(string) {
+        return string == null || string === "";
+    }
+
+    isTemplateNameFormattedCorrectly(string) {
+        let templateNameRegex = /^[\-\w]*$/;
+        return templateNameRegex.test(string);
     }
 }
 
