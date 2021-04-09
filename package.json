@@ -17,6 +17,7 @@
     "aws-sdk": "^2.848.0",
     "bootstrap": "^4.6.0",
     "browser-router": "^0.2.0",
+    "cors": "^2.8.5",
     "font-awesome": "^4.7.0",
     "mammoth": "^1.4.16",
     "newman": "^5.2.2",
