@@ -1,7 +1,7 @@
 {
   "name": "hsbc_email_service",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@aws-amplify/ui-react": "^1.0.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
@@ -17,7 +17,6 @@
     "aws-sdk": "^2.848.0",
     "bootstrap": "^4.6.0",
     "browser-router": "^0.2.0",
-    "cors": "^2.8.5",
     "font-awesome": "^4.7.0",
     "mammoth": "^1.4.16",
     "newman": "^5.2.2",
