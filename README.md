@@ -8,12 +8,21 @@ Upload template process: the following edge cases have been implemented:
 
 -Files used for creating templates must have unique names
 
+
+
 Batch email campaign: This process has been made more robust by handling the following negative paths/edge cases
+
 -The csv file must contain the correct number of columns to equal the number of dynamic values plus 1 (for the Email Address column)
+
 -If there are any empty lines above the last row an error message will be thrown
+
 -If there is an empty cell in the table an error message will be thrown 
+
 -If the columns do not have the correct name (either Email Address or the dynamic value names) an error message will be thrown 
+
 PLEASE NOTE: this has not been made robust to deal with duplicate columns with a valid Dynamic Value name. We will be implementing this on Friday. Also on the create email campaign page there should be an example csv file with the format needed for making a batch email campaign 
+
+
 Security: We have implemented a solution to ensure that if a user is not logged and tries to access the application through the URL they will be redirected to the login page
 
 UI bugs: We have added an edit columns option on the homepage to ensure that horizontal scrolling is not immediately required when the page is loaded. Also sorting is available on many of the columns on all grids 
