@@ -6,8 +6,16 @@ import { ContactlessOutlined } from "@material-ui/icons";
 class CampaignLogTable extends React.Component {
     constructor(props) {
         super(props);
+        this.defaultColumns = ["CampaignId", 
+                               "Date of Campaign Launch", 
+                               "No. of People Emailed", 
+                               "No. of Emails Successfully Delivered", 
+                               "No. of Opened Emails",
+                               "No. of Links Opened",
+                               "Email Log"];
         this.state = {
-            templateName: this.props.location.state.templateName
+            templateName: this.props.location.state.templateName,
+            table: null
         }
     }
 
@@ -27,7 +35,9 @@ class CampaignLogTable extends React.Component {
         axios(config)
             .then(response => {
                 let table = this.dataToTable(response.data.body);
+                console.log(table);
                 this.setState({table: table})
+                console.log(this.state);
             })
             .catch(function (error) {
                 console.log(error);
@@ -39,9 +49,10 @@ class CampaignLogTable extends React.Component {
     }
 
     render() {
+        console.log(this.state.table);
         return ( 
             <div className="col-lg-9 pl-0 pr-1">
-                <Table data={this.state.table}/>
+                <Table columns={this.defaultColumns} data={this.state.table}/>
             </div>        
         );
     }
@@ -59,6 +70,7 @@ class CampaignLogTable extends React.Component {
 
         let table = {columns: []};
         for (let i = 0; i < columnTitles.length; i++) {
+            console.log(columnTitles.length);
             let columnTitle = columnTitles[i];
             table.columns.push({
                 title: columnTitle.displayName,
