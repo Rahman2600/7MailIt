@@ -75,12 +75,12 @@ class CampaignPage extends React.Component {
                                 {"Return to Home Page"}
                             </Link>
                             <div className="row my-row1"></div>
-                            <div className="row justify-content-space-evenly my-row">
+                            <div className="row justify-content-space-evenly my-row mt-5 mb-2">
                                 <img src={userLogo} className="img-rounded" width="30" height="30" />
                             </div>
                             <div className="form-group">
                                 <div className="row justify-content-space-evenly my-row2">
-                                    <div className="input-group mb-3">
+                                    <div className="input-group mb-1">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text">Single Email Address</span>
                                         </div>
@@ -95,7 +95,7 @@ class CampaignPage extends React.Component {
                                     </div>
                                 </div>
                                 <div className="row justify-content-space-evenly my-row2">
-                                    <div className="input-group mb-3">
+                                    <div className="input-group mb-1">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text">Subject Line</span>
                                         </div>
@@ -112,12 +112,12 @@ class CampaignPage extends React.Component {
                                 {this.state.dynamicValues.length > 0 ?
                                     <div className="row justify-content-space-evenly my-row2">
                                         Dynamic Values
-                                        <div className="input-group mb-3">
+                                        <div className="input-group mb-1">
                                             {this.createDynamicValueTextFields()}
                                         </div>
                                     </div> : null }
                             </div>
-                            <div className="row justify-content-right my-row1">
+                            <div className="row justify-content-right my-row1 mb-1 button-spacing">
                                 <button type="button" className="btn btn-success" id='button1' onClick={this.handleSubmit}>Submit</button>
                             </div>
                             {this.state.loading ?
@@ -233,7 +233,7 @@ class CampaignPage extends React.Component {
         //Validate Dynamic Value Inputs are correctly formatted
         for(var input of dynamicValueInputs) {
             var dynamicValue = input.getAttribute("aria-label");
-            if(this.isEmptyStringOrNull(this.state[dynamicValue])) {
+            if(this.state[dynamicValue] == undefined || this.isEmptyStringOrNull(this.state[dynamicValue].trimEnd())) {
                 input.classList.add("inputError");
                 emptyField = true;
             } else {
