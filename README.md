@@ -1,8 +1,11 @@
 Team Mail It! WIP Code Drop - April 9th, 2021 
 
 Upload template process: the following edge cases have been implemented: 
+
 -When there are duplicate dynamic values it will only appear once 
+
 -Empty documents will not be accepted as templates 
+
 -Files used for creating templates must have unique names
 
 Batch email campaign: This process has been made more robust by handling the following negative paths/edge cases
