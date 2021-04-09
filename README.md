@@ -1,3 +1,28 @@
+Team Mail It! WIP Code Drop - April 9th, 2021 
+
+Upload template process: the following edge cases have been implemented: 
+-When there are duplicate dynamic values it will only appear once 
+-Empty documents will not be accepted as templates 
+-Files used for creating templates must have unique names
+
+Batch email campaign: This process has been made more robust by handling the following negative paths/edge cases
+-The csv file must contain the correct number of columns to equal the number of dynamic values plus 1 (for the Email Address column)
+-If there are any empty lines above the last row an error message will be thrown
+-If there is an empty cell in the table an error message will be thrown 
+-If the columns do not have the correct name (either Email Address or the dynamic value names) an error message will be thrown 
+PLEASE NOTE: this has not been made robust to deal with duplicate columns with a valid Dynamic Value name. We will be implementing this on Friday. Also on the create email campaign page there should be an example csv file with the format needed for making a batch email campaign 
+Security: We have implemented a solution to ensure that if a user is not logged and tries to access the application through the URL they will be redirected to the login page
+
+UI bugs: We have added an edit columns option on the homepage to ensure that horizontal scrolling is not immediately required when the page is loaded. Also sorting is available on many of the columns on all grids 
+
+Remove template: We have implemented an option to remove a template using a template name since SES limits the number of stored templates to 10,000 and we could not find a way to delete them manually through the AWS management console. 
+
+Campaign/Email Log grids: With each template there is now a button available to see all campaign (can contain one or multiple emails) logs and for each campaign log we can see the list of email logs associated with that campaign. 
+
+Email Delivery/Opened Status: Currently our campaign and email log grids should demonstrated whether the email was delivered successfully or not and whether it was opened by the user. It is working most of the time however the team is trying to isolate the pattern of when the fields are not updating. 
+
+Email “Clicked Link” Status: This column is meant to indicate if at least one link has been clicked in an email. 
+
 Team Mail It! WIP Code Drop - March 30th, 2021 
 
 1. The “Update Temporary Credentials” page has been updated with more helping text for the user to understand the purpose of the page. More error handling has been added to ensure that whitespace cannot be present in the username and to ensure that the new and confirmed password match, and if the user tries to login from the “Update Temporary Credentials” page an error message will appear that will ask the user to sign in from the main authentication page. 
