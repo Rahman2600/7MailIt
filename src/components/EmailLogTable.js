@@ -2,18 +2,31 @@ import React from "react";
 import axios from 'axios';
 import Table from "../components/Table";
 import CampaignLogTable from "../components/CampaignLogTable";
-
+import { Link } from "react-router-dom";
 
 // const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs"
-let fakeData = {"Count":3,"Items":[{"EmailAddress":{"S":"teamMailItTest@gmail.com"},"OpenedStatus":{"S":"N/A"},"ClickedLinkStatus":{"S":"N/A"},"TemplateId":{"S":"0"},"MessageId":{"S":"0"},"SentDateTime":{"S":"04-01-2021"},"DeliveryStatus":{"S":"Delivered"},"DynamicValues":{"S":"{\"NAME\": \"Hugh\", \"AMOUNT\": \"$1,000,000\", \"PROMO_CODE\": \"www.google.com\"}"},"CampaignId":{"S":"0"}},{"EmailAddress":{"S":"teamMailItTest@gmail.com"},"OpenedStatus":{"S":"N/A"},"ClickedLinkStatus":{"S":"N/A"},"TemplateId":{"S":"0"},"MessageId":{"S":"1"},"SentDateTime":{"S":"04-01-2021"},"DeliveryStatus":{"S":"Delivered"},"DynamicValues":{"S":"{\"NAME\": \"Hugh\", \"AMOUNT\": \"$1,000,000\", \"PROMO_CODE\": \"www.google.com\"}"},"CampaignId":{"S":"0"}},{"EmailAddress":{"S":"teamMailItTest@gmail.com"},"OpenedStatus":{"S":"N/A"},"ClickedLinkStatus":{"S":"N/A"},"TemplateId":{"S":"0"},"MessageId":{"S":"2"},"SentDateTime":{"S":"04-01-2021"},"DeliveryStatus":{"S":"Delivered"},"DynamicValues":{"S":"{\"NAME\": \"Hugh\", \"AMOUNT\": \"$1,000,000\", \"PROMO_CODE\": \"www.google.com\"}"},"CampaignId":{"S":"1"}}],"ScannedCount":3}
 
 class EmailLogTable extends React.Component {
     constructor(props) {
         super(props);
+        this.defaultColumns = ["Message Id", 
+                               "Sent Date", 
+                               "Email Address", 
+                               "Delivery Status", 
+                               "Open Status",
+                               "Clicked Link Status"];
+        this.sortableColumns = ["Message Id", 
+                               "Sent Date", 
+                               "Email Address", 
+                               "Delivery Status", 
+                               "Open Status",
+                               "Clicked Link Status"];
         this.state = {
             templateName: this.props.location.state.templateName,
-            campaignId: this.props.location.state.campaignId
+            campaignId: this.props.location.state.campaignId,
+            columns: []
         }
+        console.log(this.state);
     }
 
     getEmailTableData() {
@@ -46,10 +59,41 @@ class EmailLogTable extends React.Component {
 
     render() {
         let table = this.state.table;
-        return ( 
-            <div style={{"max-width": "100%"}}>
-                {table? <Table data={table} columns={this.state.columns}/> : <Table loading={true}/>}
-            </div>        
+        if (table) {
+            this.state.columns = table.columns.map(({title}) => title);
+        }
+        
+        return (
+            <div className="scroll container-fluid" style={{"max-width": "100%"}}>
+                <div className="float-left col-lg-3 ">
+                    <Link
+                        className="btn btn-primary mt-5 ml-5 mr-5 mb-5 "
+                        role="button"
+                        id="logOutButton"
+                        to={"/"}>Log Out
+                    </Link>
+                    <Link 
+                        className="btn btn-primary d-block mt-5 ml-5 mr-5 mb-5"
+                        role="button"
+                        to={{pathname: "/CampaignLogTable/", state: {templateName: this.state.templateName}}}>
+                        {"Return to Campaign Page"}
+                    </Link>
+                    <Link 
+                        className="btn btn-primary d-block mt-5 ml-5 mr-5 mb-5"
+                        role="button"
+                        to={"/HomePage"}>
+                        {"Return to Home Page"}
+                    </Link>
+                </div> 
+                <div className="float-right col-lg-9 pl-0 pr-1">
+                    <h1 className="mt-2">{`Email logs`}</h1>
+                    {table? <Table data={table} 
+                    columns={this.state.columns.map((column) => {
+                        return {title: column, sort: this.sortableColumns.includes(column)}
+                    })}/> : 
+                    <Table loading={true}/>}
+                </div>
+            </div>     
         );
     }
 

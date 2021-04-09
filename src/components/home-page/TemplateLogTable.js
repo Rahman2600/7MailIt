@@ -12,7 +12,7 @@ class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
         this.defaultColumns = ["File Name", "Template Name", "Upload Date", "Create Email Campaign", "Campaign Logs"];
-        this.sortableColumns = ["File Name",  "Template Name", "Upload Date", "Team"];
+        this.sortableColumns = ["File Name",  "Template Name", "Upload Date"];
         this.state = {table: null, editingColumns: false, columns: []};
         this.getTableData = this.getTableData.bind(this);
         this.onEditColumns = this.onEditColumns.bind(this);

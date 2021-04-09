@@ -241,7 +241,8 @@ function LoginPage() {
                                     Update Temporary Credentials
                                 </Typography>
                                 <Typography component="h9" variant="h8">
-                                    This page is only intended to update temporary credentials. 
+                                    If the system administrator has created a new account they will provide you with temporary credentials that will need to be updated in order for you to use this system. 
+                                    You will not be able to update a permanent password with this page. 
                                 </Typography>
                                 <form className={classes.form} noValidate>
                                     <TextField
@@ -250,7 +251,7 @@ function LoginPage() {
                                         required
                                         fullWidth
                                         id="email"
-                                        label="email"
+                                        label="Email"
                                         name="email"
                                         autoComplete="email"
                                         autoFocus
