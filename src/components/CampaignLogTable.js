@@ -1,8 +1,12 @@
 import React from "react";
 import axios from 'axios';
 import Table from "../components/Table";
-import { ContactlessOutlined } from "@material-ui/icons";
 import { Link } from "react-router-dom";
+import {Redirect} from "react-router";
+
+
+const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
+
 
 class CampaignLogTable extends React.Component {
     constructor(props) {
@@ -45,6 +49,9 @@ class CampaignLogTable extends React.Component {
             .catch(function (error) {
                 console.log(error);
             });
+        this.state = {
+            authenticated: this.props.user,
+        }
     }
 
     componentDidMount() {
@@ -56,32 +63,38 @@ class CampaignLogTable extends React.Component {
         if (table) {
             this.state.columns = table.columns.map(({title}) => title);
         }
-        return ( 
-            <div className="scroll container-fluid" style={{"max-width": "100%"}}>
-                <div className="float-left col-lg-3 ">
-                    <Link
-                        className="btn btn-primary mt-5 ml-5 mr-5 mb-5 "
-                        role="button"
-                        id="logOutButton"
-                        to={"/"}>Log Out
-                    </Link>
-                    <Link 
-                        className="btn btn-primary d-block mt-5 ml-5 mr-5 mb-5"
-                        role="button"
-                        to={"/HomePage"}>
-                        {"Return to Home Page"}
-                    </Link>
-                </div> 
-                <div className="float-right col-lg-9 pl-0 pr-1">
-                    <h1 className="mt-2">{`Campaign logs: ${this.state.templateName}`}</h1>
-                    {table? <Table data={table} 
-                    columns={this.state.columns.map((column) => {
-                        return {title: column, sort: this.sortableColumns.includes(column)}
-                    })}/> : 
-                    <Table loading={true}/>}
-                </div>
-            </div>        
-        );
+        if (this.state.authenticated !== true) {
+            return <Redirect to="/" />
+        } else {
+            return (
+                <div className="scroll container-fluid" style={{"max-width": "100%"}}>
+                    <div className="float-left col-lg-3 ">
+                        <Link
+                            className="btn btn-primary mt-5 ml-5 mr-5 mb-5 "
+                            role="button"
+                            id="logOutButton"
+                            to={"/"}>Log Out
+                        </Link>
+                        <Link 
+                            className="btn btn-primary d-block mt-5 ml-5 mr-5 mb-5"
+                            role="button"
+                            to={"/HomePage"}>
+                            {"Return to Home Page"}
+                        </Link>
+                    </div> 
+                    <div className="float-right col-lg-9 pl-0 pr-1">
+                        <h1 className="mt-2">{`Campaign logs: ${this.state.templateName}`}</h1>
+                        {table? <Table data={table} 
+                        columns={this.state.columns.map((column) => {
+                            return {title: column, sort: this.sortableColumns.includes(column)}
+                        })}/> : 
+                        <Table loading={true}/>}
+                    </div>
+                </div>        
+            );
+        }
+        
+            
     }
 
     dataToTable(data) {
