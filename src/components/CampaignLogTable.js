@@ -22,13 +22,16 @@ class CampaignLogTable extends React.Component {
         this.state = {
             templateName: this.props.location.state.templateName,
             table: null,
-            columns: []
+            columns: [],
+            authenticated: this.props.user
         }
+        console.log(this.state);
     }
 
     getLogTableData() {
         var apiString = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs?templateId="
         var templateId = this.state.templateName;
+        console.log(templateId);
         var queryString =  apiString.concat(templateId);
         var config = {
             method: 'get',
@@ -49,9 +52,6 @@ class CampaignLogTable extends React.Component {
             .catch(function (error) {
                 console.log(error);
             });
-        this.state = {
-            authenticated: this.props.user,
-        }
     }
 
     componentDidMount() {
@@ -150,10 +150,11 @@ class CampaignLogTable extends React.Component {
                 case "Email Log": {
                     // console.log("this.state.templateName is:", this.state.templateName)
                     // console.log("row['CampaignId'] is:", row['CampaignId'])
+                    console.log(this.state.templateName);
                     content.push({
                         button: {
                             displayName: "View",
-                            link: `EmailLogTable/`,
+                            link: `/EmailLogTable/`,
                             data: {templateName: this.state.templateName, campaignId: row['CampaignId']},
                             }});
                     break;

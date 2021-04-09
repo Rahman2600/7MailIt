@@ -152,7 +152,7 @@ class TemplateLogTable extends React.Component {
                 case "Create Email Campaign": {
                     let value = row[columnTitle.apiName];
                     if (value == "Ready") {
-                        content.push({button: {displayName:"Ready", link:"", data: ""}});
+                        content.push({button: {displayName:"Start", link:"", data: ""}});
                     } else {
                         content.push(value);
                     }

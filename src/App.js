@@ -23,11 +23,24 @@ function App() {
                 <BrowserRouter>
                     <Switch>
                         <Route path="/" component={LoginPage} exact/>
-                        <Route exact path="/HomePage" component={HomePage} user={user}></Route>
-                        <Route path="/campaignPage/:templateKey" component={CampaignPage} user={user}/>
-                        <Route path="/CampaignLogTable" component={CampaignLogTable} user={user}/>
-                        <Route path="/EmailLogTable" component={EmailLogTable} user={user}/>
-                        <Route path="/UnderConstructionPage" component={UnderConstructionPage}user={user}></Route>
+                        <Route exact path="/HomePage"><HomePage user={user}/></Route>
+                        <Route path="/campaignPage/:templateKey" 
+                               render={(props) => (
+                                 <CampaignPage {...props} user={user}/>)
+                               }>
+                        </Route> 
+                        <Route path="/CampaignLogTable" render={(props) => (
+                                 <CampaignLogTable {...props} user={user}/>)
+                               }>
+                        </Route>
+                        <Route path="/EmailLogTable" render={(props) => (
+                                 <EmailLogTable {...props} user={user}/>)
+                               }>
+                        </Route>
+                        <Route path="/UnderConstructionPage" render={(props) => (
+                                 <UnderConstructionPage {...props} user={user}/>)
+                               }>
+                        </Route>
                     </Switch>
                 </BrowserRouter>
             </div>

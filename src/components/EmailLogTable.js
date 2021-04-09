@@ -25,7 +25,8 @@ class EmailLogTable extends React.Component {
         this.state = {
             templateName: this.props.location.state.templateName,
             campaignId: this.props.location.state.campaignId,
-            columns: []
+            columns: [],
+            authenticated: this.props.user
         }
         console.log(this.state);
     }
@@ -51,8 +52,6 @@ class EmailLogTable extends React.Component {
             .catch(function (error) {
                 console.log(error);
             });
-        this.state = {
-            authenticated: this.props.user,}
     }
 
     componentDidMount() {
