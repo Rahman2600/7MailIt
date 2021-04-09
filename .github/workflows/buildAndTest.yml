@@ -39,6 +39,8 @@ jobs:
           echo REACT_APP_AWS_ACCESS_KEY_ID=${{secrets.REACT_APP_AWS_ACCESS_KEY_ID}} >> .env
           echo REACT_APP_AWS_SECRET_ACCESS_KEY=${{secrets.REACT_APP_AWS_SECRET_ACCESS_KEY}} >> .env
           echo REACT_APP_AWS_TEMPLATE_API_KEY=${{secrets.REACT_APP_AWS_TEMPLATE_API_KEY}} >> .env
+          echo REACT_APP_AWS_TEMPLATE_LOG_API_KEY=${{secrets.REACT_APP_AWS_TEMPLATE_LOG_API_KEY}} >> .env
+          echo REACT_APP_AWS_SINGLE_EMAIL_API_KEY=${{secrets.REACT_APP_AWS_SINGLE_EMAIL_API_KEY}} >> .env
           cat .env
 
       # 3: install NPM dependencies

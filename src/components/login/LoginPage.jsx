@@ -18,6 +18,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import {Redirect} from "react-router";
+import PropTypes from 'prop-types';
+import useCheckUser from "./useCheckUser";
 
 const initialFormState = {
     username: "", email: "", password: "", confirmPassword: "", newPassword: "", authCode: "", formType: "signIn"
@@ -59,8 +61,8 @@ function LoginPage() {
     const classes = useStyles();
     const [formState, updateFormState] = useState(initialFormState)
     const [showErrorMsg,setShowErrorMsg] = useState(false); 
-    const [errorMsg,setErrorMsg] = useState(""); 
-
+    const [errorMsg,setErrorMsg] = useState("");
+    const { user, checkUser } = useCheckUser();
     function onChange(e) {
         e.persist()
         updateFormState(() => ({...formState, [e.target.name]: e.target.value}))
@@ -82,7 +84,12 @@ function LoginPage() {
         } else {
             try {
                 await Auth.signIn(email, password);
+                // const user  = await Auth.currentAuthenticatedUser();
+                    // .then((boolean)=>{ console.log})
                 updateFormState(() => ({...formState, formType: "signedIn"}))
+                checkUser();
+                // console.log(updateUser)
+                // updateUser(user)
             } catch (error) {
                 signInErrorMessageProcessing(error);
             }
@@ -214,6 +221,7 @@ function LoginPage() {
                                                 // href="/ConfirmCredentials" variant="body2"
                                                 href="#"
                                                 onClick={confirmCredentials}
+                                                id="change-password-link"
                                             >
                                                 {"Update Temporary Password Here!"}
                                             </a>
@@ -240,7 +248,8 @@ function LoginPage() {
                                     Update Temporary Credentials
                                 </Typography>
                                 <Typography component="h9" variant="h8">
-                                    This page is only intended to update temporary credentials. 
+                                    If the system administrator has created a new account they will provide you with temporary credentials that will need to be updated in order for you to use this system. 
+                                    You will not be able to update a permanent password with this page. 
                                 </Typography>
                                 <form className={classes.form} noValidate>
                                     <TextField
@@ -249,7 +258,7 @@ function LoginPage() {
                                         required
                                         fullWidth
                                         id="email"
-                                        label="email"
+                                        label="Email"
                                         name="email"
                                         autoComplete="email"
                                         autoFocus
@@ -299,6 +308,7 @@ function LoginPage() {
                                     <Button
                                         type="submit"
                                         fullWidth
+                                        id="update-password-button"
                                         variant="contained"
                                         color="primary"
                                         className={classes.submit}
@@ -336,6 +346,10 @@ function LoginPage() {
         </div>
     );
 }
+
+// LoginPage.propTypes = {
+//     updateUser: PropTypes.func.isRequired
+// }
 
 export default LoginPage
 

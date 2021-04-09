@@ -2,6 +2,8 @@ import React from "react";
 import axios from 'axios';
 
 import Table from "../Table"
+import CheckList from "../CheckList"
+import { checkServerIdentity } from "tls";
 
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
@@ -9,8 +11,12 @@ const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/log
 class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {table: null}
+        this.defaultColumns = ["File Name", "Template Name", "Upload Date", "Create Email Campaign", "Campaign Logs"];
+        this.sortableColumns = ["File Name",  "Template Name", "Upload Date"];
+        this.state = {table: null, editingColumns: false, columns: []};
         this.getTableData = this.getTableData.bind(this);
+        this.onEditColumns = this.onEditColumns.bind(this);
+        this.onSelectedColumnsChange = this.onSelectedColumnsChange.bind(this);
     }
 
     componentDidMount() {
@@ -18,7 +24,7 @@ class TemplateLogTable extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.key != prevProps.key) {
+        if (this.props.id != prevProps.id) {
             this.getTableData()
         }
     }
@@ -42,7 +48,11 @@ class TemplateLogTable extends React.Component {
           .then(response => {
             this.sortTemplateLogs(response.data);
             let table = this.dataToTable(response.data);
-            this.setState({table: table})
+            this.setState({table: table, columns: table.columns.map(({title}) => {
+                if(this.defaultColumns.includes(title)) {
+                    return title;
+                }
+            })})
           })
           .catch(function (error) {
             console.log(error);
@@ -50,11 +60,47 @@ class TemplateLogTable extends React.Component {
     }
 
     render() {
+        let table = this.state.table;
+        if (table) {
+            let columns = table.columns.map(({title}) => title);
+           //console.log(columns);
+        }
         return ( 
             <div className="float-left col-lg-9 pl-0 pr-1">
-                {this.state.table? <Table data={this.state.table}/> : <Table loading={true}/>}
+                <h1 className="mt-2">Template logs</h1>
+                <button className="btn btn-primary mb-2" onClick={this.onEditColumns}> Edit columns </button>
+                {this.state.editingColumns && table ? 
+                <div className="mb-2">
+                    <CheckList list={table.columns.map(({title}) => {
+                        if (!this.defaultColumns.includes(title)) {
+                            return {value: title, checked: false}
+                        }
+                    }).filter((element) => element != null)} onChange={this.onSelectedColumnsChange}/>
+                </div>
+                : <div></div>}
+                {table? <Table data={table} 
+                columns={this.state.columns.map((column) => {
+                    return {title: column, sort: this.sortableColumns.includes(column)}
+                })}/> : 
+                <Table loading={true}/>}
             </div>        
         );
+    }
+
+    onSelectedColumnsChange(checkedStates) {
+        let additionalColumns = [];
+        for (let {value, checked} of checkedStates) {
+            if (checked) {
+                additionalColumns.push(value);
+            }
+        }
+        this.setState({columns: this.defaultColumns.concat(additionalColumns)})
+    }
+
+    onEditColumns() {
+        if (this.state.table != null) {
+            this.setState({editingColumns: !this.state.editingColumns});
+        }
     }
 
     dataToTable(data) {
@@ -82,6 +128,7 @@ class TemplateLogTable extends React.Component {
         let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
         table.numRows = templateKeyColumn.content.length;
         this.addLinksToCampaignPage(table);
+        this.addLinksToCampaignLogTable(table)
         return table;
     }
 
@@ -91,7 +138,7 @@ class TemplateLogTable extends React.Component {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
                 case "Campaign Logs": {
-                    content.push({button: {displayName: "View", link: "/EmailLogTable"}});
+                    content.push({button: {displayName: "View", link: "", data: ""}});
                     break;
                 }
                 case "Dynamic Values": {
@@ -147,6 +194,20 @@ class TemplateLogTable extends React.Component {
                 current.button.link = `campaignPage/${fileNameColumn.content[i]}`;
                 current.button.data = {dynamicValues: JSON.parse(this.commaSeperatedStringToArray(dynamicValuesColumn.content[i])), 
                                        templateName: templateNameCoumn.content[i]};
+            }
+        }
+    }
+
+    addLinksToCampaignLogTable(table) {
+        let templateNameColumn = this.getColumnWithDisplayName("Template Name", table);
+        let CampaignLogsColumn = this.getColumnWithDisplayName("Campaign Logs", table);
+        let content = CampaignLogsColumn.content;
+        for(let i = 0; i < content.length; i++) {
+            let current = content[i];
+            if (typeof current === "object") {
+                current.button.link = `CampaignLogTable`;
+                current.button.data = {
+                    templateName: templateNameColumn.content[i]};
             }
         }
     }
