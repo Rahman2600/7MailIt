@@ -10,11 +10,6 @@ let fakeData = {"Count":3,"Items":[{"EmailAddress":{"S":"teamMailItTest@gmail.co
 class EmailLogTable extends React.Component {
     constructor(props) {
         super(props);
-        // console.log("reached line 13 of EmailLogTable")
-        // console.log("printing this.props:", this.props);
-        // console.log("printing this.props.location:", this.props.location);
-        // console.log("printing this.props.location.state:", props.location.state);
-        // console.log("printing this.props.location.state.templateName:", props.location.state.templateName);
         this.state = {
             templateName: this.props.location.state.templateName,
             campaignId: this.props.location.state.campaignId
@@ -22,24 +17,21 @@ class EmailLogTable extends React.Component {
     }
 
     getEmailTableData() {
-        var apiString = "https://2rsf9haj99.execute-api.us-east-1.amazonaws.com/queryLogs/templateId/"
-        let obj = `{tpId:${this.state.templateName},cpId:${this.state.campaignId}}`;
-        var queryString =  apiString.concat(obj);
+        var apiString = `https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs?templateId=${this.state.templateName}&campaignId=${this.state.campaignId}`
+        console.log(apiString);
         var config = {
             method: 'get',
-            url: queryString,
+            url: apiString,
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': "S1VsUgcBCv14uSiR2yPPfaLlxGXv5FYdkdbOWUV6"
+                'x-api-key': "TKrgRRW19c5YY4DREgvfd3nqD0lZh4RP12KvwQBC"
             }
         };
 
         axios(config)
             .then(response => {
-                // console.log("response.data is;", response.data.Items)
-
-                // let table = this.dataToTable(response.data.Items);
-                let table = this.dataToTable(fakeData);
+                console.log(response);
+                let table = this.dataToTable(response.data);
                 this.setState({table: table})
             })
             .catch(function (error) {
@@ -50,14 +42,6 @@ class EmailLogTable extends React.Component {
     componentDidMount() {
         this.getEmailTableData()
     }
-    // var header = { headers: {
-    //      "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
-    // }};
-    // axios.get(DATA_LINK, header).then(response => {
-    //     let table = this.dataToTable(response.data);
-    //     console.log(table);
-    //     this.setState({table: table})
-    // });
 
 
     render() {
@@ -90,14 +74,15 @@ class EmailLogTable extends React.Component {
         } else {
             console.log("Request failed with " + data.statusCode)
         }
-        let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
-        table.numRows = templateKeyColumn.content.length;
+        let messageIdColumn = this.getColumnWithDisplayName("Message Id", table);
+        console.log(messageIdColumn);
+        table.numRows = messageIdColumn.content.length;
         return table;
     }
 
     getContent(columnTitle, data) {
         let content = [];
-        for (let row of data.body) {
+        for (let row of data.body.Items) {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
                 case "Message Id": {

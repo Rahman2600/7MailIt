@@ -19,7 +19,17 @@ import { Link } from "react-router-dom";
  * 
  * @param {Array} columns
  * 
- * Specifies which of the columns in the data should be shown in table
+ * - specifies which columns should be shown in table if columns is not specified all columns are shown
+ * 
+ * - columns is an array of {title: <string> ,sort: <boolean> }
+ * 
+ * - title is the title of a column we want included in the table
+ * - sort is an optional field that indicates whether we should be able to sort column, columns with sort
+ * set to true have a sorting button beside them in table.
+ * 
+ * - Default sorting order is alphabetical order of strings
+ * 
+ * 
  * 
  * @param {boolean} loading 
  * 
@@ -28,10 +38,57 @@ import { Link } from "react-router-dom";
 */
 
 class Table extends React.Component {
+    
     constructor(props) {
         super(props);
+        this.state = {
+            data: this.props.data,
+            columnsAscending: [true,true,true,true]
+        }
     }
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.data) {
+            this.setState(nextProps);
+            console.log("nextProps",this.state.data);
+        }
+    }
+    handleSorting = (column) => {
+        console.log("initial state",this.state.data)
+        let dataCopy = JSON.parse(JSON.stringify(this.state.data))        //array1.forEach(this.props.data => console.log(element))
+        let arr = dataCopy.columns
+        //console.log('state before sorted:', this.state.data.columns[column].content);
+        //console.log('dataCopy before sorted', dataCopy.columns[column].content)
 
+        //bubble sort with the weird object 2d array 
+        let n = arr[column].content.length;
+        for (let i = 0; i < n-1; i++)
+            for (let j = 0; j < n-i-1; j++)
+                if(this.state.columnsAscending[column] == true) {
+                    if (arr[column].content[j] > arr[column].content[j+1]) {
+                        // swap arr[j+1] and arr[j]
+                    for(let k = 0; k < arr.length;k++) {
+                        let temp = arr[k].content[j];
+                        arr[k].content[j] = arr[k].content[j+1];
+                        arr[k].content[j+1] = temp;
+                    }
+                    }
+            } else {
+                if (arr[column].content[j] < arr[column].content[j+1]) {
+                    // swap arr[j+1] and arr[j]
+                for(let k = 0; k < arr.length;k++) {
+                    let temp = arr[k].content[j];
+                    arr[k].content[j] = arr[k].content[j+1];
+                    arr[k].content[j+1] = temp;
+                }
+                }
+            }
+        let columnsAscendingCopy = [...this.state.columnsAscending];
+        columnsAscendingCopy[column] = !columnsAscendingCopy[column]
+        this.setState({data:dataCopy,columnsAscending:columnsAscendingCopy})
+                //this.setState(this.props.data.columns[i].content); 
+        //console.log('state after sorted:', this.state.data.columns[column].content);
+        //console.log('dataCopy after sorted', dataCopy.columns[column].content)
+      }
     render() {
         if (this.props.loading) {
             return (
@@ -64,9 +121,18 @@ class Table extends React.Component {
     renderTableHeader() {
         return (
             <tr>
-                {this.props.data.columns.map((column, i) => { 
+                {this.state.data.columns.map((column, i) => { 
                     if (this.renderColumn(column.title)) {
-                        return <th key={i}>{column.title}</th>;
+                        return ( 
+                            <th key={i}>
+                                {column.title}
+                                {this.addSortButtonToColumn(column.title)? 
+                                <button className="btn-group-vertical float-right" onClick={() => this.handleSorting(i)}>
+                                    <span>&#9650;</span> 
+                                </button> :
+                                                            <span></span>}
+                            </th>
+                        );
                     }
                 })}
             </tr>
@@ -75,7 +141,7 @@ class Table extends React.Component {
 
     renderTableBody() {
         return (
-            [...Array(this.props.data.numRows).keys()].map((i) => {
+            [...Array(this.state.data.numRows).keys()].map((i) => {
                 return <tr key={i} >{this.renderRow(i)}</tr>;               
             })
         )
@@ -83,7 +149,7 @@ class Table extends React.Component {
 
     renderRow(i) {
         return (
-            this.props.data.columns.map((current, j) => { 
+            this.state.data.columns.map((current, j) => { 
                 if (this.renderColumn(current.title)) {
                     return (
                         <td key={j}> 
@@ -117,7 +183,17 @@ class Table extends React.Component {
 
     renderColumn(columnName) {
         let columnsToShow = this.props.columns;
-        return !columnsToShow || columnsToShow.includes(columnName);
+        return !columnsToShow || columnsToShow.map(({title}) => title).includes(columnName);
+    }
+
+    addSortButtonToColumn(columnName) {
+        let columnsToShow = this.props.columns;
+        for(let {title, sort} of columnsToShow) {
+            if (columnName == title && sort) {
+                return true;
+            }
+        } 
+        return false;
     }
 
 }

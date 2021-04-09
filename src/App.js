@@ -19,7 +19,7 @@ function App() {
                     <Route exact path="/HomePage"><HomePage/></Route>
                     <Route path="/campaignPage/:templateKey" component={CampaignPage}/>
                     <Route path="/CampaignLogTable" component={CampaignLogTable}/>
-                    <Route path="/EmailLogTable"><EmailLogTable/></Route>
+                    <Route path="/EmailLogTable" component={EmailLogTable}/>
                     <Route path="/UnderConstructionPage"><UnderConstructionPage/></Route>
                 </Switch>
             </BrowserRouter>
