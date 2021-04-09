@@ -45,6 +45,7 @@ class Table extends React.Component {
             data: this.props.data,
             columnsAscending: [true,true,true,true]
         }
+        console.log(this.state);
     }
     componentWillReceiveProps(nextProps) {
         if(nextProps.data) {
@@ -163,6 +164,9 @@ class Table extends React.Component {
 
     renderCell(cell) {
         let type = typeof cell;
+        if(cell == null) {
+            return "null";
+        }
         if (type === "string") {
             return cell;
         } else if (type === "object") {

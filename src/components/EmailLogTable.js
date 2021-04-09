@@ -1,49 +1,115 @@
 import React from "react";
 import axios from 'axios';
 import Table from "../components/Table";
+import CampaignLogTable from "../components/CampaignLogTable";
+import { Link } from "react-router-dom";
+import {Redirect} from "react-router";
 
-
-const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs"
-
+// const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs"
 
 class EmailLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
-        
+        this.defaultColumns = ["Message Id", 
+                               "Sent Date", 
+                               "Email Address", 
+                               "Delivery Status", 
+                               "Open Status",
+                               "Clicked Link Status"];
+        this.sortableColumns = ["Message Id", 
+                               "Sent Date", 
+                               "Email Address", 
+                               "Delivery Status", 
+                               "Open Status",
+                               "Clicked Link Status"];
+        this.state = {
+            templateName: this.props.location.state.templateName,
+            campaignId: this.props.location.state.campaignId,
+            columns: [],
+            authenticated: this.props.user
+        }
+        console.log(this.state);
+    }
+
+    getEmailTableData() {
+        var apiString = `https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs?templateId=${this.state.templateName}&campaignId=${this.state.campaignId}`
+        console.log(apiString);
+        var config = {
+            method: 'get',
+            url: apiString,
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': "TKrgRRW19c5YY4DREgvfd3nqD0lZh4RP12KvwQBC"
+            }
+        };
+
+        axios(config)
+            .then(response => {
+                console.log(response);
+                let table = this.dataToTable(response.data);
+                this.setState({table: table})
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     componentDidMount() {
-        var header = { headers: {
-             "x-api-key": process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
-        }};
-        axios.get(DATA_LINK, header).then(response => {
-            let table = this.dataToTable(response.data);
-            console.log(table);
-            this.setState({table: table})
-        });
+        this.getEmailTableData()
     }
+
 
     render() {
         let table = this.state.table;
-        return ( 
-            <div style={{"max-width": "100%"}}>
-                {table? <Table data={table} columns={this.state.columns}/> : <Table loading={true}/>}
-            </div>        
-        );
+        if (table) {
+            this.state.columns = table.columns.map(({title}) => title);
+        }
+        if (this.state.authenticated !== true) {
+            return <Redirect to="/"/>
+        } else {
+            return (
+                <div className="scroll container-fluid" style={{"max-width": "100%"}}>
+                    <div className="float-left col-lg-3 ">
+                        <Link
+                            className="btn btn-primary mt-5 ml-5 mr-5 mb-5 "
+                            role="button"
+                            id="logOutButton"
+                            to={"/"}>Log Out
+                        </Link>
+                        <Link 
+                            className="btn btn-primary d-block mt-5 ml-5 mr-5 mb-5"
+                            role="button"
+                            to={{pathname: "/CampaignLogTable/", state: {templateName: this.state.templateName}}}>
+                            {"Return to Campaign Page"}
+                        </Link>
+                        <Link 
+                            className="btn btn-primary d-block mt-5 ml-5 mr-5 mb-5"
+                            role="button"
+                            to={"/HomePage"}>
+                            {"Return to Home Page"}
+                        </Link>
+                    </div> 
+                    <div className="float-right col-lg-9 pl-0 pr-1">
+                        <h1 className="mt-2">{`Email logs`}</h1>
+                        {table? <Table data={table} 
+                        columns={this.state.columns.map((column) => {
+                            return {title: column, sort: this.sortableColumns.includes(column)}
+                        })}/> : 
+                        <Table loading={true}/>}
+                    </div>
+                </div>     
+            );
+        }
     }
 
     dataToTable(data) {
         let columnTitles = [
-            {displayName:"File Name", apiName: "TemplateName"}, 
+            {displayName:"Message Id", apiName: "MessageId"},
             {displayName:"Sent Date", apiName: "SentDateTime"}, 
             {displayName:"Email Address", apiName: "EmailAddress"}, 
             {displayName:"Delivery Status", apiName: "DeliveryStatus"}, 
             {displayName:"Open Status", apiName: "OpenedStatus"}, 
             {displayName:"Clicked Link Status", apiName: "ClickedLinkStatus"},
-            {displayName:"Dynamic Values", apiName: "DynamicValues"},  
-            {displayName:"Job Log ID", apiName: "JobLogId"}, 
-            {displayName:"Message ID", apiName: "MessageId"}, 
         ];
         let table = {columns: []};
         if (data.statusCode === 200) {
@@ -57,71 +123,50 @@ class EmailLogTable extends React.Component {
         } else {
             console.log("Request failed with " + data.statusCode)
         }
-        let templateKeyColumn = this.getColumnWithDisplayName("File Name", table);
-        table.numRows = templateKeyColumn.content.length;
+        let messageIdColumn = this.getColumnWithDisplayName("Message Id", table);
+        console.log(messageIdColumn);
+        table.numRows = messageIdColumn.content.length;
         return table;
     }
 
     getContent(columnTitle, data) {
         let content = [];
-        for (let row of data.body) {
+        for (let row of data.body.Items) {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
-                case "Sent Date": {
-                    let value = row[columnTitle.apiName];
-                    if (value) {
-                        let dateObj = new Date(value);
-                        var date = dateObj.getDate();
-                        var month = dateObj.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
-                        var year = dateObj.getFullYear();
-                            
-                        var dateString = date + "/" + month + "/" + year;
-                        content.push(dateString);
-                    } else {
-                        content.push(" ");
-                    }
+                case "Message Id": {
+                    content.push(row['MessageId']);
                     break;
                 }
-
-                // case "File Name": {
-                //     let value = row['TemplateName'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Sent Date": {
-                //     let value = row['SentDateTime'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Email Address": {
-                //     let value = row['EmailAddress'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Delivery Status": {
-                //     let value = row['DeliveryStatus'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Open Status": {
-                //     let value = row['OpenedStatus'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Clicked Link Status": {
-                //     let value = row['ClickedLinkStatus'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                // case "Dynamic Values": {
-                //     let value = row['DynamicValues'].toString();
-                //     content.push(value);
-                //     break;
-                // }
-                default:
-                    if (apiName) {;
-                        content.push(row[columnTitle.apiName]);
-                    }
+                case "Sent Date": {
+                    let value = row['SentDateTime'];
+                    content.push(value);
+                    break;
+                }
+                case "Email Address": {
+                    let value = row['EmailAddress'];
+                    content.push(value);
+                    break;
+                }
+                case "Delivery Status": {
+                    let value = row['DeliveryStatus'].toString();
+                    content.push(value);
+                    break;
+                }
+                case "Open Status": {
+                    let value = row['OpenedStatus'].toString();
+                    content.push(value);
+                    break;
+                }
+                case "Clicked Link Status": {
+                    let value = row['ClickedLinkStatus'].toString();
+                    content.push(value);
+                    break;
+                }
+                // default:
+                //     if (apiName) {
+                //         content.push(row[columnTitle.apiName]);
+                //     }
                 }
         }
         return content;
