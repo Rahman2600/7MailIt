@@ -32,7 +32,7 @@ class FileUpload extends React.Component {
     render() {
         return (
             <div>
-                <p className="mt-5 text-center">New Template:</p>
+                <div class="mt-5 horizontal-center">New Template</div>
                 {this.state.message != null ? 
                     <div 
                     className={

@@ -167,7 +167,7 @@ class Table extends React.Component {
     renderCell(cell, row) {
         let type = typeof cell;
         if(cell == null) {
-            return "null";
+            return "";
         }
         if (type === "string") {
             return cell;
