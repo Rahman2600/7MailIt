@@ -75,7 +75,7 @@ class FileUpload extends React.Component {
                 </form>
 
 
-                <button className="btn btn-primary btn-block mt-5" onClick={this.onFileUpload}> Submit Template</button>
+                <button className="btn btn-primary btn-block mt-5" id='SubmitTemplate' onClick={this.onFileUpload}> Submit Template</button>
 
 
 
@@ -115,7 +115,7 @@ class FileUpload extends React.Component {
                             </input>
                         </div>
                     </div>
-                    <button className="btn btn-primary btn-block mt-5" onClick={this.onFileRemove}> Remove Template </button>
+                    <button className="btn btn-primary btn-block mt-5" id='RemoveTemplate' onClick={this.onFileRemove}> Remove Template </button>
                 </div>
             
 
