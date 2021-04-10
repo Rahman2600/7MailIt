@@ -113,7 +113,7 @@ context("Assertions", () => {
 
       cy.wait(5000);
 
-      const templateName = "testtemplates"+ Math.floor((Math.random() * 1000) + 1);
+      const templateName = "testtemplates"+ Math.floor((Math.random() * 10000) + 1);
 
       //enter template name
       cy.get('#template-name')
@@ -124,7 +124,7 @@ context("Assertions", () => {
       cy.fixture('testcypress.docx', 'base64').then(fileContent => {
         cy.get('input[type="file"]').attachFile({
           fileContent: fileContent,
-          fileName: 'testcypress'+ Math.floor((Math.random() * 1000) + 1)+'.docx',
+          fileName: 'testcypress'+ Math.floor((Math.random() * 10000) + 1)+'.docx',
           encoding: 'base64',
           mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         });
@@ -141,9 +141,7 @@ context("Assertions", () => {
 
       //verify grid has template
       cy.get('table').contains('td', templateName);
-      cy.get('table').contains('td', "testcypress.docx");
-      //cy.get('table').contains('td', "\"name\",\"AMOUNT\",\"PROMO_CODE\"");
-
+   
       cy.get('#template-nameR')
         .should('be.visible')
         .type(templateName);
