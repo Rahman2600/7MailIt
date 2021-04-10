@@ -25,7 +25,7 @@ class BatchEmailCampaignCreation extends React.Component {
 			<div>
 				<div className="row my-row1"></div>
 				<div className="row justify-content-space-evenly my-row">
-					<img src={multipleUserLogo} className="img-rounded" width="50" height="50" />
+					<img src={multipleUserLogo} id='img-rounded1' className="img-rounded" width="50" height="50" />
 				</div>
 				<div className="row my-row1">
 					{"Please submit a .csv file formatted similar to this :"}
