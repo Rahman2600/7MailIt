@@ -76,7 +76,7 @@ class CampaignPage extends React.Component {
                             </Link>
                             <div className="row my-row1"></div>
                             <div className="row justify-content-space-evenly my-row">
-                                <img src={userLogo} className="img-rounded" width="30" height="30" />
+                                <img src={userLogo} id='img-rounded0' className="img-rounded" width="30" height="30" />
                             </div>
                             <div className="form-group">
                                 <div className="row justify-content-space-evenly my-row2">

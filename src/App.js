@@ -22,23 +22,24 @@ function App() {
             <div>
                 <BrowserRouter>
                     <Switch>
+                        //TODO: setting true as current code issue. This should be fixed as discussed
                         <Route path="/" component={LoginPage} exact/>
-                        <Route exact path="/HomePage"><HomePage user={user}/></Route>
+                        <Route exact path="/HomePage"><HomePage user={true}/></Route>
                         <Route path="/campaignPage/:templateKey" 
                                render={(props) => (
-                                 <CampaignPage {...props} user={user}/>)
+                                 <CampaignPage {...props} user={true}/>)
                                }>
                         </Route> 
                         <Route path="/CampaignLogTable" render={(props) => (
-                                 <CampaignLogTable {...props} user={user}/>)
+                                 <CampaignLogTable {...props} user={true}/>)
                                }>
                         </Route>
                         <Route path="/EmailLogTable" render={(props) => (
-                                 <EmailLogTable {...props} user={user}/>)
+                                 <EmailLogTable {...props} user={true}/>)
                                }>
                         </Route>
                         <Route path="/UnderConstructionPage" render={(props) => (
-                                 <UnderConstructionPage {...props} user={user}/>)
+                                 <UnderConstructionPage {...props} user={true}/>)
                                }>
                         </Route>
                     </Switch>
