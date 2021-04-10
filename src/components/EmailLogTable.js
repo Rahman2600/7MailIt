@@ -85,6 +85,7 @@ class EmailLogTable extends React.Component {
                         <Link 
                             className="btn btn-primary d-block mt-5 ml-5 mr-5 mb-5"
                             role="button"
+                            id="homepagebutton"
                             to={"/HomePage"}>
                             {"Return to Home Page"}
                         </Link>

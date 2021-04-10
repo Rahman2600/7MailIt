@@ -8,7 +8,7 @@ context("Assertions", () => {
   });
 
   describe("Send email test", () => {
-    it('login success and send email', () => {
+    it('login success, send email and verify logs are updated', () => {
 
       // login
       cy.get('#email')
@@ -31,7 +31,6 @@ context("Assertions", () => {
       cy.get('#email-address')
         .should('be.visible')
         .type('gurveer.kaur.aulakh@gmail.com');
-      cy.wait(10000);
 
       cy.get('#subject-line')
         .should('be.visible')
@@ -48,10 +47,29 @@ context("Assertions", () => {
       cy.get('button[id="button1"]')
         .should('be.visible')
         .click();
-      cy.wait(10000);
+      cy.wait(5000);
       cy.get('#emailSentAlert')
         .should('be.visible');
 
+        cy.get('#homepagebutton').scrollIntoView();
+
+        //go to homepage
+        cy.get('#homepagebutton')
+        .should('be.visible')
+        .click();
+        cy.wait(5000);
+
+        //open campaign logs
+        cy.get('table').contains('td', "donotremove.docx").siblings().contains('a', 'View').click();
+        cy.contains("Campaign logs: donotremove");
+        cy.wait(5000);
+
+        //confirm emails are updated
+        cy.get('table').contains('td', "1").siblings().contains('a', 'View').click();
+        cy.contains("Email logs");
+        cy.wait(5000);
+
+        cy.get('table').contains('td', "gurveer.kaur.aulakh@gmail.com");
     });
 
     it('login success and send email fail test', () => {

@@ -71,6 +71,7 @@ class CampaignPage extends React.Component {
                             <Link
                                 className="btn btn-primary float-right mt-2"
                                 role="button"
+                                id="homepagebutton"
                                 to={"/HomePage"}>
                                 {"Return to Home Page"}
                             </Link>

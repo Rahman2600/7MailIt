@@ -9,7 +9,7 @@ context("Assertions", () => {
     cy.visit("http://localhost:3000/");
   });
 
-  describe("Template Tests", () => {
+ describe("Template Tests", () => {
 
     it('clicking Submit template without name gives error', () => {
 
@@ -98,7 +98,7 @@ context("Assertions", () => {
       cy.contains("The template name can only contain alpha numeric characters, underscores and/or hyphens");
     });
 
-    it('clicking Submit template with file and name generate success', () => {
+    it('clicking Submit template with file and name generate success and remove template works', () => {
 
       // login
       cy.get('#email')
@@ -152,6 +152,8 @@ context("Assertions", () => {
       .click();
       cy.wait(5000);
 
+      //confirm template deleted
+      cy.get('table').contains('td', templateName).siblings().contains('td', 'Deactivated');
     });
 
     it('login success and navigates to testcypress template and display image', () => {
