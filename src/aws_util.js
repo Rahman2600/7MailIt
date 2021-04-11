@@ -80,7 +80,7 @@ const createBatchEmailCampaign = async(fileInput, subjectLine, templateName, dyn
     }
 
     // read content from the file
-    var fileBase64String = await encodeFileAsBase64String(fileInput);
+    var fileText = await encodeFileAsText(fileInput);
     // setting up s3 upload parameters
     try {
      var header = { headers: {
@@ -88,7 +88,7 @@ const createBatchEmailCampaign = async(fileInput, subjectLine, templateName, dyn
      }};
 
     var body = {
-        fileContent: fileBase64String,
+        fileContent: fileText,
         dynamicValues: dynamicValues,
         subjectLine: subjectLine,
         templateId: templateName
@@ -106,6 +106,24 @@ const createBatchEmailCampaign = async(fileInput, subjectLine, templateName, dyn
     }
 
 }
+
+const encodeFileAsText = async (fileInput) => {
+   return new Promise((resolve, reject) => {
+        try {
+
+            let reader = new FileReader();
+            reader.onload = function() {
+                if(reader.readyState === FileReader.DONE) {
+                    resolve(reader.result);
+                }
+            };
+            
+            reader.readAsText(fileInput);
+        } catch(err) {
+            reject(err);
+        }
+   });
+};
 
 const encodeFileAsBase64String = async (fileInput) => {
    return new Promise((resolve, reject) => {
