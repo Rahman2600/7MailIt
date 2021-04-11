@@ -38,7 +38,7 @@ class CampaignLogTable extends React.Component {
             url: queryString,
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': "8nobK0hMri7W16vHzMj0S1SfOC5m7sPU4zxNBFX8"
+                'x-api-key': process.env.REACT_APP_AWS_CAMPAIGN_LOG_API_KEY
             }
         };
 

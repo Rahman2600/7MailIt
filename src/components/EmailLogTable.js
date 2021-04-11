@@ -39,7 +39,7 @@ class EmailLogTable extends React.Component {
             url: apiString,
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': "TKrgRRW19c5YY4DREgvfd3nqD0lZh4RP12KvwQBC"
+                'x-api-key': process.env.REACT_APP_AWS_CAMPAIGN_PAGE_API_KEY
             }
         };
 

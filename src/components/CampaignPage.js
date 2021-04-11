@@ -246,7 +246,7 @@ class CampaignPage extends React.Component {
         if(!incorrectlyFomattedEmail && !emptyField && !emailContainsWhitespace) {
                 this.setState({message: null});
                 var header = { headers: {
-                    "x-api-key": "6oyO3enoUI9Uu26ZPtdXNA2YPPCbSWn2cFRrxwRh"
+                    "x-api-key": process.env.REACT_APP_AWS_CAMPAIGN_PAGE_API_KEY
                 }};
 
                 var body = {
