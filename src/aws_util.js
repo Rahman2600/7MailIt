@@ -107,6 +107,7 @@ const createBatchEmailCampaign = async(fileInput, subjectLine, templateName, dyn
 
 }
 
+
 const encodeFileAsText = async (fileInput) => {
    return new Promise((resolve, reject) => {
         try {
@@ -124,6 +125,7 @@ const encodeFileAsText = async (fileInput) => {
         }
    });
 };
+
 
 const encodeFileAsBase64String = async (fileInput) => {
     return new Promise((resolve, reject) => {
