@@ -60,7 +60,7 @@ class CampaignPage extends React.Component {
                     </div>
                     <div className="row my-rows">
                         {this.state.docHtml?
-                            <div className="col-6 my-col img-responsive" dangerouslySetInnerHTML={{ __html: this.state.docHtml }} /> :
+                            <div className="col-6 my-col img-responsive overflow-auto" style={{wordWrap: 'break-word'}}  dangerouslySetInnerHTML={{ __html: this.state.docHtml }} /> :
                             <div className="col-6 my-col">
                                 <div className="vertical-horizontal-center">
                                     <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}} role="status"></div>
