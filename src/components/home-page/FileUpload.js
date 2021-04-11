@@ -1,5 +1,6 @@
 import React from "react";
 import { convertToTemplate, uploadFile, removeFile } from "../../aws_util"
+import $ from 'jquery'
 
 
 
@@ -30,6 +31,7 @@ class FileUpload extends React.Component {
         this.onFileUpload = this.onFileUpload.bind(this);
         this.onFileRemove = this.onFileRemove.bind(this);
     }
+
     SubmitTemplate = () => (
         <>
             <p className="mt-5 text-center">New Template:</p>
@@ -75,7 +77,7 @@ class FileUpload extends React.Component {
 
             </form>
 
-            <button className="btn btn-primary btn-block mt-5" id='SubmitTemplate' onClick={this.onFileUpload}> Submit Template</button>
+            <button className="btn btn-primary btn-block mt-5" id='SubmitTemplate' onClick={this.onFileUpload} data-toggle="tooltip" data-placement="bottom" title="Submit a .doc or .docx file"> Submit Template</button>
         </>
     )
 
@@ -123,6 +125,10 @@ class FileUpload extends React.Component {
             <button className="btn btn-primary btn-block mt-5" id='RemoveTemplate' onClick={this.onFileRemove}> Remove Template </button>
         </>
     )
+
+    componentDidMount() {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
 
 
     render() {
