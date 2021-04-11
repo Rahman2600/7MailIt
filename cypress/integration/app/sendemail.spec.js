@@ -74,10 +74,6 @@ context("Assertions", () => {
     });
 
     it('login success, send email and verify logs are updated - batch template', () => {
-
-
-
-
       // login
       cy.get('#email')
         .should('be.visible')
@@ -96,7 +92,7 @@ context("Assertions", () => {
       cy.wait(5000);
 
       //upload csv
-      cy.fixture('Example_File.csv', 'base64').then(fileContent => {
+      cy.fixture('Example_File.csv').then(fileContent => {
         cy.get('input[type="file"]').attachFile({
           fileContent: fileContent.toString(),
           fileName: 'Example_File.csv',
@@ -142,7 +138,7 @@ context("Assertions", () => {
       cy.wait(5000);
 
       cy.get('table').contains('td', "gurveer.kaur.aulakh@gmail.com");
-      cy.get('table').contains('td', "MountainSasquatch00@gmail.com");
+      //cy.get('table').contains('td', "MountainSasquatch00@gmail.com");
     });
 
     it('login success and send email fail test', () => {
