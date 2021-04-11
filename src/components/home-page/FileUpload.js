@@ -7,7 +7,7 @@ class FileUpload extends React.Component {
     constructor(props) {
         super(props);
         this.state = { selectedFile: '', templateName:'', templateNameR: '', message: null, removal_message: null, uploading: false,
-        checking: false}
+        checking: false,setVisible:true}
         this.messages = Object.freeze({
             WRONG_FILE_TYPE:   "Wrong template file type. Upload a .doc or .docx file",
             UPLOAD_FAIL:  "Upload Failure",
@@ -28,96 +28,119 @@ class FileUpload extends React.Component {
         this.onFileUpload = this.onFileUpload.bind(this);
         this.onFileRemove = this.onFileRemove.bind(this);
     }
+    SubmitTemplate = () => (
+        <>
+        <p className="mt-5 text-center">New Template:</p>
+        {this.state.message != null ? 
+            <div 
+            className={
+                this.state.message === this.messages.SUCCESS ? "alert alert-success" : "alert alert-danger" } 
+                role="alert">
+                {`${this.state.message}`} 
+            </div>
+            :
+            <div></div>
+        }
+        {this.state.uploading ? 
+            <div className="horizontal-center">
+                <div className="spinner-border text-primary" style={{width: "3rem", height: "3rem"}}
+                role="status">
+                    <span className="sr-only">Loading...</span>
+                </div>
+            </div> :
+            <div></div>
+        }
+        
+        <form>
+            <div className="form-group">
+                <input type="file" className="form-control-file my-row2" id="fileUploadButton" onChange={this.onFileChange}/>
+            </div>
+            <div className="row justify-content-space-evenly my-row2">
+                <div className="input-group mb-2">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text">Template Name</span>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="template-name"
+                        className="form-control" 
+                        aria-label="TemplateName" 
+                        onChange={this.onTemplateNameChange} 
+                        required>
+                    </input>
+                </div>
+            </div>
+            
+        </form>
+
+        <button className="btn btn-primary btn-block mt-5" id='SubmitTemplate' onClick={this.onFileUpload}> Submit Template</button>
+        </>
+        )
+
+    
+    RemoveTemplate = () => (
+        <>
+        <p className="mt-5 text-center">Remove a Template</p>
+        {this.state.removal_message != null ? 
+            <div 
+            className={
+                this.state.removal_message === this.removal_message.SUCCESSFUL_REMOVAL ? "alert alert-success" : "alert alert-danger" } 
+                role="alert">
+                {`${this.state.removal_message}`} 
+            </div>
+            :
+            <div></div>
+        }
+        {this.state.checking ? 
+            <div className="horizontal-center">
+                <div className="spinner-border text-primary" style={{width: "3rem", height: "3rem"}}
+                role="status">
+                    <span className="sr-only">Loading...</span>
+                </div>
+            </div> :
+            <div></div>
+        }
+        
+
+        <div className="row justify-content-space-evenly my-row2">
+                <div className="input-group mb-2">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text">Template Name</span>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="template-nameR"
+                        className="form-control" 
+                        aria-label="TemplateNameR" 
+                        onChange={this.onTemplateNameChangeR} 
+                        required>
+                    </input>
+                </div>
+            </div>
+
+            <button className="btn btn-primary btn-block mt-5" id='RemoveTemplate' onClick={this.onFileRemove}> Remove Template </button>
+       </>
+        )
+    
 
     render() {
         return (
-            <div>
-                <p className="mt-5 text-center">New Template:</p>
-                {this.state.message != null ? 
-                    <div 
-                    className={
-                        this.state.message === this.messages.SUCCESS ? "alert alert-success" : "alert alert-danger" } 
-                        role="alert">
-                        {`${this.state.message}`} 
-                    </div>
-                    :
-                    <div></div>
-                }
-                {this.state.uploading ? 
-                    <div className="horizontal-center">
-                        <div className="spinner-border text-primary" style={{width: "3rem", height: "3rem"}}
-                        role="status">
-                            <span className="sr-only">Loading...</span>
-                        </div>
-                    </div> :
-                    <div></div>
-                }
-                <form>
-                    <div className="form-group">
-                        <input type="file" className="form-control-file my-row2" id="fileUploadButton" onChange={this.onFileChange}/>
-                    </div>
-                    <div className="row justify-content-space-evenly my-row2">
-                        <div className="input-group mb-2">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text">Template Name</span>
-                            </div>
-                            <input 
-                                type="text" 
-                                id="template-name"
-                                className="form-control" 
-                                aria-label="TemplateName" 
-                                onChange={this.onTemplateNameChange} 
-                                required>
-                            </input>
-                        </div>
-                    </div>
-                    
-                </form>
-
-
-                <button className="btn btn-primary btn-block mt-5" onClick={this.onFileUpload}> Submit Template</button>
-
-
-
-                <p className="mt-5 text-center">Remove a Template</p>
-                {this.state.removal_message != null ? 
-                    <div 
-                    className={
-                        this.state.removal_message === this.removal_message.SUCCESSFUL_REMOVAL ? "alert alert-success" : "alert alert-danger" } 
-                        role="alert">
-                        {`${this.state.removal_message}`} 
-                    </div>
-                    :
-                    <div></div>
-                }
-                {this.state.checking ? 
-                    <div className="horizontal-center">
-                        <div className="spinner-border text-primary" style={{width: "3rem", height: "3rem"}}
-                        role="status">
-                            <span className="sr-only">Loading...</span>
-                        </div>
-                    </div> :
-                    <div></div>
-                }
-
-                <div className="row justify-content-space-evenly my-row2">
-                        <div className="input-group mb-2">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text">Template Name</span>
-                            </div>
-                            <input 
-                                type="text" 
-                                id="template-nameR"
-                                className="form-control" 
-                                aria-label="TemplateNameR" 
-                                onChange={this.onTemplateNameChangeR} 
-                                required>
-                            </input>
-                        </div>
-                    </div>
-                    <button className="btn btn-primary btn-block mt-5" onClick={this.onFileRemove}> Remove Template </button>
-                </div>
             
+            <div>
+                                <div class="dropdown">
+  <button class="btn btn-primary dropdown-toggle mt-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Submit/Remove Template
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" onClick={()=>this.setState({setVisible:true})}>Submit Template</a>
+    <a class="dropdown-item" onClick={()=>this.setState({setVisible:false})}>Remove Template</a>
+  </div>
+</div>
+            {this.state.setVisible?this.SubmitTemplate():this.RemoveTemplate()}
+
+      
+
+                </div>
 
 
         )

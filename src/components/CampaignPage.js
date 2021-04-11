@@ -71,12 +71,13 @@ class CampaignPage extends React.Component {
                             <Link
                                 className="btn btn-primary float-right mt-2"
                                 role="button"
+                                id="homepagebutton"
                                 to={"/HomePage"}>
                                 {"Return to Home Page"}
                             </Link>
                             <div className="row my-row1"></div>
                             <div className="row justify-content-space-evenly my-row">
-                                <img src={userLogo} className="img-rounded" width="30" height="30" />
+                                <img src={userLogo} id='img-rounded0' className="img-rounded" width="30" height="30" />
                             </div>
                             <div className="form-group">
                                 <div className="row justify-content-space-evenly my-row2">
