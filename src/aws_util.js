@@ -108,20 +108,21 @@ const createBatchEmailCampaign = async(fileInput, subjectLine, templateName, dyn
 }
 
 const encodeFileAsBase64String = async (fileInput) => {
-   return new Promise((resolve, reject) => {
-        try {
-
-            let reader = new FileReader();
-            reader.onload = function() {
-                if(reader.readyState === FileReader.DONE) {
-                    resolve(reader.result);
-                }
-            };
-            reader.readAsDataURL(fileInput);
-        } catch(err) {
-            reject(err);
-        }
-   });
-};
+    return new Promise((resolve, reject) => {
+         try {
+ 
+             let reader = new FileReader();
+             reader.onload = function() {
+                 if(reader.readyState === FileReader.DONE) {
+                     resolve(reader.result);
+                 }
+             };
+ 
+             reader.readAsText(fileInput);
+         } catch(err) {
+             reject(err);
+         }
+    });
+ };
 
 export {uploadFile, createBatchEmailCampaign, removeFile}
