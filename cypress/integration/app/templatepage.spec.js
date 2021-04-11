@@ -11,7 +11,7 @@ context("Assertions", () => {
 
  describe("Template Tests", () => {
 
-/*    it('clicking Submit template without name gives error', () => {
+   it('clicking Submit template without name gives error', () => {
 
       // login
       cy.get('#email')
@@ -97,7 +97,7 @@ context("Assertions", () => {
 
       cy.contains("The template name can only contain alpha numeric characters, underscores and/or hyphens");
     });
-*/
+
     it('clicking Submit template with file and name generate success and remove template works', () => {
 
       // login
