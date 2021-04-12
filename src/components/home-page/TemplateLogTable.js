@@ -192,8 +192,7 @@ class TemplateLogTable extends React.Component {
                     break;
                 }
                 case "File Name": {
-                    let value = row[columnTitle.apiName];
-                    let filename = value.split(".")[0];
+                    let filename = row[columnTitle.apiName];
                     let maybeTruncatedContent = this.getTruncatedContentIfTooLong(filename, MAX_FILENAME_STRING_CHARACTERS_SHOWN);
                     content.push(maybeTruncatedContent);
                     break;
@@ -231,16 +230,43 @@ class TemplateLogTable extends React.Component {
 
     addLinksToCampaignPage(table) {
         let fileNameColumn = this.getColumnWithDisplayName("File Name", table);
-        let templateNameCoumn = this.getColumnWithDisplayName("Template Name", table);
+        
+        let templateNameColumn = this.getColumnWithDisplayName("Template Name", table);
+        
         let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
         let statusColumn = this.getColumnWithDisplayName("Create Email Campaign", table);
         let content = statusColumn.content;
         for(let i = 0; i < content.length; i++) {
             let current = content[i];
+            
+
             if (typeof current === "object") {
-                current.button.link = `campaignPage/${fileNameColumn.content[i]}`;
-                current.button.data = {dynamicValues: JSON.parse(this.commaSeperatedStringToArray(dynamicValuesColumn.content[i])), 
-                                       templateName: templateNameCoumn.content[i]};
+                let fileNameContent = "";
+                if(typeof fileNameColumn.content[i] === "object") {
+                    fileNameContent = fileNameColumn.content[i].truncatedContent.fullVersion;
+                } else {
+                    fileNameContent = fileNameColumn.content[i]
+                }
+
+                let templateNameContent = "";
+                if(typeof templateNameColumn.content[i] === "object") {
+                    templateNameContent = templateNameColumn.content[i].truncatedContent.fullVersion;
+                } else {
+                    templateNameContent = templateNameColumn.content[i]
+                }
+
+                let dynamicValuesContent = "";
+                if(typeof dynamicValuesColumn.content[i] === "object") {
+                    dynamicValuesContent = dynamicValuesColumn.content[i].truncatedContent.fullVersion;
+
+                } else {
+                    dynamicValuesContent = dynamicValuesColumn.content[i]
+                }
+                current.button.link = `campaignPage/${templateNameContent}`;
+                console.log(current.button.link);
+                current.button.data = {dynamicValues: JSON.parse(this.commaSeperatedStringToArray(dynamicValuesContent)), 
+                                       templateKey: fileNameContent};
+                console.log(current.button.data);
             }
         }
     }
@@ -252,9 +278,15 @@ class TemplateLogTable extends React.Component {
         for(let i = 0; i < content.length; i++) {
             let current = content[i];
             if (typeof current === "object") {
+                let templateNameContent = "";
+                if(typeof templateNameColumn.content[i] === "object") {
+                    templateNameContent = templateNameColumn.content[i].truncatedContent.fullVersion;
+                } else {
+                    templateNameContent = templateNameColumn.content[i]
+                }
                 current.button.link = `CampaignLogTable`;
                 current.button.data = {
-                    templateName: templateNameColumn.content[i]};
+                    templateName: templateNameContent};
             }
         }
     }
