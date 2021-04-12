@@ -133,11 +133,11 @@ const createTemplateDatabaseLog = async(dbParams) => {
     return new Promise((resolve, reject) => {
         ddb.putItem(dbParams, function(err, data) {
             if (err) {
-                console.log("Error", err);
+                console.log("Create Template Database Log Error:", err);
                 reject(err);
             }
             else {
-                console.log("Success", data);
+                console.log("Create Template Database Log Success:", data);
                 resolve(data);
             }
         });

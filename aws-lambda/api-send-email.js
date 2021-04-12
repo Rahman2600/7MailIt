@@ -7,7 +7,7 @@ exports.handler = (event, context, callback) => {
     var body = JSON.parse(event.body);
     var emailAddress = body.emailAddress;
     //TODO remove this for testing purposes 
-    console.log(body.dynamicValueStrings);
+    console.log("Dynamiv String Values:",body.dynamicValueStrings);
     var dynamicValueStrings = body.dynamicValueStrings; // can we pass the key, value pair instead
     // //{ \"REPLACEMENT_TAG_NAME\":\"REPLACEMENT_VALUE\" }'
     var templateName = body.templateId;

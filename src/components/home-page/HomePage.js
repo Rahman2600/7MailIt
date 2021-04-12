@@ -13,11 +13,11 @@ class HomePage extends React.Component {
 		super(props);
 		this.onUploadSuccess = this.onUploadSuccess.bind(this);
 		this.id = 0;
-		console.log(this.props.user)
+		//console.log(this.props.user)
 		this.state = {
 			authenticated: this.props.user,
 		}
-		console.log(this.state);
+		//console.log(this.state);
 	}
     
 
@@ -27,10 +27,8 @@ class HomePage extends React.Component {
 
 	render() {
 		if (this.state.authenticated !== true) {
-			console.log("are we here?");
 			return <Redirect to="/" />
 		} else {
-			console.log("please");
 			this.id += 1;
 			return (
 				<div className="scroll container-fluid" style={{"max-width": "100%"}}>

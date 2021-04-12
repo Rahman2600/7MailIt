@@ -58,7 +58,7 @@ class TemplateLogTable extends React.Component {
             })})
           })
           .catch(function (error) {
-            console.log(error);
+            console.log("Get Table Data Error",error);
         });   
     }
 
@@ -134,7 +134,7 @@ class TemplateLogTable extends React.Component {
     truncateDynamicValues(table) {
         let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
         let content = dynamicValuesColumn.content;
-        console.log(dynamicValuesColumn);
+        //console.log(dynamicValuesColumn);
         for (let i = 0; i < content.length; i++) {
             let row = content[i];
             let dynamicValues = row.split(",");
@@ -144,7 +144,7 @@ class TemplateLogTable extends React.Component {
             }
         }
         dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
-        console.log(dynamicValuesColumn);
+        //console.log(dynamicValuesColumn);
     }
 
     truncateDynamicValuesRow(row) {

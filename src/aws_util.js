@@ -4,7 +4,7 @@ import fs from 'fs'
 import { type } from 'os';
 
 const uploadFile = async (fileInput,BUCKET_NAME, templateName) => {
-    console.log(fileInput);
+    console.log("File inputted",fileInput);
     if(typeof(fileInput) !== 'object' || !(fileInput instanceof File)) {
         
         throw Error("File input is not of type File");
@@ -43,7 +43,7 @@ const uploadFile = async (fileInput,BUCKET_NAME, templateName) => {
         throw new Error(res.data.body);
     }
     } catch (err) {
-        console.log("doc upload err:",err);
+        console.log("Document Upload Error:",err);
       throw err;
     }
     
@@ -65,7 +65,7 @@ const removeFile = async (templateName) => {
     const res = await axios.post(`https://zzrc6grroe.execute-api.us-east-1.amazonaws.com/removal/remove`, 
                                     body, header);
     if(res.data.statusCode !== 200) {
-        console.log(res);
+        console.log("Remove File Error",res);
         throw new Error(res.data.body);
     }
     } catch (err) {
@@ -98,7 +98,7 @@ const createBatchEmailCampaign = async(fileInput, subjectLine, templateName, dyn
     const res = await axios.put(`https://962k5qfgt3.execute-api.us-east-1.amazonaws.com/Prod/batchemailcampaign`, 
                                     body, header);
     if(res.data.statusCode !== 200) {
-        console.log(res);
+        console.log("Create Batch Email Error",res);
         throw new Error(res.data.body);
     }
     } catch (err) {

@@ -21,10 +21,10 @@ exports.handler = async (event, context, callback) => {
     var sesResponse = new Promise(function(resolve, reject) {
         ses.sendBulkTemplatedEmail(params, function (err, data) {
             if (err) {
-                console.log(err);
+                console.log("Send Bulk Templated Email Error:",err);
                 reject(err);
             } else {
-                console.log(data);
+                console.log("Send Bulk Templated Email Success:",data);
                 resolve(data);
             }
         });
