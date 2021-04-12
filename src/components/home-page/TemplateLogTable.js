@@ -4,6 +4,7 @@ import axios from 'axios';
 import Table from "../Table"
 import CheckList from "../CheckList"
 import { checkServerIdentity } from "tls";
+import { DataExchange } from "aws-sdk";
 
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
@@ -16,9 +17,8 @@ class TemplateLogTable extends React.Component {
         super(props);
         this.defaultColumns = ["File Name", "Template Name", "Upload Date", "Dynamic Values", "Create Email Campaign", "Campaign Logs"];
         this.sortableColumns = ["File Name",  "Template Name", "Upload Date"];
-        this.state = {table: null, editingColumns: false, columns: []};
+        this.state = {table: null, columns: []};
         this.getTableData = this.getTableData.bind(this);
-        this.onEditColumns = this.onEditColumns.bind(this);
         this.onSelectedColumnsChange = this.onSelectedColumnsChange.bind(this);
     }
 
@@ -64,26 +64,31 @@ class TemplateLogTable extends React.Component {
 
     render() {
         let table = this.state.table;
+        let columnsProp = this.getColumnsPropToTable();
         return ( 
             <div className="float-left col-lg-9 pl-0 pr-1">
                 <h1 className="mt-2">Template logs</h1>
-                <button className="btn btn-primary mb-2" onClick={this.onEditColumns}> Edit columns </button>
-                {this.state.editingColumns && table ? 
-                <div className="mb-2">
-                    <CheckList list={table.columns.map(({title}) => {
-                        if (!this.defaultColumns.includes(title)) {
-                            return {value: title, checked: false}
-                        }
-                    }).filter((element) => element != null)} onChange={this.onSelectedColumnsChange}/>
-                </div>
-                : <div></div>}
                 {table? <Table data={table} 
-                columns={this.state.columns.map((column) => {
-                    return {title: column, sort: this.sortableColumns.includes(column)}
-                })}/> : 
+                columns={columnsProp}/> : 
                 <Table loading={true}/>}
             </div>        
         );
+    }
+
+    getColumnsPropToTable() {
+        return this.state.columns.map((column) => {
+            let columnProp = {title: column, sort: this.sortableColumns.includes(column)}
+            if (column === "Upload Date") {
+                columnProp["compare"] = function (dateA, dateB) {
+                    let DMY_A = dateA.split("/");
+                    let DMY_B = dateB.split("/");
+                    let dateObjA = new Date(DMY_A[2], DMY_A[1], DMY_A[0]);
+                    let dateObjB = new Date(DMY_B[2], DMY_B[1], DMY_B[0]); 
+                    return dateObjA - dateObjB;                     
+                }
+            }
+            return columnProp;
+        })
     }
 
     onSelectedColumnsChange(checkedStates) {
@@ -94,12 +99,6 @@ class TemplateLogTable extends React.Component {
             }
         }
         this.setState({columns: this.defaultColumns.concat(additionalColumns)})
-    }
-
-    onEditColumns() {
-        if (this.state.table != null) {
-            this.setState({editingColumns: !this.state.editingColumns});
-        }
     }
 
     dataToTable(data) {
@@ -134,18 +133,15 @@ class TemplateLogTable extends React.Component {
     truncateDynamicValues(table) {
         let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
         let content = dynamicValuesColumn.content;
-        console.log(dynamicValuesColumn);
         for (let i = 0; i < content.length; i++) {
             let row = content[i];
             let dynamicValues = row.split(",");
-            if (!(dynamicValues.length < MAX_DYNAMIC_VALUES_SHOWN)) {
+            if (dynamicValues.length > MAX_DYNAMIC_VALUES_SHOWN) {
                 content[i] = {truncatedContent: {truncatedVersion: this.truncateDynamicValuesRow(row), 
                     fullVersion: row}}
             }
         }
-        dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
-        console.log(dynamicValuesColumn);
-    }
+        dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table); }
 
     truncateDynamicValuesRow(row) {
         let dynamicValues = row.split(",");
