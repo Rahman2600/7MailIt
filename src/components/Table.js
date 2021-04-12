@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import $ from 'jquery';
+import { object } from "prop-types";
 
 /**  
  * 
@@ -64,11 +65,26 @@ class Table extends React.Component {
         }
     }
     handleSorting = (columnTitle) => {
+
         let dataCopy = JSON.parse(JSON.stringify(this.state.data))
         let arr = dataCopy.columns
         let compareFunction = this.getColumnCompareFunction(columnTitle);
+
         if (!compareFunction) { 
             compareFunction = function (a, b) {
+
+                if (typeof a === "string" && typeof b === "string") {
+                    a = a.toLowerCase();
+                    b = b.toLowerCase();
+
+                } else if (typeof a === "object" && typeof b === "object" && 
+                          Object.keys(a)[0] === "truncatedContent" && 
+                          Object.keys(b)[0] === "truncatedContent") {
+
+                    a = a.truncatedContent.fullVersion.toLowerCase();
+                    b = b.truncatedContent.fullVersion.toLowerCase();
+                }
+         
                 if (a > b) return 1;
                 else if (a < b) return -1;
                 else return 0;
