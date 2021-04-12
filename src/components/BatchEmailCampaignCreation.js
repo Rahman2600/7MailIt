@@ -28,6 +28,11 @@ class BatchEmailCampaignCreation extends React.Component {
 					<img src={multipleUserLogo} id='img-rounded1' className="img-rounded" width="50" height="50" />
 				</div>
 				<div className="row my-row1">
+					<h1>Batch Email Campaign</h1>
+                	<p> Sends email to multiple email address using the template and given dynamic values </p>
+				</div>
+				<div className="row my-row1">
+
 					{"Please submit a .csv file formatted similar to this :"}
 					<Link to="/Example_File.csv" target="_blank" download>{"example file."}</Link>
 				</div>

@@ -82,9 +82,12 @@ class CampaignPage extends React.Component {
                             </div>
                             <div className="form-group">
                                 <div className="row justify-content-space-evenly my-row2">
+                                <h1>Single Email Campaign</h1>
+                                <p> Sends email to specified email address with template using the given dynamic values </p>
                                     <div className="input-group mb-3">
+                                    
                                         <div className="input-group-prepend" >
-                                            <span className="input-group-text" id="#singleEmail">Single Email Address</span>
+                                            <span className="input-group-text" >Single Email Address</span>
                                         </div>
                                         <input
                                             type="text"
@@ -149,9 +152,6 @@ class CampaignPage extends React.Component {
     }
 
     async componentDidMount() {
-        console.log("mounted");
-        $('[data-toggle="tooltip"]').tooltip();
-        $('#singleEmail').tooltip({title: "Enter a single email to send", placement: "bottom"})
         var s3 = new AWS.S3();
         s3.getObject({ Bucket: BUCKET_NAME, Key: this.state.templateKey }, (err, data) => {
             if (err) {
