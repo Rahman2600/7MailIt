@@ -23,16 +23,17 @@ class BatchEmailCampaignCreation extends React.Component {
 	render() {
 		return (
 			<div>
-				<div className="row my-row1"></div>
-				<div className="row justify-content-space-evenly my-row">
-					<img src={multipleUserLogo} id='img-rounded1' className="img-rounded" width="50" height="50" />
+				<div className="row mt-5"></div>
+				<div className="row justify-content-space-evenly pl-4">
+					<img src={multipleUserLogo} className="img-rounded" width="50" height="50" />
+
 				</div>
 				<div className="row my-row1">
 					{"Please submit a .csv file formatted similar to this :"}
 					<Link to="/Example_File.csv" target="_blank" download>{"example file."}</Link>
 				</div>
 				<div className="row justify-content-space-evenly my-row1">
-					<div className="input-group mb-3">
+					<div className="input-group mb-1">
 						
                 	<form>
                     	<div className="form-group">
@@ -42,7 +43,7 @@ class BatchEmailCampaignCreation extends React.Component {
 					</div>
 				</div>
 				<div className="row justify-content-space-evenly my-row1">
-					<div className="input-group mb-3">
+					<div className="input-group mb-2 pr-60">
 						<div className="input-group-prepend">
 							<span className="input-group-text" id="inputGroup-sizing-default">Subject Line</span>
 						</div>
@@ -63,10 +64,10 @@ class BatchEmailCampaignCreation extends React.Component {
 					Coming Soon!
 				</div> */}
 				
-				<div className="row justify-content-right my-row1">
+				<div className="row justify-content-end my-row1 button-spacing mb-1 ">
 					<button 
 						type="button" 
-						className="btn btn-success" 
+						className="btn btn-success " 
 						id='button2'
 						onClick={this.onSubmit}>Submit</button>
 				</div>
