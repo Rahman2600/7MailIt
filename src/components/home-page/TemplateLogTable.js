@@ -17,9 +17,8 @@ class TemplateLogTable extends React.Component {
         super(props);
         this.defaultColumns = ["File Name", "Template Name", "Upload Date", "Dynamic Values", "Create Email Campaign", "Campaign Logs"];
         this.sortableColumns = ["File Name",  "Template Name", "Upload Date"];
-        this.state = {table: null, editingColumns: false, columns: []};
+        this.state = {table: null, columns: []};
         this.getTableData = this.getTableData.bind(this);
-        this.onEditColumns = this.onEditColumns.bind(this);
         this.onSelectedColumnsChange = this.onSelectedColumnsChange.bind(this);
     }
 
@@ -69,16 +68,6 @@ class TemplateLogTable extends React.Component {
         return ( 
             <div className="float-left col-lg-9 pl-0 pr-1">
                 <h1 className="mt-2">Template logs</h1>
-                <button className="btn btn-primary mb-2" onClick={this.onEditColumns}> Edit columns </button>
-                {this.state.editingColumns && table ? 
-                <div className="mb-2">
-                    <CheckList list={table.columns.map(({title}) => {
-                        if (!this.defaultColumns.includes(title)) {
-                            return {value: title, checked: false}
-                        }
-                    }).filter((element) => element != null)} onChange={this.onSelectedColumnsChange}/>
-                </div>
-                : <div></div>}
                 {table? <Table data={table} 
                 columns={columnsProp}/> : 
                 <Table loading={true}/>}
@@ -110,12 +99,6 @@ class TemplateLogTable extends React.Component {
             }
         }
         this.setState({columns: this.defaultColumns.concat(additionalColumns)})
-    }
-
-    onEditColumns() {
-        if (this.state.table != null) {
-            this.setState({editingColumns: !this.state.editingColumns});
-        }
     }
 
     dataToTable(data) {
