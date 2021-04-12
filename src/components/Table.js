@@ -41,12 +41,12 @@ import $ from 'jquery';
 */
 
 class Table extends React.Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {
             data: this.props.data,
-            columnsAscending: [true,true,true,true]
+            columnsAscending: [true, true, true, true]
         }
     }
 
@@ -56,51 +56,61 @@ class Table extends React.Component {
 
     componentDidUpdate() {
         $('[data-toggle="tooltip"]').tooltip();
-      }
+    }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.data) {
+        if (nextProps.data) {
             this.setState(nextProps);
         }
     }
-    
-    handleSorting = (column) => {
+    handleSorting = (columnTitle) => {
         let dataCopy = JSON.parse(JSON.stringify(this.state.data))
         let arr = dataCopy.columns
-
-        //bubble sort with the weird object 2d array 
-        let n = arr[column].content.length;
-        for (let i = 0; i < n-1; i++)
-            for (let j = 0; j < n-i-1; j++)
-                if(this.state.columnsAscending[column] == true) {
-                    if (arr[column].content[j] > arr[column].content[j+1]) {
-                        // swap arr[j+1] and arr[j]
-                    for(let k = 0; k < arr.length;k++) {
-                        let temp = arr[k].content[j];
-                        arr[k].content[j] = arr[k].content[j+1];
-                        arr[k].content[j+1] = temp;
-                    }
-                    }
-            } else {
-                if (arr[column].content[j] < arr[column].content[j+1]) {
-                    // swap arr[j+1] and arr[j]
-                for(let k = 0; k < arr.length;k++) {
-                    let temp = arr[k].content[j];
-                    arr[k].content[j] = arr[k].content[j+1];
-                    arr[k].content[j+1] = temp;
-                }
-                }
+        let compareFunction = this.getColumnCompareFunction(columnTitle);
+        if (!compareFunction) { 
+            compareFunction = function (a, b) {
+                if (a > b) return 1;
+                else if (a < b) return -1;
+                else return 0;
             }
+        }
+            
+        //bubble sort with the weird object 2d array 
+        let columnIndex = this.getColumnIndex(columnTitle)
+        let n = arr[columnIndex].content.length;
+
+        for (let i = 0; i < n - 1; i++)
+            for (let j = 0; j < n - i - 1; j++)
+                if (this.state.columnsAscending[columnIndex] == true) {
+                    if (compareFunction(arr[columnIndex].content[j], arr[columnIndex].content[j + 1]) > 0) {
+                        // swap arr[j+1] and arr[j]
+                        for (let k = 0; k < arr.length; k++) {
+                            let temp = arr[k].content[j];
+                            arr[k].content[j] = arr[k].content[j + 1];
+                            arr[k].content[j + 1] = temp;
+                        }
+                    }
+                } else {
+                    if (compareFunction(arr[columnIndex].content[j], arr[columnIndex].content[j + 1]) < 0) {
+                        // swap arr[j+1] and arr[j]
+                        for (let k = 0; k < arr.length; k++) {
+                            let temp = arr[k].content[j];
+                            arr[k].content[j] = arr[k].content[j + 1];
+                            arr[k].content[j + 1] = temp;
+                        }
+                    }
+                }
         let columnsAscendingCopy = [...this.state.columnsAscending];
-        columnsAscendingCopy[column] = !columnsAscendingCopy[column]
-        this.setState({data:dataCopy,columnsAscending:columnsAscendingCopy})
-      }
+        columnsAscendingCopy[columnIndex] = !columnsAscendingCopy[columnIndex]
+        this.setState({ data: dataCopy, columnsAscending: columnsAscendingCopy })
+    }
+
     render() {
         if (this.props.loading) {
             return (
                 <div className="vertical-horizontal-center">
-                    <div className="spinner-border text-primary" style={{width: "6rem", height: "6rem"}}
-                    role="status">
+                    <div className="spinner-border text-primary" style={{ width: "6rem", height: "6rem" }}
+                        role="status">
                         <span className="sr-only">Loading...</span>
                     </div>
                 </div>
@@ -127,16 +137,16 @@ class Table extends React.Component {
     renderTableHeader() {
         return (
             <tr>
-                {this.state.data.columns.map((column, i) => { 
+                {this.state.data.columns.map((column, i) => {
                     if (this.renderColumn(column.title)) {
-                        return ( 
+                        return (
                             <th key={i}>
                                 {column.title}
-                                {this.addSortButtonToColumn(column.title)? 
-                                <button className="btn-group-vertical float-right" onClick={() => this.handleSorting(i)}>
-                                    <span>&#9650;</span> 
-                                </button> :
-                                                            <span></span>}
+                                {this.addSortButtonToColumn(column.title) ?
+                                    <button className="btn-group-vertical float-right" onClick={() => this.handleSorting(column.title)}>
+                                        <span>&#9650;</span>
+                                    </button> :
+                                    <span></span>}
                             </th>
                         );
                     }
@@ -148,66 +158,85 @@ class Table extends React.Component {
     renderTableBody() {
         return (
             [...Array(this.state.data.numRows).keys()].map((i) => {
-                return <tr key={i} >{this.renderRow(i)}</tr>;               
+                return <tr key={i} >{this.renderRow(i)}</tr>;
             })
         )
     }
 
     renderRow(i) {
         return (
-            this.state.data.columns.map((current, j) => { 
+            this.state.data.columns.map((current, j) => {
                 if (this.renderColumn(current.title)) {
                     return (
-                        <td key={j}> 
+                        <td key={j}>
                             {this.renderCell(current.content[i])}
-                         </td>
+                        </td>
                     )
                 }
-            })  
+            })
         )
     }
 
     renderCell(cell) {
         let type = typeof cell;
-        if(cell == null) {
+        if (cell == null) {
             return "null";
         }
         if (type === "string") {
             return cell;
         } else if (type === "object") {
-            switch(Object.keys(cell)[0]) {
+            switch (Object.keys(cell)[0]) {
                 case "button":
                     let data = cell.button.data ? cell.button.data : null;
                     return (
                         <div className="d-flex justify-content-center">
-                            <Link 
+                            <Link
                                 className="btn btn-primary"
                                 role="button"
-                                to={{pathname:cell.button.link, state: data}}>
+                                to={{ pathname: cell.button.link, state: data }}>
                                 {cell.button.displayName}
                             </Link>
                         </div>)
                 case "truncatedContent":
-                    return <span data-toggle="tooltip" data-placement="right" title={cell.truncatedContent.fullVersion}> 
-                                {cell.truncatedContent.truncatedVersion} 
-                            </span>
+                    return <span data-toggle="tooltip" data-placement="right" title={cell.truncatedContent.fullVersion}>
+                        {cell.truncatedContent.truncatedVersion}
+                    </span>
             }
         }
     }
 
     renderColumn(columnName) {
         let columnsToShow = this.props.columns;
-        return !columnsToShow || columnsToShow.map(({title}) => title).includes(columnName);
+        return !columnsToShow || columnsToShow.map(({ title }) => title).includes(columnName);
     }
 
     addSortButtonToColumn(columnName) {
         let columnsToShow = this.props.columns;
-        for(let {title, sort} of columnsToShow) {
+        for (let { title, sort } of columnsToShow) {
             if (columnName == title && sort) {
                 return true;
             }
-        } 
+        }
         return false;
+    }
+
+    getColumnCompareFunction(columnTitle) {
+        let columnsToShow = this.props.columns;
+        for (let {title, sort, compare} of columnsToShow) {
+            if (title === columnTitle && sort && compare) {
+                return compare;
+            }
+        }
+    }
+
+    getColumnIndex(columnTitle) {
+        let columns = this.state.data.columns;
+        for (let i = 0; i < columns.length; i++) {
+            let currentColumn = columns[i];
+            if (currentColumn.title === columnTitle) {
+                return i;
+            }
+        }
     }
 
 }

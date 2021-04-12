@@ -66,8 +66,6 @@ class TemplateLogTable extends React.Component {
     render() {
         let table = this.state.table;
         let columnsProp = this.getColumnsPropToTable();
-        console.log(columnsProp);
-        console.log(this.getColumnsPropToTable)
         return ( 
             <div className="float-left col-lg-9 pl-0 pr-1">
                 <h1 className="mt-2">Template logs</h1>
@@ -97,8 +95,6 @@ class TemplateLogTable extends React.Component {
                     let DMY_B = dateB.split("/");
                     let dateObjA = new Date(DMY_A[2], DMY_A[1], DMY_A[0]);
                     let dateObjB = new Date(DMY_B[2], DMY_B[1], DMY_B[0]); 
-                    console.log(dateObjA);
-                    console.log(dateObjB);
                     return dateObjA - dateObjB;                     
                 }
             }
@@ -154,7 +150,6 @@ class TemplateLogTable extends React.Component {
     truncateDynamicValues(table) {
         let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
         let content = dynamicValuesColumn.content;
-        console.log(dynamicValuesColumn);
         for (let i = 0; i < content.length; i++) {
             let row = content[i];
             let dynamicValues = row.split(",");
@@ -163,9 +158,7 @@ class TemplateLogTable extends React.Component {
                     fullVersion: row}}
             }
         }
-        dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
-        console.log(dynamicValuesColumn);
-    }
+        dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table); }
 
     truncateDynamicValuesRow(row) {
         let dynamicValues = row.split(",");
