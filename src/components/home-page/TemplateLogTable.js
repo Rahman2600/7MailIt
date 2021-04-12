@@ -8,6 +8,8 @@ import { checkServerIdentity } from "tls";
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
 const MAX_DYNAMIC_VALUES_SHOWN = 3; //maximum number of dynamic values shown before truncation
+const MAX_FILENAME_STRING_CHARACTERS_SHOWN = 20;
+const MAX_TEMPLATE_NAME_STRING_CHARACTERS_SHOWN = 20;
 
 class TemplateLogTable extends React.Component {
     constructor(props) {
@@ -105,7 +107,6 @@ class TemplateLogTable extends React.Component {
             {displayName:"File Name", apiName: "S3Key"}, 
             {displayName:"Template Name", apiName: "TemplateName"}, 
             {displayName:"Upload Date", apiName: "DocUploadDateTime"},
-            {displayName:"Team", apiName: "Team"},
             {displayName:"Dynamic Values", apiName: "DynamicValues"},
             {displayName:"Create Email Campaign", apiName: "UploadStatus"},
             {displayName:"Campaign Logs", apiName: ""}
@@ -136,8 +137,11 @@ class TemplateLogTable extends React.Component {
         console.log(dynamicValuesColumn);
         for (let i = 0; i < content.length; i++) {
             let row = content[i];
-            content[i] = {truncatedContent: {truncatedVersion: this.truncateDynamicValuesRow(row), 
-                fullVersion: row}}
+            let dynamicValues = row.split(",");
+            if (!(dynamicValues.length < MAX_DYNAMIC_VALUES_SHOWN)) {
+                content[i] = {truncatedContent: {truncatedVersion: this.truncateDynamicValuesRow(row), 
+                    fullVersion: row}}
+            }
         }
         dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
         console.log(dynamicValuesColumn);
@@ -145,7 +149,6 @@ class TemplateLogTable extends React.Component {
 
     truncateDynamicValuesRow(row) {
         let dynamicValues = row.split(",");
-        if (dynamicValues.length < MAX_DYNAMIC_VALUES_SHOWN) return row;
         let dynamicValuesShown = dynamicValues.slice(0, MAX_DYNAMIC_VALUES_SHOWN);
         let stringVersion = dynamicValuesShown.join(",");
         return stringVersion + "...";
@@ -192,6 +195,21 @@ class TemplateLogTable extends React.Component {
                     }
                     break;
                 }
+                case "File Name": {
+                    let value = row[columnTitle.apiName];
+                    let filename = value.split(".")[0];
+                    let maybeTruncatedContent = this.getTruncatedContentIfTooLong(filename, MAX_FILENAME_STRING_CHARACTERS_SHOWN);
+                    content.push(maybeTruncatedContent);
+                    break;
+                } case "Template Name": {
+                    let templateName = row[columnTitle.apiName];
+                    let maybeTruncatedContent = this.getTruncatedContentIfTooLong(templateName, MAX_TEMPLATE_NAME_STRING_CHARACTERS_SHOWN);
+                    content.push(maybeTruncatedContent);
+                    break;
+                } case "Team": {
+                    
+                }
+
                 default:
                     if (apiName) {
                         content.push(row[columnTitle.apiName]);
@@ -199,6 +217,20 @@ class TemplateLogTable extends React.Component {
                 }
         }
         return content;
+    }
+
+    getTruncatedContentIfTooLong(content, max_length) {
+        if (content && (content.length > max_length)) {
+            let truncatedFilename = this.truncateString(content, max_length);
+            return {truncatedContent: {truncatedVersion: truncatedFilename,
+            fullVersion: content}};
+        } else {
+            return content;
+        }
+    }
+
+    truncateString(str, numCharactersToShow) {
+        return str.slice(0, numCharactersToShow) + "...";
     }
 
     addLinksToCampaignPage(table) {
