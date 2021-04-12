@@ -48,11 +48,11 @@ exports.handler = (event, context, callback) => {
     var sesResponse = new Promise(function(resolve, reject) {
         ses.sendTemplatedEmail(params, function (err, data) {
             if (err) {
-                console.log(err);
+                console.log("Send Templated Email Error:",err);
                 reject(err);
             } else {
-                console.log("SES:",ses)
-                console.log("DATA:",data);
+                // console.log("SES:",ses)
+                // console.log("DATA:",data);
                 resolve(data);
             }
         });
