@@ -7,6 +7,8 @@ import CheckList from "../CheckList"
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
 const MAX_DYNAMIC_VALUES_SHOWN = 3; //maximum number of dynamic values shown before truncation
+const MAX_FILENAME_STRING_CHARACTERS_SHOWN = 20;
+const MAX_TEMPLATE_NAME_STRING_CHARACTERS_SHOWN = 20;
 
 class TemplateLogTable extends React.Component {
     constructor(props) {
@@ -189,6 +191,19 @@ class TemplateLogTable extends React.Component {
                     }
                     break;
                 }
+                case "File Name": {
+                    let value = row[columnTitle.apiName];
+                    let filename = value.split(".")[0];
+                    let maybeTruncatedContent = this.getTruncatedContentIfTooLong(filename, MAX_FILENAME_STRING_CHARACTERS_SHOWN);
+                    content.push(maybeTruncatedContent);
+                    break;
+                } case "Template Name": {
+                    let templateName = row[columnTitle.apiName];
+                    let maybeTruncatedContent = this.getTruncatedContentIfTooLong(templateName, MAX_TEMPLATE_NAME_STRING_CHARACTERS_SHOWN);
+                    content.push(maybeTruncatedContent);
+                    break;
+                }
+
                 default:
                     if (apiName) {
                         content.push(row[columnTitle.apiName]);
@@ -196,6 +211,20 @@ class TemplateLogTable extends React.Component {
                 }
         }
         return content;
+    }
+
+    getTruncatedContentIfTooLong(content, max_length) {
+        if (content && (content.length > max_length)) {
+            let truncatedFilename = this.truncateString(content, max_length);
+            return {truncatedContent: {truncatedVersion: truncatedFilename,
+            fullVersion: content}};
+        } else {
+            return content;
+        }
+    }
+
+    truncateString(str, numCharactersToShow) {
+        return str.slice(0, numCharactersToShow) + "...";
     }
 
     addLinksToCampaignPage(table) {
