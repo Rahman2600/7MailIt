@@ -196,8 +196,7 @@ class TemplateLogTable extends React.Component {
                     break;
                 }
                 case "File Name": {
-                    let value = row[columnTitle.apiName];
-                    let filename = value.split(".")[0];
+                    let filename = row[columnTitle.apiName];
                     let maybeTruncatedContent = this.getTruncatedContentIfTooLong(filename, MAX_FILENAME_STRING_CHARACTERS_SHOWN);
                     content.push(maybeTruncatedContent);
                     break;
@@ -249,7 +248,6 @@ class TemplateLogTable extends React.Component {
                 let fileNameContent = "";
                 if(typeof fileNameColumn.content[i] === "object") {
                     fileNameContent = fileNameColumn.content[i].truncatedContent.fullVersion;
-                    console.log(fileNameContent);
                 } else {
                     fileNameContent = fileNameColumn.content[i]
                 }
@@ -257,15 +255,13 @@ class TemplateLogTable extends React.Component {
                 let templateNameContent = "";
                 if(typeof templateNameColumn.content[i] === "object") {
                     templateNameContent = templateNameColumn.content[i].truncatedContent.fullVersion;
-                    console.log(templateNameContent);
                 } else {
                     templateNameContent = templateNameColumn.content[i]
                 }
-            
+
                 let dynamicValuesContent = "";
                 if(typeof dynamicValuesColumn.content[i] === "object") {
                     dynamicValuesContent = dynamicValuesColumn.content[i].truncatedContent.fullVersion;
-                    console.log(dynamicValuesContent);
 
                 } else {
                     dynamicValuesContent = dynamicValuesColumn.content[i]
@@ -289,7 +285,6 @@ class TemplateLogTable extends React.Component {
                 let templateNameContent = "";
                 if(typeof templateNameColumn.content[i] === "object") {
                     templateNameContent = templateNameColumn.content[i].truncatedContent.fullVersion;
-                    console.log(templateNameContent);
                 } else {
                     templateNameContent = templateNameColumn.content[i]
                 }
