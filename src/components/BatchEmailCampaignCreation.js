@@ -11,8 +11,7 @@ class BatchEmailCampaignCreation extends React.Component {
 		this.messages = Object.freeze({
             WRONG_FILE_TYPE:   "The file does not have the correct type. Please upload a .csv file",
             BATCH_EMAIL_CREATION_FAIL:  "An error occured when creating the batch email campaign: ",
-            EMPTY_FIELD: "There is at least one empty field. Please upload a correctly formatted .csv file and provide a subject line to continue.",
-            SUCCESS: "Sucessfully created a batch email campaign."
+            EMPTY_FIELD: "There is at least one empty field. Please upload a correctly formatted .csv file and provide a subject line to continue."
         });
 
 		this.onFileUpload = this.onFileUpload.bind(this);
@@ -131,8 +130,8 @@ class BatchEmailCampaignCreation extends React.Component {
             this.setState({message: this.messages.WRONG_FILE_TYPE});
         } else {
             this.setState({loading: true});
-            createBatchEmailCampaign(fileInput, subjectLine, templateName, this.state.dynamicValues).then(() => {
-                this.setState({ message: this.messages.SUCCESS, loading: false});
+            createBatchEmailCampaign(fileInput, subjectLine, templateName, this.state.dynamicValues).then((data) => {
+                this.setState({ message: data.body, loading: false});
             }).catch(error => {
                 console.log("Batch Email Campaign Error: " + error.message);
                 this.setState({ message: error.message, loading: false});
