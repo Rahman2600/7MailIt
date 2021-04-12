@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import $ from 'jquery';
 
 /**  
  * 
@@ -10,8 +11,9 @@ import { Link } from "react-router-dom";
  *  (, <column>)*
  * ]}
  * <column> ::= {title: <string>, content:[list of <content>]}
- * <content> := <string> | <button>
+ * <content> := <string> | <button> | <truncatedContent> 
  * <button> ::= {button: {displayName: <string>, link: <string>}}
+ * <truncatedContent> ::= {truncatedContent: {truncatedVersion:<string>, fullVersion: <string>}}
  * 
  * - link should be string in the form of an HTML link e.g "/HomePage"
  * 
@@ -45,16 +47,22 @@ class Table extends React.Component {
             data: this.props.data,
             columnsAscending: [true,true,true,true]
         }
-        console.log(this.state);
     }
+
+    componentDidMount() {
+        $('[data-toggle="tooltip"]').tooltip()
+    }
+
+    componentDidUpdate() {
+        $('[data-toggle="tooltip"]').tooltip();
+      }
+
     componentWillReceiveProps(nextProps) {
         if(nextProps.data) {
             this.setState(nextProps);
-            console.log("nextProps",this.state.data);
         }
     }
     handleSorting = (column) => {
-        console.log("initial state",this.state.data)
         let dataCopy = JSON.parse(JSON.stringify(this.state.data))        //array1.forEach(this.props.data => console.log(element))
         let arr = dataCopy.columns
         //console.log('state before sorted:', this.state.data.columns[column].content);
@@ -170,17 +178,22 @@ class Table extends React.Component {
         if (type === "string") {
             return cell;
         } else if (type === "object") {
-            if (Object.keys(cell)[0] === "button") {
-                let data = cell.button.data ? cell.button.data : null;
-                return (
-                    <div className="d-flex justify-content-center">
-                        <Link 
-                            className="btn btn-primary"
-                            role="button"
-                            to={{pathname:cell.button.link, state: data}}>
-                            {cell.button.displayName}
-                        </Link>
-                    </div>)
+            switch(Object.keys(cell)[0]) {
+                case "button":
+                    let data = cell.button.data ? cell.button.data : null;
+                    return (
+                        <div className="d-flex justify-content-center">
+                            <Link 
+                                className="btn btn-primary"
+                                role="button"
+                                to={{pathname:cell.button.link, state: data}}>
+                                {cell.button.displayName}
+                            </Link>
+                        </div>)
+                case "truncatedContent":
+                    return <span data-toggle="tooltip" data-placement="right" title={cell.truncatedContent.fullVersion}> 
+                                {cell.truncatedContent.truncatedVersion} 
+                            </span>
             }
         }
     }
