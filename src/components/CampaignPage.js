@@ -83,8 +83,8 @@ class CampaignPage extends React.Component {
                             <div className="form-group">
                                 <div className="row justify-content-space-evenly my-row2">
                                     <div className="input-group mb-1">
-                                        <div className="input-group-prepend">
-                                            <span className="input-group-text">Single Email Address</span>
+                                        <div className="input-group-prepend" style={{"max-width":"500px" }}>
+                                            <span className="input-group-text" style={{"text-overflow": "ellipsis", "white-space": "nowrap","overflow":"hidden","display":"block"}}>Single Email Address</span>
                                         </div>
                                         <input
                                             type="text"
