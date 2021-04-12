@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import $ from 'jquery';
 
 /**  
  * 
@@ -47,6 +48,15 @@ class Table extends React.Component {
             columnsAscending: [true,true,true,true]
         }
     }
+
+    componentDidMount() {
+        $('[data-toggle="tooltip"]').tooltip()
+    }
+
+    componentDidUpdate() {
+        $('[data-toggle="tooltip"]').tooltip();
+      }
+
     componentWillReceiveProps(nextProps) {
         if(nextProps.data) {
             this.setState(nextProps);
@@ -181,7 +191,9 @@ class Table extends React.Component {
                             </Link>
                         </div>)
                 case "truncatedContent":
-                    return cell.truncatedContent.truncatedVersion;
+                    return <span data-toggle="tooltip" data-placement="right" title={cell.truncatedContent.fullVersion}> 
+                                {cell.truncatedContent.truncatedVersion} 
+                            </span>
             }
         }
     }

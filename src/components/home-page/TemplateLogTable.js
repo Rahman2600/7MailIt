@@ -11,7 +11,7 @@ const MAX_DYNAMIC_VALUES_SHOWN = 3; //maximum number of dynamic values shown bef
 class TemplateLogTable extends React.Component {
     constructor(props) {
         super(props);
-        this.defaultColumns = ["File Name", "Template Name", "Upload Date", "Create Email Campaign", "Campaign Logs"];
+        this.defaultColumns = ["File Name", "Template Name", "Upload Date", "Dynamic Values", "Create Email Campaign", "Campaign Logs"];
         this.sortableColumns = ["File Name",  "Template Name", "Upload Date"];
         this.state = {table: null, editingColumns: false, columns: []};
         this.getTableData = this.getTableData.bind(this);
