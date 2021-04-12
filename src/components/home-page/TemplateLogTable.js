@@ -131,8 +131,11 @@ class TemplateLogTable extends React.Component {
         console.log(dynamicValuesColumn);
         for (let i = 0; i < content.length; i++) {
             let row = content[i];
-            content[i] = {truncatedContent: {truncatedVersion: this.truncateDynamicValuesRow(row), 
-                fullVersion: row}}
+            let dynamicValues = row.split(",");
+            if (!(dynamicValues.length < MAX_DYNAMIC_VALUES_SHOWN)) {
+                content[i] = {truncatedContent: {truncatedVersion: this.truncateDynamicValuesRow(row), 
+                    fullVersion: row}}
+            }
         }
         dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
         console.log(dynamicValuesColumn);
@@ -140,7 +143,6 @@ class TemplateLogTable extends React.Component {
 
     truncateDynamicValuesRow(row) {
         let dynamicValues = row.split(",");
-        if (dynamicValues.length < MAX_DYNAMIC_VALUES_SHOWN) return row;
         let dynamicValuesShown = dynamicValues.slice(0, MAX_DYNAMIC_VALUES_SHOWN);
         let stringVersion = dynamicValuesShown.join(",");
         return stringVersion + "...";
