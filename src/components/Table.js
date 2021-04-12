@@ -191,7 +191,7 @@ class Table extends React.Component {
             this.state.data.columns.map((current, j) => {
                 if (this.renderColumn(current.title)) {
                     return (
-                        <td key={j}>
+                        <td key={j} className="text-left">
                             {this.renderCell(current.content[i])}
                         </td>
                     )
@@ -206,13 +206,13 @@ class Table extends React.Component {
             return "null";
         }
         if (type === "string") {
-            return cell;
+            return cell
         } else if (type === "object") {
             switch (Object.keys(cell)[0]) {
                 case "button":
                     let data = cell.button.data ? cell.button.data : null;
                     return (
-                        <div className="d-flex justify-content-center">
+                        <div className="d-flex justify-content-left">
                             <Link
                                 className="btn btn-primary"
                                 role="button"
