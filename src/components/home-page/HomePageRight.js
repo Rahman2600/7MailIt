@@ -30,7 +30,6 @@ class HomePageRight extends React.Component {
     }
 
     onUploadSuccess() {
-        console.log("Success");
         this.props.onUploadSuccess();
     }
 }

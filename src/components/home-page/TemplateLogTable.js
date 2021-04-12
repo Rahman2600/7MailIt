@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import Table from "../Table"
 import CheckList from "../CheckList"
+import { checkServerIdentity } from "tls";
 
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
@@ -29,7 +30,11 @@ class TemplateLogTable extends React.Component {
     }
 
     getTableData() {
-       this.setState({table: null});
+        // var data = JSON.stringify({
+        //     "min": 0,
+        //     "max": 5
+        // });
+          
        var config = {
             method: 'get',
             url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs',
@@ -55,7 +60,6 @@ class TemplateLogTable extends React.Component {
     }
 
     render() {
-        console.log("rendering");
         let table = this.state.table;
         if (table) {
             let columns = table.columns.map(({title}) => title);

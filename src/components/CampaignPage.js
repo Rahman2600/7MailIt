@@ -5,7 +5,6 @@ import sendSingleEmail from '../api-service.js'
 import BatchEmailCampaignCreation from "./BatchEmailCampaignCreation";
 import { Link } from "react-router-dom";
 import {Redirect} from "react-router";
-import $ from 'jquery';
 var AWS = require('aws-sdk');
 var mammoth = require("mammoth");
 
@@ -83,8 +82,8 @@ class CampaignPage extends React.Component {
                             <div className="form-group">
                                 <div className="row justify-content-space-evenly my-row2">
                                     <div className="input-group mb-3">
-                                        <div className="input-group-prepend" >
-                                            <span className="input-group-text" id="#singleEmail">Single Email Address</span>
+                                        <div className="input-group-prepend">
+                                            <span className="input-group-text">Single Email Address</span>
                                         </div>
                                         <input
                                             type="text"
@@ -149,9 +148,6 @@ class CampaignPage extends React.Component {
     }
 
     async componentDidMount() {
-        console.log("mounted");
-        $('[data-toggle="tooltip"]').tooltip();
-        $('#singleEmail').tooltip({title: "Enter a single email to send", placement: "bottom"})
         var s3 = new AWS.S3();
         s3.getObject({ Bucket: BUCKET_NAME, Key: this.state.templateKey }, (err, data) => {
             if (err) {

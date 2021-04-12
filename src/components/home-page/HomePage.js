@@ -22,7 +22,6 @@ class HomePage extends React.Component {
     
 
 	onUploadSuccess() {
-		console.log("success");
 		this.forceUpdate();
 	}
 
