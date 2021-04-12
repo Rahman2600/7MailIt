@@ -136,7 +136,7 @@ class TemplateLogTable extends React.Component {
         for (let i = 0; i < content.length; i++) {
             let row = content[i];
             let dynamicValues = row.split(",");
-            if (!(dynamicValues.length < MAX_DYNAMIC_VALUES_SHOWN)) {
+            if (dynamicValues.length > MAX_DYNAMIC_VALUES_SHOWN) {
                 content[i] = {truncatedContent: {truncatedVersion: this.truncateDynamicValuesRow(row), 
                     fullVersion: row}}
             }
