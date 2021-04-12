@@ -31,16 +31,17 @@ class CampaignPage extends React.Component {
             EMAIL_NOT_SES_VERIFIED: "This Email Address is not registered with this service. Please ask the team to register your email before continuing."
         });
         this.state = { 
-            templateKey: this.props.match.params.templateKey,
+            templateKey: this.props.location.state.templateKey,
             docHtml: '', 
             dynamicValues: this.props.location.state.dynamicValues,
-            templateName: this.props.location.state.templateName,
+            templateName: this.props.match.params.templateName,
             emailAddress: '' ,
             message: null,
             loading: false,
             subjectLine: "",
             authenticated: this.props.user
         }
+        console.log(this.state);
         
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -150,6 +151,7 @@ class CampaignPage extends React.Component {
 
     async componentDidMount() {
         var s3 = new AWS.S3();
+        console.log(this.state.templateKey);
         s3.getObject({ Bucket: BUCKET_NAME, Key: this.state.templateKey }, (err, data) => {
             if (err) {
                 console.log("Could not get Object from S3 Bucket Error",err);
