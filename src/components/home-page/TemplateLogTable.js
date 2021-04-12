@@ -102,7 +102,6 @@ class TemplateLogTable extends React.Component {
             {displayName:"File Name", apiName: "S3Key"}, 
             {displayName:"Template Name", apiName: "TemplateName"}, 
             {displayName:"Upload Date", apiName: "DocUploadDateTime"},
-            {displayName:"Team", apiName: "Team"},
             {displayName:"Dynamic Values", apiName: "DynamicValues"},
             {displayName:"Create Email Campaign", apiName: "UploadStatus"},
             {displayName:"Campaign Logs", apiName: ""}
@@ -202,6 +201,8 @@ class TemplateLogTable extends React.Component {
                     let maybeTruncatedContent = this.getTruncatedContentIfTooLong(templateName, MAX_TEMPLATE_NAME_STRING_CHARACTERS_SHOWN);
                     content.push(maybeTruncatedContent);
                     break;
+                } case "Team": {
+                    
                 }
 
                 default:
