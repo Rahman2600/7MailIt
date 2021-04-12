@@ -84,7 +84,7 @@ class CampaignPage extends React.Component {
                                 <div className="row justify-content-space-evenly my-row2">
                                     <div className="input-group mb-1">
                                         <div className="input-group-prepend" style={{"max-width":"500px" }}>
-                                            <span className="input-group-text" style={{"text-overflow": "ellipsis", "white-space": "nowrap","overflow":"hidden","display":"block"}}>Single Email Address</span>
+                                            <span className="ellipsis input-group-text ">Single Email Address</span>
                                         </div>
                                         <input
                                             type="text"
@@ -98,8 +98,8 @@ class CampaignPage extends React.Component {
                                 </div>
                                 <div className="row justify-content-space-evenly my-row2">
                                     <div className="input-group mb-1">
-                                        <div className="input-group-prepend">
-                                            <span className="input-group-text">Subject Line</span>
+                                        <div className="input-group-prepend"style={{"max-width":"500px"}}>
+                                            <span className="ellipsis input-group-text">Subject Line</span>
                                         </div>
                                         <input
                                             type="text"
@@ -114,7 +114,7 @@ class CampaignPage extends React.Component {
                                 {this.state.dynamicValues.length > 0 ?
                                     <div className="row justify-content-space-evenly my-row2">
                                         Dynamic Values
-                                        <div className="input-group mb-1">
+                                        <div className="input-group mb-1 " >
                                             {this.createDynamicValueTextFields()}
                                         </div>
                                     </div> : null }
@@ -166,8 +166,8 @@ class CampaignPage extends React.Component {
         for (var dynamicValue of this.state.dynamicValues ) {
             let textInput = 
                 <div key={dynamicValue} className="input-group mb-1">
-                    <div className="input-group-prepend">
-                        <span className="input-group-text" id={dynamicValue}>{dynamicValue}</span>
+                    <div className="input-group-prepend" style={{"max-width":"500px"}}>
+                        <span className="ellipsis input-group-text "  id={dynamicValue}>{dynamicValue}</span>
                     </div>
                     <input 
                         type="text" 
