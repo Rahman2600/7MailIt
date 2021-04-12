@@ -4,6 +4,7 @@ import axios from 'axios';
 import Table from "../Table"
 import CheckList from "../CheckList"
 import { checkServerIdentity } from "tls";
+import { DataExchange } from "aws-sdk";
 
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
@@ -64,6 +65,9 @@ class TemplateLogTable extends React.Component {
 
     render() {
         let table = this.state.table;
+        let columnsProp = this.getColumnsPropToTable();
+        console.log(columnsProp);
+        console.log(this.getColumnsPropToTable)
         return ( 
             <div className="float-left col-lg-9 pl-0 pr-1">
                 <h1 className="mt-2">Template logs</h1>
@@ -78,12 +82,28 @@ class TemplateLogTable extends React.Component {
                 </div>
                 : <div></div>}
                 {table? <Table data={table} 
-                columns={this.state.columns.map((column) => {
-                    return {title: column, sort: this.sortableColumns.includes(column)}
-                })}/> : 
+                columns={columnsProp}/> : 
                 <Table loading={true}/>}
             </div>        
         );
+    }
+
+    getColumnsPropToTable() {
+        return this.state.columns.map((column) => {
+            let columnProp = {title: column, sort: this.sortableColumns.includes(column)}
+            if (column === "Upload Date") {
+                columnProp["compare"] = function (dateA, dateB) {
+                    let DMY_A = dateA.split("/");
+                    let DMY_B = dateB.split("/");
+                    let dateObjA = new Date(DMY_A[2], DMY_A[1], DMY_A[0]);
+                    let dateObjB = new Date(DMY_B[2], DMY_B[1], DMY_B[0]); 
+                    console.log(dateObjA);
+                    console.log(dateObjB);
+                    return dateObjA - dateObjB;                     
+                }
+            }
+            return columnProp;
+        })
     }
 
     onSelectedColumnsChange(checkedStates) {
