@@ -64,6 +64,7 @@ class Table extends React.Component {
             this.setState(nextProps);
         }
     }
+
     handleSorting = (columnTitle) => {
 
         let dataCopy = JSON.parse(JSON.stringify(this.state.data))
@@ -71,25 +72,9 @@ class Table extends React.Component {
         let compareFunction = this.getColumnCompareFunction(columnTitle);
 
         if (!compareFunction) { 
-            compareFunction = function (a, b) {
-
-                if (typeof a === "string" && typeof b === "string") {
-                    a = a.toLowerCase();
-                    b = b.toLowerCase();
-
-                } else if (typeof a === "object" && typeof b === "object" && 
-                          Object.keys(a)[0] === "truncatedContent" && 
-                          Object.keys(b)[0] === "truncatedContent") {
-
-                    a = a.truncatedContent.fullVersion.toLowerCase();
-                    b = b.truncatedContent.fullVersion.toLowerCase();
-                }
-         
-                if (a > b) return 1;
-                else if (a < b) return -1;
-                else return 0;
-            }
+            compareFunction = this.defaultCompareFunction;
         }
+
             
         //bubble sort with the weird object 2d array 
         let columnIndex = this.getColumnIndex(columnTitle)
@@ -119,6 +104,28 @@ class Table extends React.Component {
         let columnsAscendingCopy = [...this.state.columnsAscending];
         columnsAscendingCopy[columnIndex] = !columnsAscendingCopy[columnIndex]
         this.setState({ data: dataCopy, columnsAscending: columnsAscendingCopy })
+    }
+
+    defaultCompareFunction(a,b) { 
+
+        if (typeof a === "string") {
+            a = a.toLowerCase();
+        } else if (typeof a === "object" && Object.keys(a)[0] === "truncatedContent") {
+            a = a.truncatedContent.fullVersion.toLowerCase();
+        }
+
+        if (typeof b === "string") {
+            b = b.toLowerCase();
+        } else if (typeof b === "object" && Object.keys(b)[0] === "truncatedContent") {
+            b = b.truncatedContent.fullVersion.toLowerCase();
+        }
+    
+        console.log(a);
+        console.log(b);
+    
+        if (a > b) return 1;
+        else if (a < b) return -1;
+        else return 0;
     }
 
     render() {
