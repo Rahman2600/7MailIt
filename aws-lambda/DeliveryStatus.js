@@ -32,7 +32,7 @@ exports.handler = function (event, context, callback) {
     };
     ddb.putItem(itemParams, function (err, data) {
       if (err) {
-        callback("Put Item Error",err)
+        callback(err)
       } else {
         console.log("Item put successfully",data);
         callback(null,'')
@@ -53,7 +53,7 @@ exports.handler = function (event, context, callback) {
     };
     ddb.putItem(itemParamsdel, function (err, data) {
       if (err) {
-        callback("Put Item Error",err)
+        callback(err)
       } else {
         console.log("Item put successfully",data);
         callback(null,'')
@@ -74,7 +74,7 @@ exports.handler = function (event, context, callback) {
     };
     ddb.putItem(itemParamscomp, function (err, data) {
       if (err) {
-        callback("Put Item Error",err)
+        callback(err)
       } else {
         console.log("Item put successfully",data);
         callback(null,'')
