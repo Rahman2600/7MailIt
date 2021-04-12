@@ -6,6 +6,7 @@ import CheckList from "../CheckList"
 
 
 const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs"
+const MAX_DYNAMIC_VALUES_SHOWN = 3; //maximum number of dynamic values shown before truncation
 
 class TemplateLogTable extends React.Component {
     constructor(props) {
@@ -55,12 +56,7 @@ class TemplateLogTable extends React.Component {
     }
 
     render() {
-        console.log("rendering");
         let table = this.state.table;
-        if (table) {
-            let columns = table.columns.map(({title}) => title);
-           //console.log(columns);
-        }
         return ( 
             <div className="float-left col-lg-9 pl-0 pr-1">
                 <h1 className="mt-2">Template logs</h1>
@@ -125,7 +121,29 @@ class TemplateLogTable extends React.Component {
         table.numRows = templateKeyColumn.content.length;
         this.addLinksToCampaignPage(table);
         this.addLinksToCampaignLogTable(table)
+        this.truncateDynamicValues(table)
         return table;
+    }
+
+    truncateDynamicValues(table) {
+        let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
+        let content = dynamicValuesColumn.content;
+        console.log(dynamicValuesColumn);
+        for (let i = 0; i < content.length; i++) {
+            let row = content[i];
+            content[i] = {truncatedContent: {truncatedVersion: this.truncateDynamicValuesRow(row), 
+                fullVersion: row}}
+        }
+        dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
+        console.log(dynamicValuesColumn);
+    }
+
+    truncateDynamicValuesRow(row) {
+        let dynamicValues = row.split(",");
+        if (dynamicValues.length < MAX_DYNAMIC_VALUES_SHOWN) return row;
+        let dynamicValuesShown = dynamicValues.slice(0, MAX_DYNAMIC_VALUES_SHOWN);
+        let stringVersion = dynamicValuesShown.join(",");
+        return stringVersion + "...";
     }
 
     getContent(columnTitle, data) {
