@@ -170,6 +170,12 @@ class CampaignLogTable extends React.Component {
                             }});
                     break;
                 }
+
+                case "No. Of Emails With At Least One Clicked Link" : {
+                    content.push(row[columnTitle.apiName].toString());
+                    break;
+                }
+                
                 default:
                     if (apiName) {
                         content.push(row[columnTitle.apiName]);
