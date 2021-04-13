@@ -11,6 +11,7 @@ const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/log
 const MAX_DYNAMIC_VALUES_SHOWN = 3; //maximum number of dynamic values shown before truncation
 const MAX_FILENAME_STRING_CHARACTERS_SHOWN = 20;
 const MAX_TEMPLATE_NAME_STRING_CHARACTERS_SHOWN = 20;
+const MAX_DYNAMIC_VALUE_STRING_CHARACTER_SHOWN = 30;
 
 class TemplateLogTable extends React.Component {
     constructor(props) {
@@ -126,33 +127,30 @@ class TemplateLogTable extends React.Component {
         table.numRows = templateKeyColumn.content.length;
         this.addLinksToCampaignPage(table);
         this.addLinksToCampaignLogTable(table)
-        this.truncateDynamicValues(table)
+        //this.truncateDynamicValues(table)
         return table;
     }
 
-    truncateDynamicValues(table) {
-        let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
-        let content = dynamicValuesColumn.content;
-      
-        for (let i = 0; i < content.length; i++) {
-            let row = content[i];
-            let dynamicValues = row.split(",");
-            if (dynamicValues.length > MAX_DYNAMIC_VALUES_SHOWN) {
-                content[i] = {truncatedContent: {truncatedVersion: this.truncateDynamicValuesRow(row), 
-                    fullVersion: row}}
-            }
-        }
-        dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
-        
-    }
-
-
-    truncateDynamicValuesRow(row) {
-        let dynamicValues = row.split(",");
-        let dynamicValuesShown = dynamicValues.slice(0, MAX_DYNAMIC_VALUES_SHOWN);
-        let stringVersion = dynamicValuesShown.join(",");
-        return stringVersion + "...";
-    }
+    // truncateDynamicValues(table) {
+    //     let dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table);
+    //     let content = dynamicValuesColumn.content;
+    //     for (let i = 0; i < content.length; i++) {
+    //         let row = content[i];
+    //         let dynamicValues = row.split(",");
+    //         if (dynamicValues.length > MAX_DYNAMIC_VALUES_SHOWN) {
+    //             content[i] = {truncatedContent: {truncatedVersion: this.truncateDynamicValuesRow(row), 
+    //                 fullVersion: row}}
+    //         }
+    //     }
+    //     dynamicValuesColumn = this.getColumnWithDisplayName("Dynamic Values", table); 
+    // }
+  
+    // truncateDynamicValuesRow(row) {
+    //     let dynamicValues = row.split(",");
+    //     let dynamicValuesShown = dynamicValues.slice(0, MAX_DYNAMIC_VALUES_SHOWN);
+    //     let stringVersion = dynamicValuesShown.join(",");
+    //     return stringVersion + "...";
+    // }
 
     getContent(columnTitle, data) {
         let content = [];
@@ -167,8 +165,9 @@ class TemplateLogTable extends React.Component {
                     let value = row[columnTitle.apiName];
 
                     let commaList = this.arrayToCommaSeperatedString(value);
+                    let maybeTruncatedContent = this.getTruncatedContentIfTooLong(commaList, MAX_DYNAMIC_VALUE_STRING_CHARACTER_SHOWN);
+                    content.push(maybeTruncatedContent);
                     //Need to remove this once dynamic value parsing is complete
-                    content.push(commaList);
                     break;
                 }
                 case "Create Email Campaign": {

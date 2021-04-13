@@ -56,7 +56,7 @@ class CampaignPage extends React.Component {
             return (
                 <div className="container-fluid my-container">
                     <div className="row my-rows" style={{ textAlign: 'center' }}>
-                        <div className="col-6 my-col">Preview Template</div>
+                        <div className="col-6 my-col">{`Preview Template: ${this.state.templateName}`}</div>
                         <div className="col-6 my-col">Create Email Campaign</div>
                     </div>
                     <div className="row my-rows">
