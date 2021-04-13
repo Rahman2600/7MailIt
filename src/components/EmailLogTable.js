@@ -68,14 +68,19 @@ class EmailLogTable extends React.Component {
             return <Redirect to="/"/>
         } else {
             return (
-                <div className="scroll container-fluid" style={{"max-width": "100%"}}>
-                    <div className="float-left col-lg-3 ">
+                <div>
+                <div className="d-flex justify-content-end">
                         <Link
-                            className="btn btn-primary mt-5 ml-5 mr-5 mb-5 "
                             role="button"
                             id="logOutButton"
-                            to={"/"}>Log Out
+                            to={"/"}
+                            className="btn btn-primary mr-1 mt-1"
+                            >
+                            Log out
                         </Link>
+				</div>
+                <div className="scroll container-fluid" style={{"max-width": "100%"}}>
+                    <div className="float-left col-lg-3 ">
                         <Link 
                             className="btn btn-primary d-block mt-5 ml-5 mr-5 mb-5"
                             role="button"
@@ -98,7 +103,8 @@ class EmailLogTable extends React.Component {
                         })}/> : 
                         <Table loading={true}/>}
                     </div>
-                </div>     
+                </div>  
+                </div>   
             );
         }
     }
@@ -110,7 +116,7 @@ class EmailLogTable extends React.Component {
             {displayName:"Email Address", apiName: "EmailAddress"}, 
             {displayName:"Delivery Status", apiName: "DeliveryStatus"}, 
             {displayName:"Open Status", apiName: "OpenedStatus"}, 
-            {displayName:"Clicked Link Status", apiName: "ClickedLinkStatus"},
+            {displayName:"Has A Link Been Clicked?", apiName: "ClickedLinkStatus"},
         ];
         let table = {columns: []};
         if (data.statusCode === 200) {
@@ -159,7 +165,7 @@ class EmailLogTable extends React.Component {
                     content.push(value);
                     break;
                 }
-                case "Clicked Link Status": {
+                case "Has A Link Been Clicked?": {
                     let value = row['ClickedLinkStatus'].toString();
                     content.push(value);
                     break;

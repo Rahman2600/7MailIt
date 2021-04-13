@@ -67,14 +67,19 @@ class CampaignLogTable extends React.Component {
             return <Redirect to="/" />
         } else {
             return (
-                <div className="scroll container-fluid" style={{"max-width": "100%"}}>
-                    <div className="float-left col-lg-3 ">
+                <div>
+                <div className="d-flex justify-content-end">
                         <Link
-                            className="btn btn-primary mt-5 ml-5 mr-5 mb-5 "
                             role="button"
                             id="logOutButton"
-                            to={"/"}>Log Out
+                            to={"/"}
+                            className="btn btn-primary mr-1 mt-1"
+                            >
+                            Log out
                         </Link>
+				</div>
+                <div className="scroll container-fluid">
+                    <div className="float-left col-lg-3 ">
                         <Link 
                             className="btn btn-primary d-block mt-5 ml-5 mr-5 mb-5"
                             role="button"
@@ -91,7 +96,8 @@ class CampaignLogTable extends React.Component {
                         })}/> : 
                         <Table loading={true}/>}
                     </div>
-                </div>        
+                </div> 
+                </div>       
             );
         }
         
@@ -105,7 +111,7 @@ class CampaignLogTable extends React.Component {
             {displayName:"No. of People Emailed", apiName: "NumEmailed"}, 
             {displayName:"No. of Emails Successfully Delivered", apiName: "NumSuccessfullyDelivered"},
             {displayName:"No. of Opened Emails", apiName: "NumOpened"},
-            {displayName:"No. of Links Opened", apiName: "NumLinks"},
+            {displayName:"No. Of Emails With At Least One Clicked Link", apiName: "NumLinks"},
             {displayName:"Email Log", apiName: ""}
         ];
 
@@ -144,7 +150,7 @@ class CampaignLogTable extends React.Component {
                     content.push(row['NumOpened'].toString());
                     break;
                 }
-                case "No. of Links Opened": {
+                case "No. Of Emails With At Least One Clicked Link": {
                     content.push(row['NumLinks'].toString());
                     break;
                 }
