@@ -101,6 +101,7 @@ const createBatchEmailCampaign = async(fileInput, subjectLine, templateName, dyn
         console.log(res);
         throw new Error(res.data.body);
     }
+    return res.data;
     } catch (err) {
       throw err;
     }
