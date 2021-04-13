@@ -1,12 +1,8 @@
 import React from "react";
 import axios from 'axios';
-import Table from "../components/Table";
+import Table from "./Table";
 import { Link } from "react-router-dom";
 import {Redirect} from "react-router";
-
-
-const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs"
-
 
 class CampaignLogTable extends React.Component {
     constructor(props) {
@@ -44,6 +40,7 @@ class CampaignLogTable extends React.Component {
 
         axios(config)
             .then(response => {
+                this.sortCampaignLogs(response.data)
                 let table = this.dataToTable(response.data.body);
                 console.log(table);
                 this.setState({table: table})
@@ -135,23 +132,30 @@ class CampaignLogTable extends React.Component {
            let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
                 case "Date of Campaign Launch": {
-                        content.push(row["SentDateTime"]);
+                    let value = row[columnTitle.apiName];
+                    if (value) {
+                        let dateObj = new Date(value);
+                        var date = dateObj.getDate();
+                        var month = dateObj.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+                        var year = dateObj.getFullYear();
+                            
+                        var dateString = date + "/" + month + "/" + year;
+                        content.push(dateString);
+                    } else {
+                        content.push(" ");
+                    }
                     break;
                 }
                 case "No. of People Emailed": {
-                    content.push(row['NumEmailed'].toString());
+                    content.push(row[columnTitle.apiName].toString());
                     break;
                 }
                 case "No. of Emails Successfully Delivered": {
-                    content.push(row['NumSuccessfullyDelivered'].toString());
+                    content.push(row[columnTitle.apiName].toString());
                     break;
                 }
                 case "No. of Opened Emails": {
-                    content.push(row['NumOpened'].toString());
-                    break;
-                }
-                case "No. Of Emails With At Least One Clicked Link": {
-                    content.push(row['NumLinks'].toString());
+                    content.push(row[columnTitle.apiName].toString());
                     break;
                 }
                 case "Email Log": {
@@ -181,6 +185,14 @@ class CampaignLogTable extends React.Component {
                 return column;
             }
         }
+    }
+
+    sortCampaignLogs(campaignLogs) {
+        campaignLogs.body.sort((a, b) => {
+            let dateA = new Date(a.SentDateTime);
+            let dateB = new Date(b.SentDateTime)
+            return dateB - dateA;
+        });
     }
 }
 

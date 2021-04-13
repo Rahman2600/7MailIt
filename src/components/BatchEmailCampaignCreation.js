@@ -12,7 +12,7 @@ class BatchEmailCampaignCreation extends React.Component {
             WRONG_FILE_TYPE:   "The file does not have the correct type. Please upload a .csv file",
             BATCH_EMAIL_CREATION_FAIL:  "An error occured when creating the batch email campaign: ",
             EMPTY_FIELD: "There is at least one empty field. Please upload a correctly formatted .csv file and provide a subject line to continue.",
-            SUCCESS: "Sucessfully created a batch email campaign."
+			SUCCESS: "Batch Email Success: "
         });
 
 		this.onFileUpload = this.onFileUpload.bind(this);
@@ -25,16 +25,19 @@ class BatchEmailCampaignCreation extends React.Component {
 			<div>
 				<div className="row mt-5"></div>
 				<div className="row justify-content-space-evenly pl-4">
-					<img src={multipleUserLogo} className="img-rounded" width="50" height="50" />
-
+					<img src={multipleUserLogo} className="img-rounded" width="50" height="70" />
+					<h5>Batch Email Campaign</h5>
 				</div>
-				<div className="row my-row1">
+				<div className="row my-row10">
+					{"Sends email to multiple email addresses and dynamic values through csv file"}
+				</div>
+
+				<div className="row my-row10">
 					{"Please submit a .csv file formatted similar to this :"}
 					<Link to="/Example_File.csv" target="_blank" download>{"example file."}</Link>
 				</div>
-				<div className="row justify-content-space-evenly my-row1">
-					<div className="input-group mb-1">
-						
+				<div className="row justify-content-space-evenly my-row10">
+					<div className="input-group mb-1">						
                 	<form>
                     	<div className="form-group">
                         	<input type="file" className="form-control-file" id="fileUploadButton" onChange={this.onFileUpload}/>
@@ -57,14 +60,8 @@ class BatchEmailCampaignCreation extends React.Component {
 							required/>
 					</div>
 				</div>
-
-				{/* <div className="row justify-content-left my-row1">
-					<img src={scrap} className="img-rounded" width="50" height="50" />
-					<button type="button" className="btn btn-danger">Remove Template</button>
-					Coming Soon!
-				</div> */}
 				
-				<div className="row justify-content-end my-row1 button-spacing mb-1 ">
+				<div className="row justify-content-right my-row1 mb-1 button-spacing">
 					<button 
 						type="button" 
 						className="btn btn-success " 
@@ -80,9 +77,9 @@ class BatchEmailCampaignCreation extends React.Component {
                 }
 				{this.state.message != null ? 
 					<div id={
-                        	this.state.message === this.messages.SUCCESS ? "emailSentAlert" : "emailSentFailed" }
+                        	this.state.message.includes(this.messages.SUCCESS) ? "emailSentAlert" : "emailSentFailed" }
                         className={
-                            this.state.message === this.messages.SUCCESS ? "alert alert-success" : "alert alert-danger" } 
+                            this.state.message.includes(this.messages.SUCCESS) ? "alert alert-success" : "alert alert-danger" } 
                             role="alert">
                             {`${this.state.message}`} 
                     </div>
@@ -102,6 +99,7 @@ class BatchEmailCampaignCreation extends React.Component {
 	}
 
 	onSubmit(event) {
+		this.setState({message: null});
         //Validate Subject Line
 		let subjectLineInput = document.getElementById('subject-line-batch-email');
         let emptySubjectLine = false;
@@ -131,8 +129,9 @@ class BatchEmailCampaignCreation extends React.Component {
             this.setState({message: this.messages.WRONG_FILE_TYPE});
         } else {
             this.setState({loading: true});
-            createBatchEmailCampaign(fileInput, subjectLine, templateName, this.state.dynamicValues).then(() => {
-                this.setState({ message: this.messages.SUCCESS, loading: false});
+            createBatchEmailCampaign(fileInput, subjectLine, templateName, this.state.dynamicValues).then((data) => {
+                console.log(data);
+				this.setState({ message: this.messages.SUCCESS + data.body, loading: false});
             }).catch(error => {
                 console.log("Batch Email Campaign Error: " + error.message);
                 this.setState({ message: error.message, loading: false});

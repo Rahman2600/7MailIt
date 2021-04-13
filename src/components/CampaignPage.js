@@ -31,16 +31,17 @@ class CampaignPage extends React.Component {
             EMAIL_NOT_SES_VERIFIED: "This Email Address is not registered with this service. Please ask the team to register your email before continuing."
         });
         this.state = { 
-            templateKey: this.props.match.params.templateKey,
+            templateKey: this.props.location.state.templateKey,
             docHtml: '', 
             dynamicValues: this.props.location.state.dynamicValues,
-            templateName: this.props.location.state.templateName,
+            templateName: this.props.match.params.templateName,
             emailAddress: '' ,
             message: null,
             loading: false,
             subjectLine: "",
             authenticated: this.props.user
         }
+        console.log(this.state);
         
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -55,7 +56,7 @@ class CampaignPage extends React.Component {
             return (
                 <div className="container-fluid my-container">
                     <div className="row my-rows" style={{ textAlign: 'center' }}>
-                        <div className="col-6 my-col">Preview Template</div>
+                        <div className="col-6 my-col">{`Preview Template: ${this.state.templateName}`}</div>
                         <div className="col-6 my-col">Create Email Campaign</div>
                     </div>
                     <div className="row my-rows">
@@ -77,8 +78,11 @@ class CampaignPage extends React.Component {
                             </Link>
                             <div className="row my-row1"></div>
                             <div className="row justify-content-space-evenly my-row mt-5 mb-2">
-                                <img src={userLogo} className="img-rounded" width="30" height="30" />
-
+                                <img src={userLogo} className="img-rounded" width="30" height="30"/>
+                                <h5>Single Email Campaign</h5>
+                            </div>
+                            <div className="row my-row10">
+                            {"Sends email to specified email address with template using the given dynamic values"}
                             </div>
                             <div className="form-group">
                                 <div className="row justify-content-space-evenly my-row2">
@@ -150,6 +154,7 @@ class CampaignPage extends React.Component {
 
     async componentDidMount() {
         var s3 = new AWS.S3();
+        console.log(this.state.templateKey);
         s3.getObject({ Bucket: BUCKET_NAME, Key: this.state.templateKey }, (err, data) => {
             if (err) {
                 console.log(err);
