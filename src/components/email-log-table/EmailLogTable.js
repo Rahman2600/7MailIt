@@ -1,11 +1,9 @@
 import React from "react";
 import axios from 'axios';
-import Table from "../components/Table";
-import CampaignLogTable from "../components/CampaignLogTable";
+import Table from "../Table";
 import { Link } from "react-router-dom";
 import {Redirect} from "react-router";
 
-// const DATA_LINK = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs"
 
 class EmailLogTable extends React.Component {
     constructor(props) {
@@ -14,26 +12,24 @@ class EmailLogTable extends React.Component {
                                "Sent Date", 
                                "Email Address", 
                                "Delivery Status", 
-                               "Open Status",
-                               "Clicked Link Status"];
+                               "Open Status"];
         this.sortableColumns = ["Message Id", 
                                "Sent Date", 
                                "Email Address", 
                                "Delivery Status", 
-                               "Open Status",
-                               "Clicked Link Status"];
+                               "Open Status"];
         this.state = {
             templateName: this.props.location.state.templateName,
             campaignId: this.props.location.state.campaignId,
             columns: [],
             authenticated: this.props.user
         }
-        //console.log(this.state);
     }
 
+    //Retrieve Email logs from AWS to create a table
     getEmailTableData() {
         var apiString = `https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs?templateId=${this.state.templateName}&campaignId=${this.state.campaignId}`
-        //console.log(apiString);
+        
         var config = {
             method: 'get',
             url: apiString,
@@ -45,9 +41,6 @@ class EmailLogTable extends React.Component {
 
         axios(config)
             .then(response => {
-
-                console.log("Email Table Data:",response);
-
                 let table = this.dataToTable(response.data);
                 this.setState({table: table})
             })
@@ -60,11 +53,11 @@ class EmailLogTable extends React.Component {
         this.getEmailTableData()
     }
 
-
+    //Render the email log grid page
     render() {
         let table = this.state.table;
         if (table) {
-            this.state.columns = table.columns.map(({title}) => title);
+           this.state.columns = table.columns.map(({title}) => title);
         }
         if (this.state.authenticated !== true) {
             return <Redirect to="/"/>
@@ -111,6 +104,7 @@ class EmailLogTable extends React.Component {
         }
     }
 
+    //Convert response data from /email-logs api to a table
     dataToTable(data) {
         let columnTitles = [
             {displayName:"Message Id", apiName: "MessageId"},
@@ -118,7 +112,6 @@ class EmailLogTable extends React.Component {
             {displayName:"Email Address", apiName: "EmailAddress"}, 
             {displayName:"Delivery Status", apiName: "DeliveryStatus"}, 
             {displayName:"Open Status", apiName: "OpenedStatus"}, 
-            {displayName:"Has A Link Been Clicked?", apiName: "ClickedLinkStatus"},
         ];
         let table = {columns: []};
         if (data.statusCode === 200) {
@@ -133,15 +126,19 @@ class EmailLogTable extends React.Component {
             console.log("Request failed with " + data.statusCode)
         }
         let messageIdColumn = this.getColumnWithDisplayName("Message Id", table);
-        //console.log(messageIdColumn);
         table.numRows = messageIdColumn.content.length;
         return table;
     }
 
+    /**
+ 	* Get the content of a cell
+ 	* @param {columnTitle} - string
+    * @param {data} - string
+ 	}}
+ 	*/
     getContent(columnTitle, data) {
         let content = [];
         for (let row of data.body.Items) {
-           let apiName = columnTitle.apiName;
             switch (columnTitle.displayName) {
                 case "Message Id": {
                     content.push(row['MessageId']);
@@ -167,21 +164,24 @@ class EmailLogTable extends React.Component {
                     content.push(value);
                     break;
                 }
-                case "Has A Link Been Clicked?": {
-                    let value = row['ClickedLinkStatus'].toString();
-                    content.push(value);
+                // case "Has A Link Been Clicked?": {
+                //     let value = row['ClickedLinkStatus'].toString();
+                //     content.push(value);
+                //     break;
+                // }
+                default:
                     break;
-                }
-                // default:
-                //     if (apiName) {
-                //         content.push(row[columnTitle.apiName]);
-                //     }
                 }
         }
         return content;
     }
 
-
+    /**
+ 	* Get the column data using the display name of the table
+ 	* @param {displayName} - string
+    * @param {table} - Array[Object]
+ 	}}
+ 	*/
     getColumnWithDisplayName(displayName, table) {
         for (let column of table.columns) {
             if (column.title === displayName) {

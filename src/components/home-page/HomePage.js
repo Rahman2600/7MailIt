@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import TemplateLogTable from "./TemplateLogTable";
-import HomePageRight from "./HomePageRight";
-import "../../styles/HomePage.css"
+import "../../App.css";
 import {Redirect} from "react-router";
 import {Link} from "react-router-dom";
+import FileUpload from "./file-upload/FileUpload";
+
 
 
 class HomePage extends React.Component {
@@ -13,14 +14,14 @@ class HomePage extends React.Component {
 		super(props);
 		this.onUploadSuccess = this.onUploadSuccess.bind(this);
 		this.id = 0;
-		//console.log(this.props.user)
 		this.state = {
 			authenticated: this.props.user,
 		}
-		//console.log(this.state);
+
+		this.onUploadSuccess = this.onUploadSuccess.bind(this);
 	}
     
-
+	//If update is successfull update the template log grid
 	onUploadSuccess() {
 		this.forceUpdate();
 	}
@@ -44,7 +45,9 @@ class HomePage extends React.Component {
 				</div>
 				<div className="container-fluid" >
 					<div className="row">
-						<HomePageRight onUploadSuccess={this.onUploadSuccess}/>
+						<div className="col-lg-3">
+                    		<FileUpload onUploadSuccess={this.onUploadSuccess}/>
+                		</div> 
 						<TemplateLogTable id={this.id}/>
 					</div>
 				</div>
