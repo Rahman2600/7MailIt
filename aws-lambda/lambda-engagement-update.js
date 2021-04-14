@@ -33,7 +33,7 @@ exports.handler = function(event, context, callback) {
     
   var table = "tEmailLog";
 
-  console.log(new Date(emailTimeStamp).toString());
+  console.log("Date sent",new Date(emailTimeStamp).toString());
   
   for (var i = 0; i < emailsTo.length; i++) {
     var emailAddress = emailsTo[i];

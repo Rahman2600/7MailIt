@@ -34,7 +34,7 @@ exports.handler = function (event, context, callback) {
       if (err) {
         callback(err)
       } else {
-        console.log(data);
+        console.log("Item put successfully",data);
         callback(null,'')
       }
     });
@@ -55,7 +55,7 @@ exports.handler = function (event, context, callback) {
       if (err) {
         callback(err)
       } else {
-        console.log(data);
+        console.log("Item put successfully",data);
         callback(null,'')
       }
     });
@@ -76,7 +76,7 @@ exports.handler = function (event, context, callback) {
       if (err) {
         callback(err)
       } else {
-        console.log(data);
+        console.log("Item put successfully",data);
         callback(null,'')
       }
     });

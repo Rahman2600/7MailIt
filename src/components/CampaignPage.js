@@ -157,7 +157,7 @@ class CampaignPage extends React.Component {
         console.log(this.state.templateKey);
         s3.getObject({ Bucket: BUCKET_NAME, Key: this.state.templateKey }, (err, data) => {
             if (err) {
-                console.log(err);
+                console.log("Could not get Object from S3 Bucket Error",err);
                 throw err
             }
             mammoth.convertToHtml({ arrayBuffer: data.Body }).then((v, m) => {

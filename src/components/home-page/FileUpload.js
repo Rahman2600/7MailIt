@@ -198,7 +198,7 @@ class FileUpload extends React.Component {
                 this.setState({ message: this.messages.SUCCESS, processing: false, uploading: false });
                 this.props.onUploadSuccess();
             }).catch(error => {
-                console.log(error);
+                console.log("File Upload Error:",error);
                 this.setState({ message: this.messages.UPLOAD_FAIL + ": " + error.message, uploading: false });
             });
         }
@@ -236,7 +236,7 @@ class FileUpload extends React.Component {
                 this.setState({ removal_message: this.removal_message.SUCCESSFUL_REMOVAL, checking: false });
                 this.props.onUploadSuccess();
             }).catch(error => {
-                console.log(error);
+                console.log("Remove File Error:",error);
                 this.setState({ removal_message: this.removal_message.REMOVE_FAILED, checking: false });
             });
         }

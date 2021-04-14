@@ -14,10 +14,8 @@ exports.handler = (event, context, callback) => {
     var ses = new aws.SES({region: 'us-east-1'});
     var dynamodb = new aws.DynamoDB({apiVersion: '2012-08-10'});
 
-    console.log("test");
-            console.log("3:",event);
 
-            console.log("4:",event.queryStringParameters);
+            console.log("Parameters passed from unsubscribe link:",event.queryStringParameters);
 
     //queryStringParameters are parameters given in the url i.e. path/unsubscribe-from-ses?email="corbynkwan@gmail.com"
     const { email } = event.queryStringParameters;
@@ -25,14 +23,13 @@ exports.handler = (event, context, callback) => {
  var params = {
   Identity: email
  };
-    console.log("test");
     var unsubscribeSesResponse = new Promise(function(resolve, reject) {
          ses.deleteIdentity(params, function(err, data) {
            if (err) {
-               console.log(err, err.stack); 
+               console.log("Unsubscribe from SES Error:", err.stack); 
                reject( err);
            } else {
-               console.log(data); 
+               console.log("Unsubscribe from SES Success:",data); 
                resolve(data);
            }
          });
@@ -47,10 +44,10 @@ exports.handler = (event, context, callback) => {
     var putItemResponse = new Promise(function(resolve, reject) {
          dynamodb.putItem(itemParams, function(err, data) {
            if (err) {
-               console.log(err, err.stack); 
+               console.log("Put Item to Unsubscribe Email log Error",err, err.stack); 
                reject( err);
            } else {
-               console.log(data); 
+               console.log("Put Item to Unsubscribe Email log Success",data); 
                resolve(data);
            }
          });
@@ -59,7 +56,6 @@ exports.handler = (event, context, callback) => {
     unsubscribeSesResponse.then(data => {
         putItemResponse.then(data => {
         
-        console.log("works");
         var response = {
             "statusCode": 200,
             "body": "Email Unsubscribed Successfully" + JSON.stringify(event)
@@ -68,7 +64,6 @@ exports.handler = (event, context, callback) => {
         
     });
     }).catch( error => {
-        console.log("no work");
         var response = {
             "statusCode": 500,
             "body": JSON.stringify(error)

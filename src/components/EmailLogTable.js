@@ -28,12 +28,12 @@ class EmailLogTable extends React.Component {
             columns: [],
             authenticated: this.props.user
         }
-        console.log(this.state);
+        //console.log(this.state);
     }
 
     getEmailTableData() {
         var apiString = `https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/email-logs?templateId=${this.state.templateName}&campaignId=${this.state.campaignId}`
-        console.log(apiString);
+        //console.log(apiString);
         var config = {
             method: 'get',
             url: apiString,
@@ -45,12 +45,14 @@ class EmailLogTable extends React.Component {
 
         axios(config)
             .then(response => {
-                console.log(response);
+
+                console.log("Email Table Data:",response);
+
                 let table = this.dataToTable(response.data);
                 this.setState({table: table})
             })
             .catch(function (error) {
-                console.log(error);
+                console.log("Get Email Data Error:",error);
             });
     }
 
@@ -131,7 +133,7 @@ class EmailLogTable extends React.Component {
             console.log("Request failed with " + data.statusCode)
         }
         let messageIdColumn = this.getColumnWithDisplayName("Message Id", table);
-        console.log(messageIdColumn);
+        //console.log(messageIdColumn);
         table.numRows = messageIdColumn.content.length;
         return table;
     }

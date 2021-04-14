@@ -21,13 +21,11 @@ class CampaignLogTable extends React.Component {
             columns: [],
             authenticated: this.props.user
         }
-        console.log(this.state);
     }
 
     getLogTableData() {
         var apiString = "https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/campaign-logs?templateId="
         var templateId = this.state.templateName;
-        console.log(templateId);
         var queryString =  apiString.concat(templateId);
         var config = {
             method: 'get',
@@ -42,12 +40,11 @@ class CampaignLogTable extends React.Component {
             .then(response => {
                 this.sortCampaignLogs(response.data)
                 let table = this.dataToTable(response.data.body);
-                console.log(table);
+                console.log("Table data:",table);
                 this.setState({table: table})
-                console.log(this.state);
             })
             .catch(function (error) {
-                console.log(error);
+                console.log("Error getting Log Table Data:",error);
             });
     }
 
@@ -114,7 +111,6 @@ class CampaignLogTable extends React.Component {
 
         let table = {columns: []};
         for (let i = 0; i < columnTitles.length; i++) {
-            console.log(columnTitles.length);
             let columnTitle = columnTitles[i];
             table.columns.push({
                 title: columnTitle.displayName,
@@ -161,7 +157,7 @@ class CampaignLogTable extends React.Component {
                 case "Email Log": {
                     // console.log("this.state.templateName is:", this.state.templateName)
                     // console.log("row['CampaignId'] is:", row['CampaignId'])
-                    console.log(this.state.templateName);
+                    //console.log(this.state.templateName);
                     content.push({
                         button: {
                             displayName: "View",

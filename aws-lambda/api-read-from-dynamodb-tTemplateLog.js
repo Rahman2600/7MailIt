@@ -5,7 +5,7 @@ const ddb = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
 exports.handler = async (event, context, callback) => {
     await readTable().then(data => {
         data.Items.forEach(function(item) {
-            console.log(item.TemplateName);
+        //console.log(item.TemplateName);
         });
         callback(null, {
             statusCode: 200,

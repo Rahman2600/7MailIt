@@ -136,11 +136,9 @@ function LoginPage() {
                         user,               // the Cognito User Object
                         newPassword,       // the new password
                     ).then(user => {
-                        console.log("made it");
                         updateFormState(() => ({...formState, formType: "signedIn"}))
                         // at this time the user is logged in if no MFA required
                     }).catch(error => {
-                        console.log("made it here");
                         setShowErrorMsg(true);
                         setErrorMsg("An error has occured: " + error.message);
                     });
