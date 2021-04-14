@@ -26,7 +26,7 @@ context("Assertions", () => {
 
       // click ready
       cy.get('table').contains('td', "donotremove.docx").siblings().contains('a', 'Start').click();
-      cy.wait(5000);
+      cy.wait(50000);
 
       //single email test
       cy.get('#email-address')
@@ -58,7 +58,7 @@ context("Assertions", () => {
       cy.get('#homepagebutton')
         .should('be.visible')
         .click();
-      cy.wait(5000);
+      cy.wait(50000);
 
       //open campaign logs
       cy.get('table').contains('td', "donotremove.docx").siblings().contains('a', 'View').click();
@@ -68,7 +68,7 @@ context("Assertions", () => {
       //confirm emails are updated
       cy.get('table').contains('td', "1").siblings().contains('a', 'View').click();
       cy.contains("Email logs");
-      cy.wait(5000);
+      cy.wait(50000);
 
       cy.get('table').contains('td', "gXXXXXXXXXX");
     });
@@ -89,7 +89,7 @@ context("Assertions", () => {
 
       // click ready
       cy.get('table').contains('td', "donotremove.docx").siblings().contains('a', 'Start').click();
-      cy.wait(5000);
+      cy.wait(50000);
 
       //upload csv
       cy.fixture('Example_File.csv').then(fileContent => {
@@ -125,7 +125,7 @@ context("Assertions", () => {
       cy.get('#homepagebutton')
         .should('be.visible')
         .click();
-      cy.wait(5000);
+      cy.wait(50000);
 
       //open campaign logs
       cy.get('table').contains('td', "donotremove.docx").siblings().contains('a', 'View').click();
@@ -138,7 +138,7 @@ context("Assertions", () => {
       cy.wait(5000);
 
       cy.get('table').contains('td', "gXXXXXXXXXX");
-      //cy.get('table').contains('td', "MountainSasquatch00@gmail.com");
+      cy.get('table').contains('td', "MXXXXXXXXXX");
     });
 
     it('login success and send email fail test', () => {

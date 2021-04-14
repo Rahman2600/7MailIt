@@ -78,14 +78,17 @@ class CampaignPage extends React.Component {
                             </Link>
                             <div className="row my-row1"></div>
                             <div className="row justify-content-space-evenly my-row mt-5 mb-2">
-                                <img src={userLogo} className="img-rounded" width="30" height="30" />
-
+                                <img src={userLogo} className="img-rounded" width="30" height="30"/>
+                                <h5>Single Email Campaign</h5>
+                            </div>
+                            <div className="row my-row10">
+                            {"Sends email to specified email address with template using the given dynamic values"}
                             </div>
                             <div className="form-group">
                                 <div className="row justify-content-space-evenly my-row2">
                                     <div className="input-group mb-1">
-                                        <div className="input-group-prepend">
-                                            <span className="input-group-text">Single Email Address</span>
+                                        <div className="input-group-prepend dynamic-value-key-container" >
+                                            <span className="ellipsis input-group-text ">Single Email Address</span>
                                         </div>
                                         <input
                                             type="text"
@@ -99,8 +102,8 @@ class CampaignPage extends React.Component {
                                 </div>
                                 <div className="row justify-content-space-evenly my-row2">
                                     <div className="input-group mb-1">
-                                        <div className="input-group-prepend">
-                                            <span className="input-group-text">Subject Line</span>
+                                        <div className="input-group-prepend dynamic-value-key-container">
+                                            <span className="ellipsis input-group-text">Subject Line</span>
                                         </div>
                                         <input
                                             type="text"
@@ -115,7 +118,7 @@ class CampaignPage extends React.Component {
                                 {this.state.dynamicValues.length > 0 ?
                                     <div className="row justify-content-space-evenly my-row2">
                                         Dynamic Values
-                                        <div className="input-group mb-1">
+                                        <div className="input-group mb-1 " >
                                             {this.createDynamicValueTextFields()}
                                         </div>
                                     </div> : null }
@@ -168,8 +171,8 @@ class CampaignPage extends React.Component {
         for (var dynamicValue of this.state.dynamicValues ) {
             let textInput = 
                 <div key={dynamicValue} className="input-group mb-1">
-                    <div className="input-group-prepend">
-                        <span className="input-group-text" id={dynamicValue}>{dynamicValue}</span>
+                    <div className="input-group-prepend dynamic-value-key-container">
+                        <span className="ellipsis input-group-text "  id={dynamicValue}>{dynamicValue}</span>
                     </div>
                     <input 
                         type="text" 
