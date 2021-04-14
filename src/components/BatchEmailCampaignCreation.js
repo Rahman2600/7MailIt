@@ -47,8 +47,8 @@ class BatchEmailCampaignCreation extends React.Component {
 				</div>
 				<div className="row justify-content-space-evenly my-row1">
 					<div className="input-group mb-2 pr-60">
-						<div className="input-group-prepend">
-							<span className="input-group-text" id="inputGroup-sizing-default">Subject Line</span>
+					<div className="input-group-prepend"style={{"max-width":"500px"}}>							
+							<span className="ellipsis input-group-text" id="inputGroup-sizing-default">Subject Line</span>
 						</div>
 						<input 
 							type="text" 
