@@ -26,12 +26,12 @@ class TemplateLogTable extends React.Component {
         }
     }
 
-    //Retrieve Tempalte logs from tTemplateLog DynamoDb to create a table
+    //Retrieve Template logs from tTemplateLog DynamoDb to create a table
     getTableData() {
           
        var config = {
             method: 'get',
-            url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/logs',
+            url: 'https://cif088g5cd.execute-api.us-east-1.amazonaws.com/v1/template-logs',
             headers: { 
               'Content-Type': 'application/json',
               'x-api-key': process.env.REACT_APP_AWS_TEMPLATE_LOG_API_KEY
@@ -67,12 +67,12 @@ class TemplateLogTable extends React.Component {
         );
     }
 
-    //This is for providing specialized sorting in the Table based on the column name
+    //This generates the prop for telling the table which columns should be sortable
     getColumnsPropToTable() {
         return this.state.columns.map((column) => {
-            let columnProp = {title: column, sort: this.sortableColumns.includes(column)}
+            let columnToSort = {title: column, sort: this.sortableColumns.includes(column)}
             if (column === "Upload Date") {
-                columnProp["compare"] = function (dateA, dateB) {
+                columnToSort["compare"] = function (dateA, dateB) {
                     let DMY_A = dateA.split("/");
                     let DMY_B = dateB.split("/");
                     let dateObjA = new Date(DMY_A[2], DMY_A[1], DMY_A[0]);
@@ -80,7 +80,7 @@ class TemplateLogTable extends React.Component {
                     return dateObjA - dateObjB;                     
                 }
             }
-            return columnProp;
+            return columnToSort;
         })
     }
 
@@ -100,7 +100,7 @@ class TemplateLogTable extends React.Component {
                 let columnTitle = columnTitles[i];
                 table.columns.push({
                     title: columnTitle.displayName,
-                    content: this.setCellContent(columnTitle, data)
+                    content: this.getCellContent(columnTitle, data)
                 });
             }
         } else {
@@ -120,7 +120,7 @@ class TemplateLogTable extends React.Component {
     * @param {data} - string
  	}}
  	*/
-    setCellContent(columnTitle, data) {
+    getCellContent(columnTitle, data) {
         let content = [];
         for (let row of data.body) {
            let apiName = columnTitle.apiName;
@@ -191,8 +191,8 @@ class TemplateLogTable extends React.Component {
  	*/
     getTruncatedContentIfTooLong(content, max_length) {
         if (content && (content.length > max_length)) {
-            let truncatedFilename = this.truncateString(content, max_length);
-            return {truncatedContent: {truncatedVersion: truncatedFilename,
+            let truncatedString = this.truncateString(content, max_length);
+            return {truncatedContent: {truncatedVersion: truncatedString,
             fullVersion: content}};
         } else {
             return content;
@@ -300,7 +300,7 @@ class TemplateLogTable extends React.Component {
 
     /**
  	* Sort the template log data by data
- 	* @param {campaignLogs} - Array[Object]
+ 	* @param {templateLogs} - Array[Object]
  	}}
  	*/
     sortTemplateLogs(templateLogs) {

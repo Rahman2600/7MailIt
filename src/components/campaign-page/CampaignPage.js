@@ -256,7 +256,7 @@ class CampaignPage extends React.Component {
         //Validate Dynamic Value Inputs are correctly formatted
         for(var input of dynamicValueInputs) {
             var dynamicValue = input.getAttribute("aria-label");
-            if(this.state[dynamicValue] == null || this.isEmptyStringOrNull(this.state[dynamicValue].trimEnd())) {
+            if(!this.state[dynamicValue] || this.isEmptyStringOrNull(this.state[dynamicValue].trimEnd())) {
                 input.classList.add("inputError");
                 emptyField = true;
             } else {

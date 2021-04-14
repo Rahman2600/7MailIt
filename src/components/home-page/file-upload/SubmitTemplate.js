@@ -1,13 +1,12 @@
 import React from "react";
-import {uploadFile, removeFile } from "../../aws_util"
+import {uploadFile} from "../../../aws_util"
 
 
-
-class FileUpload extends React.Component {
+class SubmitTemplate extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedFile: '', templateName: '', templateNameR: '', message: null, removal_message: null, uploading: false,
+            selectedFile: '', templateName: '', message: null, uploading: false,
             checking: false, setVisible: true
         }
         this.messages = Object.freeze({
@@ -18,20 +17,13 @@ class FileUpload extends React.Component {
             EMPTY_TEMPLATE_NAME: "The template name is empty. Please provide a template name to continue.",
             SUCCESS: "Sucessfully uploaded file"
         });
-        this.removal_message = Object.freeze({
-            REMOVE_FAILED: "Template Removal failed. Please verify Template Name corresponds to an Active Template.",
-            EMPTY_FIELD: "The text field is empty. Please enter a Template Name to continue.",
-            TEMPLATE_NAME_INCORRECT_FORMAT: "The template name can only contain alpha numeric characters, underscores and/or hyphens. This does not appear to be a valid Template Name. ",
-            SUCCESSFUL_REMOVAL: "Sucessfully removed a template"
-        });
         this.onFileChange = this.onFileChange.bind(this);
         this.onTemplateNameChange = this.onTemplateNameChange.bind(this);
-        this.onTemplateNameChangeR = this.onTemplateNameChangeR.bind(this);
         this.onFileUpload = this.onFileUpload.bind(this);
-        this.onFileRemove = this.onFileRemove.bind(this);
     }
     //Render of submit template form
-    SubmitTemplate = () => (
+    render() {
+		return (
         <div className="text-center">
             <p className="mt-5 text-center"><b>Upload Template</b></p>
             <p className="mt-2 text-center">Please upload a .docx file and a unique template name to create a template.</p>
@@ -79,72 +71,8 @@ class FileUpload extends React.Component {
 
             <button className="btn btn-primary btn-block mt-5" id='SubmitTemplate' onClick={this.onFileUpload}> Submit Template</button>
         </div>
-    )
-
-    //Render of remove template form
-    RemoveTemplate = () => (
-        <div>
-            <p className="mt-5 text-center"><b>Remove a Template</b></p>
-            <p className="mt-2 text-center">Please provide the name of an existing template that you would like to remove.</p>
-            {this.state.removal_message != null ?
-                <div
-                    className={
-                        this.state.removal_message === this.removal_message.SUCCESSFUL_REMOVAL ? "alert alert-success" : "alert alert-danger"}
-                    role="alert">
-                    {`${this.state.removal_message}`}
-                </div>
-                :
-                <div></div>
-            }
-            {this.state.checking ?
-                <div className="horizontal-center">
-                    <div className="spinner-border text-primary" style={{ width: "3rem", height: "3rem" }}
-                        role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div> :
-                <div></div>
-            }
-
-
-            <div className="row justify-content-space-evenly my-row2">
-                <div className="input-group mb-2">
-                    <div className="input-group-prepend">
-                        <span className="input-group-text">Template Name</span>
-                    </div>
-                    <input
-                        type="text"
-                        id="template-nameR"
-                        className="form-control"
-                        aria-label="TemplateNameR"
-                        onChange={this.onTemplateNameChangeR}
-                        required>
-                    </input>
-                </div>
-            </div>
-
-            <button className="btn btn-primary btn-block mt-5" id='RemoveTemplate' onClick={this.onFileRemove}> Remove Template </button>
-        </div>
-    )
-
-
-    //Render of File Upload Component
-    render() {
-        return (
-            <div>
-                <div class="dropdown text-center">
-                    <button class="btn btn-primary dropdown-toggle mt-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Submit/Remove Template
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" onClick={() => this.setState({ setVisible: true })}>Submit Template</a>
-                        <a class="dropdown-item" id="RemoveTemplateDropDown" onClick={() => this.setState({ setVisible: false })}>Remove Template</a>
-                    </div>
-                </div>
-                {this.state.setVisible ? this.SubmitTemplate() : this.RemoveTemplate()}
-            </div>
-        )
-    }
+    	)
+	} 
 
     /**
  	* Event handler for when the file is uploadeds
@@ -162,15 +90,6 @@ class FileUpload extends React.Component {
  	*/
     onTemplateNameChange(event) {
         this.setState({ templateName: event.target.value });
-    }
-
-    /**
- 	* Event handler for when the template name has changed for removing a template
- 	* @param {event} - event object
- 	}}
- 	*/
-    onTemplateNameChangeR(event) {
-        this.setState({ templateNameR: event.target.value });
     }
 
 
@@ -225,48 +144,6 @@ class FileUpload extends React.Component {
         }
     }
 
-    //Event handler for when the submit button is clicked when for removing a template
-    onFileRemove() {
-        let templateNameInputR = document.getElementById('template-nameR');
-        let isEmptyFieldR = false;
-        let isTemplateNameCorrectFormatR = true;
-        let templateNameR = this.state['templateNameR'];
-
-        this.setState({ removal_message: null });
-        //Validate template name
-        if (this.isEmptyStringOrNull(templateNameR.trim())) {
-            isEmptyFieldR = true;
-            templateNameInputR.classList.add("inputError");
-        } else {
-            templateNameInputR.classList.remove("inputError");
-        }
-
-        if (!this.isTemplateNameFormattedCorrectly(templateNameR)) {
-            isTemplateNameCorrectFormatR = false;
-            templateNameInputR.classList.add("inputError");
-        } else {
-            templateNameInputR.classList.remove("inputError");
-        }
-
-        if (isEmptyFieldR) {
-            this.setState({ removal_message: this.removal_message.EMPTY_FIELD });
-        } else if (!isTemplateNameCorrectFormatR) {
-            this.setState({ removal_message: this.removal_message.TEMPLATE_NAME_INCORRECT_FORMAT });
-        } else {
-            this.setState({ checking: true });
-            removeFile(templateNameR).then(() => {
-                this.setState({ removal_message: this.removal_message.SUCCESSFUL_REMOVAL, checking: false });
-                this.props.onUploadSuccess();
-            }).catch(error => {
-                console.log("Remove File Error:",error);
-                this.setState({ removal_message: this.removal_message.REMOVE_FAILED, checking: false });
-            });
-        }
-
-
-
-
-    }
 
     isEmptyStringOrNull(string) {
         return string == null || string === "";
@@ -278,4 +155,4 @@ class FileUpload extends React.Component {
     }
 }
 
-export default FileUpload;
+export default SubmitTemplate;

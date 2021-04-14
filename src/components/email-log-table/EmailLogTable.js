@@ -12,14 +12,12 @@ class EmailLogTable extends React.Component {
                                "Sent Date", 
                                "Email Address", 
                                "Delivery Status", 
-                               "Open Status",
-                               "Clicked Link Status"];
+                               "Open Status"];
         this.sortableColumns = ["Message Id", 
                                "Sent Date", 
                                "Email Address", 
                                "Delivery Status", 
-                               "Open Status",
-                               "Clicked Link Status"];
+                               "Open Status"];
         this.state = {
             templateName: this.props.location.state.templateName,
             campaignId: this.props.location.state.campaignId,
@@ -114,7 +112,6 @@ class EmailLogTable extends React.Component {
             {displayName:"Email Address", apiName: "EmailAddress"}, 
             {displayName:"Delivery Status", apiName: "DeliveryStatus"}, 
             {displayName:"Open Status", apiName: "OpenedStatus"}, 
-            //{displayName:"Has A Link Been Clicked?", apiName: "ClickedLinkStatus"},
         ];
         let table = {columns: []};
         if (data.statusCode === 200) {
@@ -134,7 +131,7 @@ class EmailLogTable extends React.Component {
     }
 
     /**
- 	* Set the content of a cell
+ 	* Get the content of a cell
  	* @param {columnTitle} - string
     * @param {data} - string
  	}}
