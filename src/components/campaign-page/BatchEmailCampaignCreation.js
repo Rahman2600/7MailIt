@@ -1,8 +1,8 @@
 import React from "react";
-import {createBatchEmailCampaign} from "../aws_util";
-import scrap from '../assets/scrap.png';
-import multipleUserLogo from '../assets/multipleUserLogo.png';
+import {createBatchEmailCampaign} from "../../aws_util";
+import multipleUserLogo from '../../assets/multipleUserLogo.png';
 import { Link } from "react-router-dom";
+
 
 class BatchEmailCampaignCreation extends React.Component {
 	constructor(props) {
@@ -20,6 +20,7 @@ class BatchEmailCampaignCreation extends React.Component {
         this.onSubmit = this.onSubmit.bind(this);
 	}
 
+	//Render the batch email campaign section of the campaign page 
 	render() {
 		return (
 			<div>
@@ -90,14 +91,31 @@ class BatchEmailCampaignCreation extends React.Component {
 		);
 	}
 
+	
+	/**
+ 	* Event handler for uploading a file 
+ 	* @param {event} - The event object  
+ 	}}
+ 	*/
 	onFileUpload(event) {
         this.setState({ selectedFile: event.target.files[0], message: null });
 	}
 
+	
+	/**
+ 	* Event handler for uploading a file 
+ 	* @param {event} - The event object 
+ 	}}
+ 	*/
 	onSubjectLineChange(event) {
 		this.setState({subjectLine: event.target.value});
 	}
 
+	/**
+ 	* Event handler for the submit button being clicked  
+ 	* @param {event} - The event object 
+ 	}}
+ 	*/
 	onSubmit(event) {
 		this.setState({message: null});
         //Validate Subject Line

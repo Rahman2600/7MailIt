@@ -1,6 +1,5 @@
 import React from "react";
 import FileUpload from "./FileUpload";
-import {Link} from "react-router-dom";
 
 class HomePageRight extends React.Component {
     constructor(props) {

@@ -1,8 +1,5 @@
 
-import AWS from 'aws-sdk'
 import axios from 'axios'
-import fs from 'fs'
-import { type } from 'os';
 
 const uploadFile = async (fileInput,BUCKET_NAME, templateName) => {
     console.log("File inputted",fileInput);

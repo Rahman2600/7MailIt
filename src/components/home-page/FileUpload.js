@@ -1,5 +1,5 @@
 import React from "react";
-import { convertToTemplate, uploadFile, removeFile } from "../../aws_util"
+import {uploadFile, removeFile } from "../../aws_util"
 
 
 
@@ -11,7 +11,7 @@ class FileUpload extends React.Component {
             checking: false, setVisible: true
         }
         this.messages = Object.freeze({
-            WRONG_FILE_TYPE: "Wrong template file type. Upload a .doc or .docx file",
+            WRONG_FILE_TYPE: "Wrong template file type. Please upload a .docx file",
             UPLOAD_FAIL: "Upload Failure",
             EMPTY_FIELD: "At least one field is empty. Please fill in both fields to continue.",
             TEMPLATE_NAME_INCORRECT_FORMAT: "The template name can only contain alpha numeric characters, underscores and/or hyphens",
@@ -30,9 +30,11 @@ class FileUpload extends React.Component {
         this.onFileUpload = this.onFileUpload.bind(this);
         this.onFileRemove = this.onFileRemove.bind(this);
     }
+    //Render of submit template form
     SubmitTemplate = () => (
         <div className="text-center">
-            <p className="mt-5 text-center">Upload Template</p>
+            <p className="mt-5 text-center"><b>Upload Template</b></p>
+            <p className="mt-2 text-center">Please upload a .docx file and a unique template name to create a template.</p>
             {this.state.message != null ?
                 <div
                     className={
@@ -79,10 +81,11 @@ class FileUpload extends React.Component {
         </div>
     )
 
-
+    //Render of remove template form
     RemoveTemplate = () => (
         <div>
-            <p className="mt-5 text-center">Remove a Template</p>
+            <p className="mt-5 text-center"><b>Remove a Template</b></p>
+            <p className="mt-2 text-center">Please provide the name of an existing template that you would like to remove.</p>
             {this.state.removal_message != null ?
                 <div
                     className={
@@ -125,6 +128,7 @@ class FileUpload extends React.Component {
     )
 
 
+    //Render of File Upload Component
     render() {
         return (
             <div>
@@ -142,28 +146,45 @@ class FileUpload extends React.Component {
         )
     }
 
+    /**
+ 	* Event handler for when the file is uploadeds
+ 	* @param {event} - event object
+ 	}}
+ 	*/
     onFileChange(event) {
         this.setState({ selectedFile: event.target.files[0], message: null });
     }
 
+    /**
+ 	* Event handler for when the template name has changed for submitting a template
+ 	* @param {event} - event object
+ 	}}
+ 	*/
     onTemplateNameChange(event) {
         this.setState({ templateName: event.target.value });
     }
 
+    /**
+ 	* Event handler for when the template name has changed for removing a template
+ 	* @param {event} - event object
+ 	}}
+ 	*/
     onTemplateNameChangeR(event) {
         this.setState({ templateNameR: event.target.value });
     }
 
 
-
+    
+ 	//Event handler for when the submit button is clicked when uploading a template
     onFileUpload() {
-        //Validate template name
+        
         let templateNameInput = document.getElementById('template-name');
         let isEmptyField = false;
         let isTemplateNameCorrectFormat = true;
         let templateName = this.state['templateName'];
 
         this.setState({ message: null });
+        //Validate template name
         if (this.isEmptyStringOrNull(templateName.trim())) {
             isEmptyField = true;
             templateNameInput.classList.add("inputError");
@@ -204,14 +225,15 @@ class FileUpload extends React.Component {
         }
     }
 
+    //Event handler for when the submit button is clicked when for removing a template
     onFileRemove() {
-        //Validate template name
         let templateNameInputR = document.getElementById('template-nameR');
         let isEmptyFieldR = false;
         let isTemplateNameCorrectFormatR = true;
         let templateNameR = this.state['templateNameR'];
 
         this.setState({ removal_message: null });
+        //Validate template name
         if (this.isEmptyStringOrNull(templateNameR.trim())) {
             isEmptyFieldR = true;
             templateNameInputR.classList.add("inputError");

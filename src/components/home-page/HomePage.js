@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import TemplateLogTable from "./TemplateLogTable";
-import HomePageRight from "./HomePageRight";
+import HomePageRight from "./HomePageLeft";
 import "../../styles/HomePage.css"
 import {Redirect} from "react-router";
 import {Link} from "react-router-dom";
@@ -13,11 +13,9 @@ class HomePage extends React.Component {
 		super(props);
 		this.onUploadSuccess = this.onUploadSuccess.bind(this);
 		this.id = 0;
-		//console.log(this.props.user)
 		this.state = {
 			authenticated: this.props.user,
 		}
-		//console.log(this.state);
 	}
     
 
