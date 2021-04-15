@@ -14,7 +14,8 @@ class CampaignLogTable extends React.Component {
                                "No. of Emails Successfully Delivered", 
                                "No. of Opened Emails",
                                "Email Log"];
-        this.sortableColumns = ["CampaignId",  "Date of Campaign Launch"];
+        this.sortableColumns = ["CampaignId",  "Date of Campaign Launch", "No. of People Emailed",
+        "No. of Emails Successfully Delivered", "No. of Opened Emails"];
         this.state = {
             templateName: this.props.location.state.templateName,
             table: null,
@@ -106,6 +107,12 @@ class CampaignLogTable extends React.Component {
             let columnsToSort = {title: column, sort: this.sortableColumns.includes(column)}
             if (column === "Date of Campaign Launch") {
                 columnsToSort["compare"] = compareTableFormattedDate;
+            } else if (column === "No. of People Emailed" || 
+                       column === "No. of Emails Successfully Delivered" || 
+                       column === "No. of Opened Emails") {
+                       columnsToSort["compare"] = function (strA, strB) {
+                            return parseInt(strA) - parseInt(strB);
+                       }
             }
             return columnsToSort;
         })

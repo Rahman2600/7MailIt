@@ -104,6 +104,19 @@ class EmailLogTable extends React.Component {
         }
     }
 
+    //This generates the prop for telling the table which columns should be sortable
+    getColumnsToSort() {
+        return this.sortableColumns.map((column) => {
+            let columnsToSort = {title: column, sort: this.sortableColumns.includes(column)}
+            if (column === "Sent Date") {
+                columnsToSort["compare"] = function (dateA, dateB) {
+                    return new Date(dateA) - new Date(dateB);
+                };
+            }
+            return columnsToSort;
+        })
+    }
+
     //Convert response data from /email-logs api to a table
     dataToTable(data) {
         let columnTitles = [
