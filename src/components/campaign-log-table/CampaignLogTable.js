@@ -3,6 +3,7 @@ import axios from 'axios';
 import Table from "../Table";
 import { Link } from "react-router-dom";
 import {Redirect} from "react-router";
+import {compareTableFormattedDate} from "../util.js";
 
 class CampaignLogTable extends React.Component {
     constructor(props) {
@@ -40,6 +41,7 @@ class CampaignLogTable extends React.Component {
             .then(response => {
                 this.sortCampaignLogs(response.data)
                 let table = this.dataToTable(response.data.body);
+                console.log(table);
                 this.setState({table: table})
             })
             .catch(function (error) {
@@ -83,11 +85,11 @@ class CampaignLogTable extends React.Component {
                         </Link>
                     </div> 
                     <div className="float-right col-lg-9 pl-0 pr-1">
-                        <h1 className="mt-2">{`Campaign logs: ${this.state.templateName}`}</h1>
-                        {table? <Table data={table} 
-                        columns={this.state.columns.map((column) => {
-                            return {title: column, sort: this.sortableColumns.includes(column)}
-                        })}/> : 
+                        {table && table.numRows > 0 ? <h1 className="mt-2">{`Campaign logs: ${this.state.templateName}`}</h1> :
+                        <div></div>}
+                        {table? (table.numRows > 0 ? <Table data={table} columnsToSort={this.getColumnsToSort()}/> :
+                        <h1 className="vertical-horizontal-center"> No campaigns for this template yet</h1> )
+                        : 
                         <Table loading={true}/>}
                     </div>
                 </div> 
@@ -97,6 +99,19 @@ class CampaignLogTable extends React.Component {
         
             
     }
+
+    //This generates the prop for telling the table which columns should be sortable
+    getColumnsToSort() {
+        return this.sortableColumns.map((column) => {
+            let columnsToSort = {title: column, sort: this.sortableColumns.includes(column)}
+            if (column === "Date of Campaign Launch") {
+                columnsToSort["compare"] = compareTableFormattedDate;
+            }
+            return columnsToSort;
+        })
+    }
+
+
 
     //Convert response data from /campaign-logs api to a table
     dataToTable(data) {
