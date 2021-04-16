@@ -158,18 +158,25 @@ class Table extends React.Component {
             <tr>
                 {this.state.data.columns.map((column, i) => {
                     return (
-                        <th key={i} className={this.isSortColumn(column.title)? "bg-secondary text-white" : ""}>
+                        <th key={i} className={this.getTableHeaderClasses(column.title)}>
                             {column.title}
-                            {this.addSortButtonToColumn(column.title) ?
-                                <button className="btn-group-vertical float-right" onClick={() => this.handleSorting(column.title)}>
-                                    <span>&#9650;</span>
-                                </button> :
-                                <span></span>}
                         </th>
                     );
                 })}
             </tr>
         )
+    }
+
+    getTableHeaderClasses(columnTitle) {
+        let classes = [];
+        if (this.isSortColumn(columnTitle)) {
+            classes.push("bg-secondary");
+            classes.push("text-white");
+        }
+        if (this.addSortButtonToColumn(columnTitle)) {
+            classes.push("sortable");
+        }
+        return classes.join(" ");
     }
 
     isSortColumn(columnTitle) {
