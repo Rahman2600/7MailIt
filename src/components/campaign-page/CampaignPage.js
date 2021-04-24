@@ -17,15 +17,17 @@ AWS.config.update(
     }
 );
 
+
 class CampaignPage extends React.Component {
 
     constructor(props) {
-        super(props);
+        super(props); 
         this.state = {
             authenticated: this.props.user,
             templateKey: this.props.location.state.templateKey,
             dynamicValues: this.props.location.state.dynamicValues,
-            templateName: this.props.match.params.templateName
+            templateName: this.props.match.params.templateName,
+            setVisible: true 
         }
     }
 
@@ -49,16 +51,29 @@ class CampaignPage extends React.Component {
                             </div>}
 
                         <div className="col-6 my-col">
-                            <Link
-                                className="btn btn-primary float-right mt-2"
-                                role="button"
-                                id="homepagebutton"
-                                to={"/HomePage"}>
-                                {"Return to Home Page"}
-                            </Link>
+                            <div className="d-flex justify-content-end">
+                                <Link
+                                    className="btn btn-primary mt-2"
+                                    role="button"
+                                    id="homepagebutton"
+                                    to={"/HomePage"}>
+                                    {"Return to Home Page"}
+                                </Link>
+                            </div>
                             <div className="row my-row1"></div>
-                            <SingleEmailCampaignCreation dynamicValues={this.state.dynamicValues} templateName={this.state.templateName}/>
-                            <BatchEmailCampaignCreation dynamicValues={this.state.dynamicValues} templateName={this.state.templateName} />
+                            <div>
+                                <div class="dropdown text-center">
+                                    <button class="btn btn-primary dropdown-toggle mt-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Single/Batch Email Campaign
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" onClick={() => this.setState({ setVisible: true })}>Single Email Campaign</a>
+                                        <a class="dropdown-item" id="RemoveTemplateDropDown" onClick={() => this.setState({ setVisible: false })}>Batch Email Campaign</a>
+                                    </div>
+                            </div>
+                                {this.state.setVisible? <SingleEmailCampaignCreation dynamicValues={this.state.dynamicValues} templateName={this.state.templateName}/> :
+                                <BatchEmailCampaignCreation dynamicValues={this.state.dynamicValues} templateName={this.state.templateName} />}
+                            </div>
                         </div>
                     </div>
                 </div>
